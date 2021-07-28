@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+
+
+<fx:root dividerPositions="0.07662835249042146" orientation="VERTICAL" type="SplitPane"
+         xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1">
+   <Text boundsType="LOGICAL_VERTICAL_CENTER" strokeType="OUTSIDE" strokeWidth="0.0" text="Imagine Character Creator"
+         textAlignment="CENTER" textOrigin="CENTER" underline="true">
+      <font>
+         <Font name="Blackadder ITC" size="49.0"/>
+      </font>
+   </Text>
+   <VBox alignment="CENTER" spacing="15.0">
+      <padding>
+         <Insets bottom="100.0" left="100.0" right="100.0" top="70.0"/>
+      </padding>
+      <Button fx:id="characterBioButton" alignment="CENTER" contentDisplay="CENTER" maxWidth="500.0" minWidth="300.0"
+              mnemonicParsing="false" text="Character Biograpies" VBox.vgrow="SOMETIMES">
+         <font>
+            <Font name="Blackadder ITC" size="23.0"/>
+         </font>
+      </Button>
+      <Button fx:id="worldAtlasButton" alignment="CENTER" contentDisplay="CENTER" layoutX="40.0" layoutY="40.0"
+              maxWidth="500.0" mnemonicParsing="false" text="World Atlus" VBox.vgrow="SOMETIMES">
+         <font>
+            <Font name="Blackadder ITC" size="23.0"/>
+         </font>
+      </Button>
+      <Button fx:id="encyclopaediaButton" alignment="CENTER" contentDisplay="CENTER" layoutX="40.0" layoutY="354.0"
+              maxWidth="500.0" mnemonicParsing="false" text="Encyclopedia" VBox.vgrow="SOMETIMES">
+         <font>
+            <Font name="Blackadder ITC" size="23.0"/>
+         </font>
+      </Button>
+      <Pane maxWidth="1.7976931348623157E308" minHeight="50.0"/>
+      <Button fx:id="optionsButton" alignment="CENTER" contentDisplay="CENTER" layoutX="400.0" layoutY="296.0"
+              maxWidth="500.0" mnemonicParsing="false" text="Options">
+         <font>
+            <Font name="Blackadder ITC" size="23.0"/>
+         </font>
+      </Button>
+   </VBox>
+</fx:root>
