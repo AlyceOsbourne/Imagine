@@ -1,7 +1,5 @@
 package imagine.scenes.core;
 
-import com.google.gson.annotations.Expose;
-import imagine.scenes.characterbio.CharacterBioCore;
 import imagine.scenes.menus.MainMenu;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
@@ -9,15 +7,17 @@ import javafx.scene.control.MenuItem;
 import javafx.scene.control.SplitPane;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
+import lib.HoldsSaveData;
 import lib.LoadsFXML;
 import lib.Save;
+
+import java.util.HashMap;
 
 public class Window extends SplitPane implements LoadsFXML, Save {
 
 	Window loadedWindow;
+	MainMenu menu;
 	@FXML
-	@Expose
-	public SceneLibrary library;
 	private final Stage primaryStage;
 	@FXML
 	public MenuItem saveFile;
@@ -37,9 +37,9 @@ public class Window extends SplitPane implements LoadsFXML, Save {
 	public Window(Stage primaryStage) {
 		loadFXML();
 		loadedWindow = this;
+		menu = new MainMenu(loadedWindow);
 		this.primaryStage = primaryStage;
-		this.library = new SceneLibrary(this.loadedWindow);
-		this.changeContent(library.menu);
+		this.changeContent(menu);
 	}
 
 	public void changeContent(Node node) {
@@ -49,26 +49,17 @@ public class Window extends SplitPane implements LoadsFXML, Save {
 
 	public void loadControls() {
 		this.close.setOnAction(event -> this.primaryStage.close());
-		this.saveFile.setOnAction(event -> this.serializeObject(this.library, SceneLibrary.class,"/save.json"));
-		this.loadFile.setOnAction(event -> library = deserializeObject(SceneLibrary.class, "/save.json"));
-		this.returnToMenu.setOnAction(event -> this.changeContent(this.library.menu));
-		this.newFile.setOnAction(event -> {
-			this.changeContent(this.library.menu);
-			this.library = new SceneLibrary(this.loadedWindow);
-		});
+		this.returnToMenu.setOnAction(event -> this.changeContent(menu));
+		this.newFile.setOnAction(event -> this.changeContent(menu));
 	}
 
 	private void doToggles() {
 		this.returnToMenu.setVisible(!(this.content.getCenter() instanceof MainMenu));
 	}
 
-	public static class SceneLibrary {
-		MainMenu menu;
-		@Expose
-		CharacterBioCore characterBio;
-		SceneLibrary(Window window) {
-			menu = new MainMenu(window);
-			characterBio = new CharacterBioCore(window);
-		}
+	HashMap<String, HoldsSaveData> saveData() {
+		return null;
 	}
+
+
 }
