@@ -8,7 +8,7 @@ import com.google.gson.stream.JsonWriter;
 import java.io.*;
 import java.util.logging.Logger;
 
-public interface Save {
+public interface DataSerialization {
 
 	Logger log = Logger.getLogger("SaveLogger");
 
@@ -18,10 +18,9 @@ public interface Save {
 		SERIALIZE serializeObject = type.cast(toSerialize);
 		log.info(serializeObject.toString());
 		try {
-			if((file.exists()
-					||(file.mkdirs()&&file.createNewFile()))
-					&&(file.canWrite()&&file.canRead()))
-			{
+			if ((file.exists()
+					|| (file.mkdirs() && file.createNewFile()))
+					&& (file.canWrite() && file.canRead())) {
 				GsonBuilder gsonBuilder = new GsonBuilder();
 				gsonBuilder.setPrettyPrinting();
 				gsonBuilder.enableComplexMapKeySerialization();
@@ -45,14 +44,16 @@ public interface Save {
 			Gson gson = new GsonBuilder().setPrettyPrinting().excludeFieldsWithoutExposeAnnotation().serializeNulls().enableComplexMapKeySerialization().create();
 			DESERIALIZE deserializeObject = null;
 			File file = new File(filename);
-			if((file.exists())) deserializeObject = (gson.fromJson(new JsonReader(new BufferedReader(new FileReader(file))), type));
+			if ((file.exists()))
+				deserializeObject = (gson.fromJson(new JsonReader(new BufferedReader(new FileReader(file))), type));
 			return deserializeObject;
-		}
-		catch (IOException e) {
+		} catch (IOException e) {
 			e.printStackTrace();
 			return null;
 		}
 	}
+
+
 
 
 }

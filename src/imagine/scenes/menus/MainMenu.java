@@ -1,22 +1,20 @@
 package imagine.scenes.menus;
 
-import lib.LoadsFXML;
+import imagine.Main;
 import imagine.scenes.characterbio.CharacterBioCore;
-import imagine.scenes.core.Window;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.SplitPane;
+import lib.LoadsFXML;
 
 public  class MainMenu extends SplitPane implements LoadsFXML {
 
 
-	private final Window windowIn;
 	CharacterBioCore cb;
 
-	public MainMenu(Window windowIn){
-		this.windowIn = windowIn;
+	public MainMenu(){
 		loadFXML();
-		cb = new CharacterBioCore(this.windowIn);
+		cb = new CharacterBioCore();
 	}
 	@FXML
 	public Button characterBioButton;
@@ -30,7 +28,7 @@ public  class MainMenu extends SplitPane implements LoadsFXML {
 
 	@Override
 	public void loadControls() {
-		this.characterBioButton.setOnAction(event -> this.windowIn.changeContent(this.cb));
+		this.characterBioButton.setOnAction(event -> Main.window.changeContent(new CharacterBioCore()));
 
 	}
 }

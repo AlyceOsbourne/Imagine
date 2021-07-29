@@ -1,22 +1,22 @@
 package imagine.scenes.characterbio;
 
 import com.google.gson.annotations.Expose;
-import imagine.scenes.core.Window;
 import javafx.fxml.FXML;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TabPane;
 import javafx.scene.control.TextField;
 import javafx.scene.control.ToolBar;
 import javafx.scene.layout.BorderPane;
-import lib.HoldsSaveData;
 import lib.LoadsFXML;
 
 import java.util.HashMap;
 import java.util.Map;
 
-public class CharacterBioCore extends BorderPane implements LoadsFXML, HoldsSaveData {
+public class CharacterBioCore extends BorderPane implements LoadsFXML{
 
-	SaveData savedata = new SaveData();
+
+	Map<String,CharacterBio> protagonists = new HashMap<>();
+	Map<String,CharacterBio> antagonists = new HashMap<>();
 
 	@FXML
 	public TextField forename;
@@ -43,7 +43,7 @@ public class CharacterBioCore extends BorderPane implements LoadsFXML, HoldsSave
 	@FXML
 	public ScrollPane characterpane;
 
-	public CharacterBioCore(Window window) {
+	public CharacterBioCore() {
 		loadFXML();
 	}
 
@@ -51,24 +51,6 @@ public class CharacterBioCore extends BorderPane implements LoadsFXML, HoldsSave
 	public void loadControls() {
 	}
 
-	@Override
-	public SaveData getSaveData() {
-		 return this.savedata;
-	}
-
-
-
-	class SaveData extends SaveDataHolder{
-
-		Map<String,CharacterBio> protagonists = new HashMap<>();
-		Map<String,CharacterBio> antagonists = new HashMap<>();
-		@Override
-		public Map<String, Map<String, ?>> saveDataCollection() {
-			return null;
-		}
-
-
-	}
 
 	static class CharacterBio {
 		@Expose

@@ -7,16 +7,14 @@ import javafx.scene.control.MenuItem;
 import javafx.scene.control.SplitPane;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
-import lib.HoldsSaveData;
 import lib.LoadsFXML;
-import lib.Save;
+import lib.DataSerialization;
 
-import java.util.HashMap;
-
-public class Window extends SplitPane implements LoadsFXML, Save {
+public class Window extends SplitPane implements LoadsFXML, DataSerialization {
 
 	Window loadedWindow;
 	MainMenu menu;
+
 	@FXML
 	private final Stage primaryStage;
 	@FXML
@@ -37,7 +35,7 @@ public class Window extends SplitPane implements LoadsFXML, Save {
 	public Window(Stage primaryStage) {
 		loadFXML();
 		loadedWindow = this;
-		menu = new MainMenu(loadedWindow);
+		menu = new MainMenu();
 		this.primaryStage = primaryStage;
 		this.changeContent(menu);
 	}
@@ -57,9 +55,6 @@ public class Window extends SplitPane implements LoadsFXML, Save {
 		this.returnToMenu.setVisible(!(this.content.getCenter() instanceof MainMenu));
 	}
 
-	HashMap<String, HoldsSaveData> saveData() {
-		return null;
-	}
 
 
 }
