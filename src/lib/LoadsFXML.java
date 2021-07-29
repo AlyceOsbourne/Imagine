@@ -1,3 +1,7 @@
+/*
+ * © Owned by Alyce Kat Osbourne, AKA Alycrafticus, All Rights Reserved.
+ */
+
 package lib;
 
 import javafx.fxml.FXML;

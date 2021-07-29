@@ -1,6 +1,10 @@
+/*
+ * © Owned by Alyce Kat Osbourne, AKA Alycrafticus, All Rights Reserved.
+ */
+
+
 package imagine.scenes.characterbio;
 
-import com.google.gson.annotations.Expose;
 import javafx.fxml.FXML;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TabPane;
@@ -53,40 +57,7 @@ public class CharacterBioCore extends BorderPane implements LoadsFXML{
 
 
 	static class CharacterBio {
-		@Expose
-		private final String nickname;
-		@Expose
-		private final String title;
-		@Expose
-		private final String forename;
-		@Expose
-		private final String middlename;
-		@Expose
-		private final String surname;
-		@Expose
-		private final int age;
-		@Expose
-		private final String gender;
-		@Expose
-		private final String sex;
-		@Expose
-		private final String sexuality;
 
-		CharacterBio() {
-			this("AlyKat","Lady","Alyce","Kahlan", "Windsong", 30, "Femme", "Sexless", "Pan");
-		}
-
-		CharacterBio(String nickname, String title, String forename, String middlename, String surname, int age, String gender, String sex, String sexuality) {
-			this.nickname = nickname;
-			this.title = title;
-			this.forename = forename;
-			this.middlename = middlename;
-			this.surname = surname;
-			this.age = age;
-			this.gender = gender;
-			this.sex = sex;
-			this.sexuality = sexuality;
-		}
 
 	}
 }

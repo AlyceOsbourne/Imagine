@@ -6,6 +6,11 @@
 <?import javafx.scene.text.*?>
 
 
+<!--
+  ~ © Owned by Alyce Kat Osbourne, AKA Alycrafticus, All Rights Reserved.
+  -->
+
+
 <fx:root dividerPositions="0.07662835249042146" orientation="VERTICAL" type="SplitPane"
          xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1">
    <Text boundsType="LOGICAL_VERTICAL_CENTER" strokeType="OUTSIDE" strokeWidth="0.0" text="Imagine Character Creator"

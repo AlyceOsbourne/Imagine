@@ -1,3 +1,8 @@
+/*
+ * © Owned by Alyce Kat Osbourne, AKA Alycrafticus, All Rights Reserved.
+ */
+
+
 package imagine;
 
 import imagine.scenes.core.Window;
