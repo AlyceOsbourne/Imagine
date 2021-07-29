@@ -18,9 +18,7 @@ public interface DataSerialization {
 		SERIALIZE serializeObject = type.cast(toSerialize);
 		log.info(serializeObject.toString());
 		try {
-			if ((file.exists()
-					|| (file.mkdirs() && file.createNewFile()))
-					&& (file.canWrite() && file.canRead())) {
+			if ((file.exists() || (file.mkdirs() && file.createNewFile())) && (file.canWrite() && file.canRead())) {
 				GsonBuilder gsonBuilder = new GsonBuilder();
 				gsonBuilder.setPrettyPrinting();
 				gsonBuilder.enableComplexMapKeySerialization();
@@ -28,9 +26,6 @@ public interface DataSerialization {
 				gsonBuilder.serializeNulls();
 				Gson gson = gsonBuilder.create();
 				gson.newJsonWriter(new BufferedWriter(new FileWriter(file)));
-				gson.newJsonReader(new BufferedReader(new FileReader(file)));
-
-				//log.info(gson.toString());
 				gson.toJson(serializeObject, type, new JsonWriter(new BufferedWriter(new FileWriter(file))));
 			}
 		} catch (IOException e) {
@@ -41,9 +36,9 @@ public interface DataSerialization {
 	default <DESERIALIZE> DESERIALIZE deserializeObject(Class<?> type, String filename) {
 
 		try {
+			File file = new File(filename);
 			Gson gson = new GsonBuilder().setPrettyPrinting().excludeFieldsWithoutExposeAnnotation().serializeNulls().enableComplexMapKeySerialization().create();
 			DESERIALIZE deserializeObject = null;
-			File file = new File(filename);
 			if ((file.exists()))
 				deserializeObject = (gson.fromJson(new JsonReader(new BufferedReader(new FileReader(file))), type));
 			return deserializeObject;
