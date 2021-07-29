@@ -88,7 +88,6 @@ public class CharacterBioCore extends BorderPane implements LoadsFXML{
 			this.sexuality = sexuality;
 		}
 
-
 	}
 }
 
