@@ -15,7 +15,7 @@ public class CreateCharacter extends BorderPane implements LoadsFXML {
 
 
 	@Override
-	public void loadControls() throws Exception {
+	public void loadControls() {
 
 	}
 }
