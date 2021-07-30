@@ -2,8 +2,16 @@
  * © Owned by Alyce Kat Osbourne, AKA Alycrafticus, All Rights Reserved.
  */
 
+/*
+ * © Owned by Alyce Kat Osbourne, AKA Alycrafticus, All Rights Reserved.
+ */
 
-package lib;
+/*
+ * © Owned by Alyce Kat Osbourne, AKA Alycrafticus, All Rights Reserved.
+ */
+
+
+package lib.serialization.gson;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -13,7 +21,7 @@ import com.google.gson.stream.JsonWriter;
 import java.io.*;
 import java.util.logging.Logger;
 
-public interface DataSerialization {
+public interface GsonDataSerialization {
 
 	Logger log = Logger.getLogger("SaveLogger");
 
@@ -23,7 +31,7 @@ public interface DataSerialization {
 		SERIALIZE serializeObject = type.cast(toSerialize);
 		log.info(serializeObject.toString());
 		try {
-			if ((file.exists() || (file.mkdirs() && file.createNewFile())) && (file.canWrite() && file.canRead())) {
+			if ((file.exists() || (file.createNewFile())) && (file.canWrite() && file.canRead())) {
 				GsonBuilder gsonBuilder = new GsonBuilder();
 				gsonBuilder.setPrettyPrinting();
 				gsonBuilder.enableComplexMapKeySerialization();

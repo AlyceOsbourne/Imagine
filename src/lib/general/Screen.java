@@ -2,7 +2,11 @@
  * © Owned by Alyce Kat Osbourne, AKA Alycrafticus, All Rights Reserved.
  */
 
-package lib;
+/*
+ * © Owned by Alyce Kat Osbourne, AKA Alycrafticus, All Rights Reserved.
+ */
+
+package lib.general;
 
 import java.awt.*;
 

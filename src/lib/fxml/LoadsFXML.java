@@ -2,15 +2,26 @@
  * © Owned by Alyce Kat Osbourne, AKA Alycrafticus, All Rights Reserved.
  */
 
-package lib;
+/*
+ * © Owned by Alyce Kat Osbourne, AKA Alycrafticus, All Rights Reserved.
+ */
+
+package lib.fxml;
 
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 
-import java.io.IOException;
-
+/**
+ * The interface Loads fxml.
+ */
 public interface LoadsFXML {
 
+	/**
+	 * Returning loader is optional, provided for post load modification,
+	 * but is also fire and forget if loadFXML() is called also
+	 *
+	 * @return fully loaded FXMLLoader.
+	 */
 	@FXML
 	default FXMLLoader loadFXML(){
 		FXMLLoader loader = new FXMLLoader();
@@ -21,9 +32,14 @@ public interface LoadsFXML {
 			loader.load();
 			loadControls();
 		}
-		catch (IOException e) {e.printStackTrace();}
+		catch (Exception e) {e.printStackTrace();}
 		return loader;
 	}
 
-	void loadControls() throws IOException;
+	/**
+	 * Load controls.
+	 *
+	 *
+	 */
+	void loadControls() throws Exception;
 }

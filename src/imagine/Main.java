@@ -5,17 +5,15 @@
 
 package imagine;
 
-import imagine.scenes.core.Window;
-import lib.Screen;
+import imagine.scenes.ContentLibrary;
 import javafx.application.Application;
 import javafx.fxml.FXML;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+import lib.general.Screen;
 
 public class Main extends Application implements Screen{
 
-    @FXML
-    public static Window window;
     @FXML
     public static Stage stage;
 
@@ -23,9 +21,8 @@ public class Main extends Application implements Screen{
     public void start(Stage primaryStage) {
         primaryStage.setTitle("Imagine");
         primaryStage.setMaximized(true);
-        window = new Window(primaryStage);
-        Scene scene = new Scene(window);
-        scene.setRoot(window);
+        Scene scene = new Scene(ContentLibrary.window);
+        scene.setRoot(ContentLibrary.window);
         primaryStage.setScene(scene);
         stage = primaryStage;
         show();
@@ -38,5 +35,6 @@ public class Main extends Application implements Screen{
     public static void main(String[] args) {
         launch(args);
     }
+
 
 }

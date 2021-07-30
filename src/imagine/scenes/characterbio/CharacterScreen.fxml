@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.layout.*?>
+
+<!--
+  ~ © Owned by Alyce Kat Osbourne, AKA Alycrafticus, All Rights Reserved.
+  -->
+
+<AnchorPane xmlns="http://javafx.com/javafx"
+            prefHeight="400.0" prefWidth="600.0">
+
+</AnchorPane>

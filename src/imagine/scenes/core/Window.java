@@ -4,23 +4,29 @@
 
 package imagine.scenes.core;
 
+import imagine.Main;
+import imagine.scenes.ContentLibrary;
 import imagine.scenes.menus.MainMenu;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.SplitPane;
 import javafx.scene.layout.BorderPane;
-import javafx.stage.Stage;
-import lib.LoadsFXML;
-import lib.DataSerialization;
+import lib.fxml.LoadsFXML;
+import lib.serialization.gson.GsonDataSerialization;
+import lib.serialization.gson.SaveData;
 
-public class Window extends SplitPane implements LoadsFXML, DataSerialization {
+public class Window extends SplitPane implements LoadsFXML, GsonDataSerialization {
 
-	Window loadedWindow;
-	MainMenu menu;
+	MainMenu menu = (MainMenu) ContentLibrary.Menus.MainMenu.content;
 
-	@FXML
-	private final Stage primaryStage;
+	SaveData savedata = new SaveData() {
+		@Override
+		public String getFile() {
+			return "save.json";
+		}
+	};
+
 	@FXML
 	public MenuItem saveFile;
 	@FXML
@@ -36,11 +42,8 @@ public class Window extends SplitPane implements LoadsFXML, DataSerialization {
 	@FXML
 	public BorderPane content;
 
-	public Window(Stage primaryStage) {
+	public Window() {
 		loadFXML();
-		loadedWindow = this;
-		menu = new MainMenu();
-		this.primaryStage = primaryStage;
 		this.changeContent(menu);
 	}
 
@@ -50,7 +53,9 @@ public class Window extends SplitPane implements LoadsFXML, DataSerialization {
 	}
 
 	public void loadControls() {
-		this.close.setOnAction(event -> this.primaryStage.close());
+		this.saveFile.setOnAction(event -> savedata.saveFile(savedata.getFile()));
+		this.loadFile.setOnAction(event -> savedata.loadFile(savedata.getFile()));
+		this.close.setOnAction(event -> Main.stage.close());
 		this.returnToMenu.setOnAction(event -> this.changeContent(menu));
 		this.newFile.setOnAction(event -> this.changeContent(menu));
 	}
