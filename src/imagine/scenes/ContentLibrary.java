@@ -8,7 +8,6 @@
 
 package imagine.scenes;
 
-import imagine.scenes.characterbio.CreateCharacter;
 import imagine.scenes.characterbio.CharacterScreen;
 import imagine.scenes.core.Window;
 import imagine.scenes.menus.MainMenu;
@@ -28,8 +27,8 @@ public class ContentLibrary {
 
 	public enum CharacterBiograpies{
 
-		CharacterScreen(new CharacterScreen()),
-		CreateCharacter(new CreateCharacter());
+		LoadCharacterScreen(new CharacterScreen()),
+		LoadCreateCharacter(null);
 
 		public Parent content;
 		CharacterBiograpies(Parent parent){

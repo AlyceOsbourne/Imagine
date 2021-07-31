@@ -4,7 +4,6 @@
 
 package imagine.scenes.characterbio.data;
 
-import com.google.gson.annotations.Expose;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -14,22 +13,16 @@ public class Character {
 	@NotNull
 	String nickname;
 
-	@Expose
 	@Nullable
 	private final Info info;
-	@Expose
 	@Nullable
 	private final Physical physical;
-	@Expose
 	@Nullable
 	private final Personality personality;
-	@Expose
 	@Nullable
 	private final History history;
-	@Expose
 	@Nullable
 	private final Relationships relationships;
-	@Expose
 	@Nullable
 	private final Skills skills;
 
@@ -45,59 +38,109 @@ public class Character {
 
 	class Info{
 
-		@Expose
+
 		@Nullable
 		Integer age;
-		@Expose
+
 		@Nullable
-		String title,forename,middlename,surname,gender,sex,sexuality;
+		String title,
+		forename,
+		middlename,
+		surname,
+		gender,
+		sex,
+		sexuality;
 
 
 
 	}
+
 	class Physical{
-		@Expose
+
 		@Nullable
-		String weight,height,musclature,haircolour,skincolour,eyecolour,race,disabilities,markings,gait,voice;
+		String weight,
+		height,
+		physique,
+		haircolour,
+		skincolour,
+		eyecolour,
+		race,
+		disabilities,
+		markings,
+		gait,
+		voice;
 	}
 
 	class Personality{
-		@Expose
+
 		@Nullable
-		String alignment,drive,fear,education,openness,conscientiousness,extraversion,agreebleness,neuroticism;
-		@Expose
+		String alignment,
+		drive,
+		fear,
+		education,
+		openness,
+		conscientiousness,
+		extraversion,
+		agreebleness,
+		neuroticism;
+
 		@Nullable
-		String theology,honor,honesty,generosity,kindness,pleasures,dislikes,clothingstyle,mannerisms;
+		String theology,
+		honor,
+		honesty,
+		generosity,
+		kindness,
+		pleasures,
+		dislikes,
+		clothingstyle,
+		mannerisms;
 	}
+
 	class History{
-		@Expose
+
 		@Nullable
-		String placeofbirth,homecountry,homeregion,hometown,briefhistory,longhistory,fondmemories,aversememories,definingmoments;
+		String placeofbirth,
+		homecountry,
+		homeregion,
+		hometown,
+		briefhistory,
+		longhistory,
+		fondmemories,
+		aversememories,
+		definingmoments;
 	}
+
 	class Relationships{
-		@Expose
+
 		@Nullable
-		String clan,faction;
-		@Expose
+		String clan,
+		faction;
+
 		@Nullable
 		List<Character> family;
-		@Expose
+
 		@Nullable
 		List<Character> friends;
-		@Expose
+
 		@Nullable
 		List<Character> enemies;
-		@Expose
+
 		@Nullable
 		List<Character> allies;
-		@Expose
+
 		@Nullable
 		List<Character> lovers;
 	}
+
 	class Skills{
-		@Expose
+
 		@Nullable
-		String majorclass,minorclass,physicalskills,mysticalskills,dexterityskills,thinkingskills;
+		String majorclass,
+		minorclass,
+		physicalskills,
+		mysticalskills,
+		dexterityskills,
+		thinkingskills;
 	}
 
 

@@ -19,12 +19,12 @@ public class Main extends Application implements Screen{
 
     @Override
     public void start(Stage primaryStage) {
+        stage = primaryStage;
         primaryStage.setTitle("Imagine");
         primaryStage.setMaximized(true);
         Scene scene = new Scene(ContentLibrary.window);
         scene.setRoot(ContentLibrary.window);
         primaryStage.setScene(scene);
-        stage = primaryStage;
         show();
     }
 

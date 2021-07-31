@@ -3,125 +3,473 @@
 <?import javafx.geometry.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
 
 <!--
   ~ © Owned by Alyce Kat Osbourne, AKA Alycrafticus, All Rights Reserved.
   -->
 
-
 <fx:root prefHeight="768.0" prefWidth="1024.0" type="BorderPane" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1">
    <center>
        <TabPane prefHeight="200.0" prefWidth="200.0" tabClosingPolicy="UNAVAILABLE" BorderPane.alignment="CENTER">
            <Tab text="Physical">
-               <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0"/>
+            <GridPane alignment="CENTER">
+              <columnConstraints>
+                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                  <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                  <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                  <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                  <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                  <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+              </columnConstraints>
+              <rowConstraints>
+                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+              </rowConstraints>
+               <children>
+                  <Label text="Race" GridPane.halignment="CENTER" GridPane.valignment="CENTER">
+                     <font>
+                        <Font name="Blackadder ITC" size="24.0" />
+                     </font>
+                  </Label>
+                  <Label text="Weight" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="CENTER">
+                     <font>
+                        <Font name="Blackadder ITC" size="24.0" />
+                     </font>
+                  </Label>
+                  <Label text="Height" GridPane.halignment="CENTER" GridPane.rowIndex="2" GridPane.valignment="CENTER">
+                     <font>
+                        <Font name="Blackadder ITC" size="24.0" />
+                     </font>
+                  </Label>
+                  <Label text="Physique" GridPane.halignment="CENTER" GridPane.rowIndex="3" GridPane.valignment="CENTER">
+                     <font>
+                        <Font name="Blackadder ITC" size="24.0" />
+                     </font>
+                  </Label>
+                  <Label text="Skin Colour" GridPane.columnIndex="4" GridPane.halignment="CENTER" GridPane.valignment="CENTER">
+                     <font>
+                        <Font name="Blackadder ITC" size="24.0" />
+                     </font>
+                  </Label>
+                  <Label text="Hair Colour" GridPane.columnIndex="4" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="CENTER">
+                     <font>
+                        <Font name="Blackadder ITC" size="24.0" />
+                     </font>
+                  </Label>
+                  <Label text="Eye Colour" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.valignment="CENTER">
+                     <font>
+                        <Font name="Blackadder ITC" size="24.0" />
+                     </font>
+                  </Label>
+                  <Label text="Markings" GridPane.columnIndex="4" GridPane.halignment="CENTER" GridPane.rowIndex="2" GridPane.valignment="CENTER">
+                     <font>
+                        <Font name="Blackadder ITC" size="24.0" />
+                     </font>
+                  </Label>
+                  <Label text="Disabilities" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="CENTER">
+                     <font>
+                        <Font name="Blackadder ITC" size="24.0" />
+                     </font>
+                  </Label>
+                  <Label text="Gait" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.rowIndex="2" GridPane.valignment="CENTER">
+                     <font>
+                        <Font name="Blackadder ITC" size="24.0" />
+                     </font>
+                  </Label>
+                  <Label text="Voice" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.rowIndex="3" GridPane.valignment="CENTER">
+                     <font>
+                        <Font name="Blackadder ITC" size="24.0" />
+                     </font>
+                  </Label>
+                  <TextField alignment="CENTER" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.hgrow="SOMETIMES" GridPane.valignment="CENTER" GridPane.vgrow="SOMETIMES">
+                     <font>
+                        <Font name="Blackadder ITC" size="24.0" />
+                     </font>
+                  </TextField>
+                  <TextField alignment="CENTER" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.hgrow="SOMETIMES" GridPane.rowIndex="1" GridPane.valignment="CENTER" GridPane.vgrow="SOMETIMES">
+                     <font>
+                        <Font name="Blackadder ITC" size="24.0" />
+                     </font>
+                  </TextField>
+                  <TextField alignment="CENTER" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.hgrow="SOMETIMES" GridPane.rowIndex="2" GridPane.valignment="CENTER" GridPane.vgrow="SOMETIMES">
+                     <font>
+                        <Font name="Blackadder ITC" size="24.0" />
+                     </font>
+                  </TextField>
+                  <TextField alignment="CENTER" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.hgrow="SOMETIMES" GridPane.rowIndex="3" GridPane.valignment="CENTER" GridPane.vgrow="SOMETIMES">
+                     <font>
+                        <Font name="Blackadder ITC" size="24.0" />
+                     </font>
+                  </TextField>
+                  <TextField alignment="CENTER" GridPane.columnIndex="5" GridPane.halignment="CENTER" GridPane.hgrow="SOMETIMES" GridPane.valignment="CENTER" GridPane.vgrow="SOMETIMES">
+                     <font>
+                        <Font name="Blackadder ITC" size="24.0" />
+                     </font>
+                  </TextField>
+                  <TextField alignment="CENTER" GridPane.columnIndex="5" GridPane.halignment="CENTER" GridPane.hgrow="SOMETIMES" GridPane.rowIndex="1" GridPane.valignment="CENTER" GridPane.vgrow="SOMETIMES">
+                     <font>
+                        <Font name="Blackadder ITC" size="24.0" />
+                     </font>
+                  </TextField>
+                  <TextField alignment="CENTER" GridPane.columnIndex="3" GridPane.halignment="CENTER" GridPane.hgrow="SOMETIMES" GridPane.valignment="CENTER" GridPane.vgrow="SOMETIMES">
+                     <font>
+                        <Font name="Blackadder ITC" size="24.0" />
+                     </font>
+                  </TextField>
+                  <TextField alignment="CENTER" GridPane.columnIndex="5" GridPane.halignment="CENTER" GridPane.hgrow="SOMETIMES" GridPane.rowIndex="2" GridPane.valignment="CENTER" GridPane.vgrow="SOMETIMES">
+                     <font>
+                        <Font name="Blackadder ITC" size="24.0" />
+                     </font>
+                  </TextField>
+                  <TextField alignment="CENTER" GridPane.columnIndex="3" GridPane.halignment="CENTER" GridPane.hgrow="SOMETIMES" GridPane.rowIndex="1" GridPane.valignment="CENTER" GridPane.vgrow="SOMETIMES">
+                     <font>
+                        <Font name="Blackadder ITC" size="24.0" />
+                     </font>
+                  </TextField>
+                  <TextField alignment="CENTER" GridPane.columnIndex="3" GridPane.halignment="CENTER" GridPane.hgrow="SOMETIMES" GridPane.rowIndex="2" GridPane.valignment="CENTER" GridPane.vgrow="SOMETIMES">
+                     <font>
+                        <Font name="Blackadder ITC" size="24.0" />
+                     </font>
+                  </TextField>
+                  <TextField alignment="CENTER" GridPane.columnIndex="3" GridPane.halignment="CENTER" GridPane.hgrow="SOMETIMES" GridPane.rowIndex="3" GridPane.valignment="CENTER" GridPane.vgrow="SOMETIMES">
+                     <font>
+                        <Font name="Blackadder ITC" size="24.0" />
+                     </font>
+                  </TextField>
+               </children>
+               <opaqueInsets>
+                  <Insets />
+               </opaqueInsets>
+               <padding>
+                  <Insets bottom="30.0" left="30.0" right="30.0" top="30.0" />
+               </padding>
+            </GridPane>
            </Tab>
            <Tab text="Personality">
-               <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0"/>
+               <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+               <children>
+                  <Accordion prefHeight="539.2" prefWidth="1024.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                    <panes>
+                      <TitledPane animated="false" text="untitled 1">
+                        <content>
+                          <AnchorPane>
+                                 <children>
+                                    <GridPane prefHeight="461.6" prefWidth="1022.4" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                      <columnConstraints>
+                                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                                          <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                                      </columnConstraints>
+                                      <rowConstraints>
+                                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                      </rowConstraints>
+                                       <children>
+                                          <Label alignment="CENTER" contentDisplay="CENTER" text="Drives" GridPane.halignment="CENTER" GridPane.hgrow="NEVER" GridPane.rowIndex="1" GridPane.valignment="CENTER" GridPane.vgrow="SOMETIMES">
+                                             <font>
+                                                <Font name="Blackadder ITC" size="24.0" />
+                                             </font>
+                                          </Label>
+                                          <TextField GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.hgrow="ALWAYS" GridPane.rowIndex="1" GridPane.valignment="CENTER" GridPane.vgrow="SOMETIMES">
+                                             <font>
+                                                <Font name="Blackadder ITC" size="24.0" />
+                                             </font>
+                                          </TextField>
+                                          <Label alignment="CENTER" contentDisplay="CENTER" layoutX="72.0" layoutY="152.0" text="Education" GridPane.halignment="CENTER" GridPane.hgrow="NEVER" GridPane.rowIndex="3" GridPane.valignment="CENTER" GridPane.vgrow="SOMETIMES">
+                                             <font>
+                                                <Font name="Blackadder ITC" size="24.0" />
+                                             </font>
+                                          </Label>
+                                          <TextField layoutX="181.0" layoutY="144.0" GridPane.columnIndex="1" GridPane.hgrow="ALWAYS" GridPane.vgrow="SOMETIMES">
+                                             <font>
+                                                <Font name="Blackadder ITC" size="24.0" />
+                                             </font>
+                                          </TextField>
+                                          <Label alignment="CENTER" contentDisplay="CENTER" layoutX="72.0" layoutY="152.0" text="Fears" GridPane.halignment="CENTER" GridPane.hgrow="NEVER" GridPane.rowIndex="2" GridPane.valignment="CENTER" GridPane.vgrow="SOMETIMES">
+                                             <font>
+                                                <Font name="Blackadder ITC" size="24.0" />
+                                             </font>
+                                          </Label>
+                                          <Label alignment="CENTER" contentDisplay="CENTER" layoutX="10.0" layoutY="368.0" text="Theology" GridPane.halignment="CENTER" GridPane.hgrow="NEVER" GridPane.rowIndex="4" GridPane.valignment="CENTER" GridPane.vgrow="SOMETIMES">
+                                             <font>
+                                                <Font name="Blackadder ITC" size="24.0" />
+                                             </font>
+                                          </Label>
+                                          <Label alignment="CENTER" contentDisplay="CENTER" layoutX="694.0" layoutY="477.0" text="Alignment" GridPane.halignment="CENTER" GridPane.hgrow="NEVER" GridPane.valignment="CENTER" GridPane.vgrow="SOMETIMES">
+                                             <font>
+                                                <Font name="Blackadder ITC" size="24.0" />
+                                             </font>
+                                          </Label>
+                                          <TextField layoutX="181.0" layoutY="144.0" GridPane.columnIndex="1" GridPane.hgrow="ALWAYS" GridPane.rowIndex="2" GridPane.vgrow="SOMETIMES">
+                                             <font>
+                                                <Font name="Blackadder ITC" size="24.0" />
+                                             </font>
+                                          </TextField>
+                                          <TextField layoutX="181.0" layoutY="252.0" GridPane.columnIndex="1" GridPane.hgrow="ALWAYS" GridPane.rowIndex="3" GridPane.vgrow="SOMETIMES">
+                                             <font>
+                                                <Font name="Blackadder ITC" size="24.0" />
+                                             </font>
+                                          </TextField>
+                                          <TextField layoutX="181.0" layoutY="360.0" GridPane.columnIndex="1" GridPane.hgrow="ALWAYS" GridPane.rowIndex="4" GridPane.vgrow="SOMETIMES">
+                                             <font>
+                                                <Font name="Blackadder ITC" size="24.0" />
+                                             </font>
+                                          </TextField>
+                                       </children>
+                                       <padding>
+                                          <Insets bottom="30.0" left="30.0" right="30.0" top="30.0" />
+                                       </padding>
+                                    </GridPane>
+                                 </children>
+                              </AnchorPane>
+                        </content>
+                      </TitledPane>
+                      <TitledPane animated="false" text="untitled 2">
+                        <content>
+                          <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                                 <children>
+                                    <GridPane prefHeight="0.0" prefWidth="1022.4" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                      <rowConstraints>
+                                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                      </rowConstraints>
+                                       <children>
+                                          <Label alignment="CENTER" contentDisplay="CENTER" text="Neuroticism" GridPane.halignment="CENTER" GridPane.hgrow="NEVER" GridPane.rowIndex="4" GridPane.valignment="CENTER" GridPane.vgrow="SOMETIMES">
+                                             <font>
+                                                <Font name="Blackadder ITC" size="24.0" />
+                                             </font>
+                                          </Label>
+                                          <Label alignment="CENTER" contentDisplay="CENTER" text="Agreebleness" GridPane.halignment="CENTER" GridPane.hgrow="NEVER" GridPane.rowIndex="3" GridPane.valignment="CENTER" GridPane.vgrow="SOMETIMES">
+                                             <font>
+                                                <Font name="Blackadder ITC" size="24.0" />
+                                             </font>
+                                          </Label>
+                                          <Label alignment="CENTER" contentDisplay="CENTER" text="Extraversion" GridPane.halignment="CENTER" GridPane.hgrow="NEVER" GridPane.rowIndex="2" GridPane.valignment="CENTER" GridPane.vgrow="SOMETIMES">
+                                             <font>
+                                                <Font name="Blackadder ITC" size="24.0" />
+                                             </font>
+                                          </Label>
+                                          <Label alignment="CENTER" contentDisplay="CENTER" text="Conscientiousness" GridPane.halignment="CENTER" GridPane.hgrow="NEVER" GridPane.rowIndex="1" GridPane.valignment="CENTER" GridPane.vgrow="SOMETIMES">
+                                             <font>
+                                                <Font name="Blackadder ITC" size="24.0" />
+                                             </font>
+                                          </Label>
+                                          <Label alignment="CENTER" contentDisplay="CENTER" text="Openness" GridPane.halignment="CENTER" GridPane.hgrow="NEVER" GridPane.valignment="CENTER" GridPane.vgrow="SOMETIMES">
+                                             <font>
+                                                <Font name="Blackadder ITC" size="24.0" />
+                                             </font>
+                                          </Label>
+                                          <TextField GridPane.columnIndex="1" GridPane.hgrow="SOMETIMES" GridPane.vgrow="SOMETIMES">
+                                             <font>
+                                                <Font name="Blackadder ITC" size="24.0" />
+                                             </font>
+                                          </TextField>
+                                          <TextField GridPane.columnIndex="1" GridPane.hgrow="SOMETIMES" GridPane.rowIndex="1" GridPane.vgrow="SOMETIMES">
+                                             <font>
+                                                <Font name="Blackadder ITC" size="24.0" />
+                                             </font>
+                                          </TextField>
+                                          <TextField GridPane.columnIndex="1" GridPane.hgrow="SOMETIMES" GridPane.rowIndex="2" GridPane.vgrow="SOMETIMES">
+                                             <font>
+                                                <Font name="Blackadder ITC" size="24.0" />
+                                             </font>
+                                          </TextField>
+                                          <TextField GridPane.columnIndex="1" GridPane.hgrow="SOMETIMES" GridPane.rowIndex="3" GridPane.vgrow="SOMETIMES">
+                                             <font>
+                                                <Font name="Blackadder ITC" size="24.0" />
+                                             </font>
+                                          </TextField>
+                                          <TextField GridPane.columnIndex="1" GridPane.hgrow="SOMETIMES" GridPane.rowIndex="4" GridPane.vgrow="SOMETIMES">
+                                             <font>
+                                                <Font name="Blackadder ITC" size="24.0" />
+                                             </font>
+                                          </TextField>
+                                       </children>
+                                       <columnConstraints>
+                                          <ColumnConstraints />
+                                          <ColumnConstraints />
+                                       </columnConstraints>
+                                    </GridPane>
+                                 </children>
+                              </AnchorPane>
+                        </content>
+                      </TitledPane>
+                      <TitledPane animated="false" text="untitled 3">
+                        <content>
+                          <AnchorPane>
+                                 <children>
+                                    <GridPane prefHeight="461.6" prefWidth="1022.4" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                      <rowConstraints>
+                                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                          <RowConstraints />
+                                          <RowConstraints />
+                                      </rowConstraints>
+                                       <children>
+                                          <Label alignment="CENTER" contentDisplay="CENTER" text="Honor" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.hgrow="NEVER" GridPane.valignment="CENTER" GridPane.vgrow="SOMETIMES">
+                                             <font>
+                                                <Font name="Blackadder ITC" size="24.0" />
+                                             </font>
+                                          </Label>
+                                          <Label alignment="CENTER" contentDisplay="CENTER" text="Honesty" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.hgrow="NEVER" GridPane.rowIndex="1" GridPane.valignment="CENTER" GridPane.vgrow="SOMETIMES">
+                                             <font>
+                                                <Font name="Blackadder ITC" size="24.0" />
+                                             </font>
+                                          </Label>
+                                          <Label alignment="CENTER" contentDisplay="CENTER" text="Generosity" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.hgrow="NEVER" GridPane.rowIndex="2" GridPane.valignment="CENTER" GridPane.vgrow="SOMETIMES">
+                                             <font>
+                                                <Font name="Blackadder ITC" size="24.0" />
+                                             </font>
+                                          </Label>
+                                          <Label alignment="CENTER" contentDisplay="CENTER" text="Kindness" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.hgrow="NEVER" GridPane.rowIndex="3" GridPane.valignment="CENTER" GridPane.vgrow="SOMETIMES">
+                                             <font>
+                                                <Font name="Blackadder ITC" size="24.0" />
+                                             </font>
+                                          </Label>
+                                          <Label alignment="CENTER" contentDisplay="CENTER" text="Intelligence" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.hgrow="NEVER" GridPane.rowIndex="4" GridPane.valignment="CENTER" GridPane.vgrow="SOMETIMES">
+                                             <font>
+                                                <Font name="Blackadder ITC" size="24.0" />
+                                             </font>
+                                          </Label>
+                                          <TextField GridPane.columnIndex="3" GridPane.hgrow="ALWAYS" GridPane.vgrow="ALWAYS">
+                                             <font>
+                                                <Font name="Blackadder ITC" size="24.0" />
+                                             </font>
+                                          </TextField>
+                                          <TextField GridPane.columnIndex="3" GridPane.hgrow="ALWAYS" GridPane.rowIndex="1" GridPane.vgrow="ALWAYS">
+                                             <font>
+                                                <Font name="Blackadder ITC" size="24.0" />
+                                             </font>
+                                          </TextField>
+                                          <TextField GridPane.columnIndex="3" GridPane.hgrow="ALWAYS" GridPane.rowIndex="2" GridPane.vgrow="ALWAYS">
+                                             <font>
+                                                <Font name="Blackadder ITC" size="24.0" />
+                                             </font>
+                                          </TextField>
+                                          <TextField GridPane.columnIndex="3" GridPane.hgrow="ALWAYS" GridPane.rowIndex="3" GridPane.vgrow="ALWAYS">
+                                             <font>
+                                                <Font name="Blackadder ITC" size="24.0" />
+                                             </font>
+                                          </TextField>
+                                          <TextField GridPane.columnIndex="3" GridPane.hgrow="ALWAYS" GridPane.rowIndex="4" GridPane.vgrow="ALWAYS">
+                                             <font>
+                                                <Font name="Blackadder ITC" size="24.0" />
+                                             </font>
+                                          </TextField>
+                                       </children>
+                                       <columnConstraints>
+                                          <ColumnConstraints />
+                                          <ColumnConstraints />
+                                          <ColumnConstraints />
+                                          <ColumnConstraints />
+                                       </columnConstraints>
+                                    </GridPane>
+                                 </children>
+                              </AnchorPane>
+                        </content>
+                      </TitledPane>
+                    </panes>
+                  </Accordion>
+               </children></AnchorPane>
            </Tab>
            <Tab text="History">
-               <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0"/>
+               <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
            </Tab>
            <Tab text="Relationships">
-               <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0"/>
+               <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
            </Tab>
            <Tab text="Skills">
-               <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0"/>
+               <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
            </Tab>
        </TabPane>
    </center>
    <top>
        <GridPane prefHeight="200.0" prefWidth="1024.0" BorderPane.alignment="CENTER">
            <columnConstraints>
-               <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0"/>
-               <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0"/>
-               <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0"/>
+               <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+               <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+               <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
            </columnConstraints>
            <rowConstraints>
-               <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
+               <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
            </rowConstraints>
            <GridPane>
                <columnConstraints>
-                   <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0"/>
+                   <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
                </columnConstraints>
                <rowConstraints>
-                   <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
-                   <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
-                   <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
-                   <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
+                   <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                   <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                   <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                   <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                </rowConstraints>
-               <TextField alignment="CENTER" maxWidth="-Infinity" prefHeight="30.0" prefWidth="200.0"
-                          promptText="Title" GridPane.halignment="RIGHT" GridPane.rowIndex="1"
-                          GridPane.valignment="CENTER">
+               <TextField alignment="CENTER" maxWidth="-Infinity" prefHeight="30.0" prefWidth="200.0" promptText="Title" GridPane.halignment="RIGHT" GridPane.rowIndex="1" GridPane.valignment="CENTER">
                    <padding>
-                       <Insets bottom="9.0"/>
+                       <Insets bottom="9.0" />
                    </padding>
                </TextField>
-               <TextField alignment="CENTER" maxWidth="-Infinity" prefHeight="30.0" prefWidth="200.0"
-                          promptText="Forename" GridPane.halignment="RIGHT" GridPane.valignment="CENTER">
+               <TextField alignment="CENTER" maxWidth="-Infinity" prefHeight="30.0" prefWidth="200.0" promptText="Forename" GridPane.halignment="RIGHT" GridPane.valignment="CENTER">
                    <padding>
-                       <Insets bottom="9.0"/>
+                       <Insets bottom="9.0" />
                    </padding>
                </TextField>
-               <TextField alignment="CENTER" maxWidth="-Infinity" prefHeight="30.0" prefWidth="200.0"
-                          promptText="Middlename" GridPane.halignment="RIGHT" GridPane.rowIndex="2"
-                          GridPane.valignment="CENTER">
+               <TextField alignment="CENTER" maxWidth="-Infinity" prefHeight="30.0" prefWidth="200.0" promptText="Middlename" GridPane.halignment="RIGHT" GridPane.rowIndex="2" GridPane.valignment="CENTER">
                    <padding>
-                       <Insets bottom="9.0"/>
+                       <Insets bottom="9.0" />
                    </padding>
                </TextField>
-               <TextField alignment="CENTER" maxWidth="-Infinity" prefHeight="30.0" prefWidth="200.0"
-                          promptText="Surname" GridPane.halignment="RIGHT" GridPane.rowIndex="3"
-                          GridPane.valignment="CENTER">
+               <TextField alignment="CENTER" maxWidth="-Infinity" prefHeight="30.0" prefWidth="200.0" promptText="Surname" GridPane.halignment="RIGHT" GridPane.rowIndex="3" GridPane.valignment="CENTER">
                    <padding>
-                       <Insets bottom="9.0"/>
+                       <Insets bottom="9.0" />
                    </padding>
                </TextField>
            </GridPane>
            <GridPane GridPane.columnIndex="2">
                <columnConstraints>
-                   <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0"/>
+                   <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
                </columnConstraints>
                <rowConstraints>
-                   <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
-                   <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
-                   <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
-                   <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
+                   <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                   <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                   <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                   <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                </rowConstraints>
-               <TextField alignment="CENTER" maxWidth="-Infinity" prefHeight="30.0" prefWidth="200.0"
-                          promptText="Gender" GridPane.halignment="LEFT" GridPane.rowIndex="1"
-                          GridPane.valignment="CENTER">
+               <TextField alignment="CENTER" maxWidth="-Infinity" prefHeight="30.0" prefWidth="200.0" promptText="Gender" GridPane.halignment="LEFT" GridPane.rowIndex="1" GridPane.valignment="CENTER">
                    <padding>
-                       <Insets bottom="9.0"/>
+                       <Insets bottom="9.0" />
                    </padding>
                </TextField>
-               <TextField alignment="CENTER" maxWidth="-Infinity" prefHeight="30.0" prefWidth="200.0"
-                          promptText="Age" GridPane.halignment="LEFT" GridPane.valignment="CENTER">
+               <TextField alignment="CENTER" maxWidth="-Infinity" prefHeight="30.0" prefWidth="200.0" promptText="Age" GridPane.halignment="LEFT" GridPane.valignment="CENTER">
                    <padding>
-                       <Insets bottom="9.0"/>
+                       <Insets bottom="9.0" />
                    </padding>
                </TextField>
-               <TextField alignment="CENTER" maxWidth="-Infinity" prefHeight="30.0" prefWidth="200.0"
-                          promptText="Sex" GridPane.halignment="LEFT" GridPane.rowIndex="2"
-                          GridPane.valignment="CENTER">
+               <TextField alignment="CENTER" maxWidth="-Infinity" prefHeight="30.0" prefWidth="200.0" promptText="Sex" GridPane.halignment="LEFT" GridPane.rowIndex="2" GridPane.valignment="CENTER">
                    <padding>
-                       <Insets bottom="9.0"/>
+                       <Insets bottom="9.0" />
                    </padding>
                </TextField>
-               <TextField alignment="CENTER" maxWidth="-Infinity" prefHeight="30.0" prefWidth="200.0"
-                          promptText="Sexuality" GridPane.halignment="LEFT" GridPane.rowIndex="3"
-                          GridPane.valignment="CENTER">
+               <TextField alignment="CENTER" maxWidth="-Infinity" prefHeight="30.0" prefWidth="200.0" promptText="Sexuality" GridPane.halignment="LEFT" GridPane.rowIndex="3" GridPane.valignment="CENTER">
                    <padding>
-                       <Insets bottom="9.0"/>
+                       <Insets bottom="9.0" />
                    </padding>
                </TextField>
            </GridPane>
-           <TextField alignment="CENTER" maxWidth="-Infinity" prefHeight="30.0" prefWidth="200.0" promptText="Nickname"
-                      GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.valignment="BOTTOM">
+           <TextField alignment="CENTER" maxWidth="-Infinity" prefHeight="30.0" prefWidth="200.0" promptText="Nickname" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.valignment="BOTTOM">
               <GridPane.margin>
-                  <Insets bottom="9.0"/>
+                  <Insets bottom="9.0" />
               </GridPane.margin>
               <padding>
-                  <Insets bottom="9.0"/>
+                  <Insets bottom="9.0" />
               </padding>
            </TextField>
        </GridPane>

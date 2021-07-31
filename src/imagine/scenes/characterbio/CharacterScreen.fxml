@@ -1,12 +1,153 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.*?>
 <?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
 
 <!--
   ~ © Owned by Alyce Kat Osbourne, AKA Alycrafticus, All Rights Reserved.
   -->
 
-<AnchorPane xmlns="http://javafx.com/javafx"
-            prefHeight="400.0" prefWidth="600.0">
-
-</AnchorPane>
+<fx:root dividerPositions="0.25" orientation="VERTICAL" prefHeight="768.0" prefWidth="1024.0" type="SplitPane" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1">
+  <items>
+    <AnchorPane>
+         <children>
+            <Label alignment="CENTER" contentDisplay="CENTER" layoutX="497.0" layoutY="86.0" mnemonicParsing="true" prefHeight="188.0" prefWidth="1022.4" text="Character Biographies" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+               <font>
+                  <Font name="Blackadder ITC" size="96.0" />
+               </font>
+            </Label>
+         </children>
+      </AnchorPane>
+    <AnchorPane>
+         <children>
+            <SplitPane dividerPositions="0.25" layoutX="200.0" layoutY="68.0" prefHeight="296.0" prefWidth="599.2" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+              <items>
+                <AnchorPane>
+                     <children>
+                        <TreeView fx:id="characterlibrary" layoutX="26.0" layoutY="186.0" prefHeight="571.2" prefWidth="252.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+                     </children>
+                  </AnchorPane>
+                <AnchorPane>
+                     <children>
+                        <SplitPane dividerPositions="0.75" layoutX="302.0" layoutY="186.0" orientation="VERTICAL" prefHeight="571.2" prefWidth="763.2" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                          <items>
+                            <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="100.0" prefWidth="160.0">
+                                 <children>
+                                    <HBox layoutX="281.0" layoutY="162.0" prefHeight="424.0" prefWidth="762.4" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                       <children>
+                                          <VBox alignment="CENTER" HBox.hgrow="SOMETIMES">
+                                             <children>
+                                                <TextField fx:id="title" alignment="CENTER">
+                                                   <VBox.margin>
+                                                      <Insets bottom="25.0" left="25.0" right="25.0" top="25.0" />
+                                                   </VBox.margin>
+                                                </TextField>
+                                                <TextField fx:id="forename" alignment="CENTER">
+                                                   <VBox.margin>
+                                                      <Insets bottom="25.0" left="25.0" right="25.0" top="25.0" />
+                                                   </VBox.margin>
+                                                </TextField>
+                                                <TextField fx:id="middlename" alignment="CENTER">
+                                                   <VBox.margin>
+                                                      <Insets bottom="25.0" left="25.0" right="25.0" top="25.0" />
+                                                   </VBox.margin>
+                                                </TextField>
+                                                <TextField fx:id="surname" alignment="CENTER">
+                                                   <VBox.margin>
+                                                      <Insets bottom="25.0" left="25.0" right="25.0" top="25.0" />
+                                                   </VBox.margin>
+                                                </TextField>
+                                             </children>
+                                          </VBox>
+                                          <VBox alignment="CENTER" spacing="25.0" HBox.hgrow="SOMETIMES">
+                                             <children>
+                                                <TextField fx:id="nickname">
+                                                   <VBox.margin>
+                                                      <Insets />
+                                                   </VBox.margin>
+                                                </TextField>
+                                                <ImageView fx:id="characterimage" fitHeight="200.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true">
+                                                   <viewport>
+                                                      <Rectangle2D height="300.0" width="300.0" />
+                                                   </viewport>
+                                                   <VBox.margin>
+                                                      <Insets />
+                                                   </VBox.margin>
+                                                </ImageView>
+                                             </children>
+                                             <HBox.margin>
+                                                <Insets />
+                                             </HBox.margin>
+                                          </VBox>
+                                          <VBox alignment="CENTER" HBox.hgrow="SOMETIMES">
+                                             <children>
+                                                <TextField fx:id="age" alignment="CENTER">
+                                                   <VBox.margin>
+                                                      <Insets bottom="25.0" left="25.0" right="25.0" top="25.0" />
+                                                   </VBox.margin>
+                                                </TextField>
+                                                <TextField fx:id="gender" alignment="CENTER">
+                                                   <VBox.margin>
+                                                      <Insets bottom="25.0" left="25.0" right="25.0" top="25.0" />
+                                                   </VBox.margin>
+                                                </TextField>
+                                                <TextField fx:id="sex" alignment="CENTER">
+                                                   <VBox.margin>
+                                                      <Insets bottom="25.0" left="25.0" right="25.0" top="25.0" />
+                                                   </VBox.margin>
+                                                </TextField>
+                                                <TextField fx:id="sexuality" alignment="CENTER">
+                                                   <VBox.margin>
+                                                      <Insets bottom="25.0" left="25.0" right="25.0" top="25.0" />
+                                                   </VBox.margin>
+                                                </TextField>
+                                             </children>
+                                          </VBox>
+                                       </children>
+                                    </HBox>
+                                 </children>
+                              </AnchorPane>
+                            <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="100.0" prefWidth="160.0">
+                                 <children>
+                                    <HBox alignment="CENTER" layoutX="281.0" layoutY="20.0" prefHeight="140.0" prefWidth="762.4" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                       <padding>
+                                          <Insets left="100.0" right="100.0" />
+                                       </padding>
+                                       <children>
+                                          <Button fx:id="create" contentDisplay="CENTER" mnemonicParsing="false" prefHeight="70.0" prefWidth="70.0" text="Create" textAlignment="CENTER" HBox.hgrow="ALWAYS">
+                                             <HBox.margin>
+                                                <Insets left="30.0" right="30.0" />
+                                             </HBox.margin>
+                                          </Button>
+                                          <Button fx:id="edit" contentDisplay="CENTER" mnemonicParsing="false" prefHeight="70.0" prefWidth="70.0" text="Edit" textAlignment="CENTER" HBox.hgrow="ALWAYS">
+                                             <HBox.margin>
+                                                <Insets left="30.0" right="30.0" />
+                                             </HBox.margin>
+                                          </Button>
+                                          <Button fx:id="delete" contentDisplay="CENTER" mnemonicParsing="false" prefHeight="70.0" prefWidth="70.0" text="Delete" textAlignment="CENTER" HBox.hgrow="ALWAYS">
+                                             <HBox.margin>
+                                                <Insets left="30.0" right="30.0" />
+                                             </HBox.margin>
+                                          </Button>
+                                          <Button fx:id="random" alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" prefHeight="70.0" prefWidth="70.0" text="Random" textAlignment="CENTER" HBox.hgrow="ALWAYS">
+                                             <HBox.margin>
+                                                <Insets left="30.0" right="30.0" />
+                                             </HBox.margin>
+                                          </Button>
+                                       </children>
+                                    </HBox>
+                                 </children>
+                              </AnchorPane>
+                          </items>
+                        </SplitPane>
+                     </children>
+                  </AnchorPane>
+              </items>
+            </SplitPane>
+         </children>
+      </AnchorPane>
+  </items>
+</fx:root>

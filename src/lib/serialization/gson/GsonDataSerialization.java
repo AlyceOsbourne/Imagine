@@ -22,23 +22,17 @@ import java.io.*;
 import java.util.logging.Logger;
 
 public interface GsonDataSerialization {
+	Gson gson = new GsonBuilder().setPrettyPrinting().excludeFieldsWithoutExposeAnnotation().serializeNulls().enableComplexMapKeySerialization().create();
 
 	Logger log = Logger.getLogger("SaveLogger");
 
-	default <SERIALIZE> void serializeObject(SERIALIZE toSerialize, Class<SERIALIZE> type, String filename) {
-		File file = new File(filename);
+	default <SERIALIZE> void serializeObject(SERIALIZE toSerialize, Class<SERIALIZE> type, File file) {
+
 		log.info(file.getAbsolutePath());
 		SERIALIZE serializeObject = type.cast(toSerialize);
 		log.info(serializeObject.toString());
 		try {
 			if ((file.exists() || (file.createNewFile())) && (file.canWrite() && file.canRead())) {
-				GsonBuilder gsonBuilder = new GsonBuilder();
-				gsonBuilder.setPrettyPrinting();
-				gsonBuilder.enableComplexMapKeySerialization();
-				gsonBuilder.excludeFieldsWithoutExposeAnnotation();
-				gsonBuilder.serializeNulls();
-				Gson gson = gsonBuilder.create();
-				gson.newJsonWriter(new BufferedWriter(new FileWriter(file)));
 				gson.toJson(serializeObject, type, new JsonWriter(new BufferedWriter(new FileWriter(file))));
 			}
 		} catch (IOException e) {
@@ -46,19 +40,15 @@ public interface GsonDataSerialization {
 		}
 	}
 
-	default <DESERIALIZE> DESERIALIZE deserializeObject(Class<?> type, String filename) {
+	default <DESERIALIZE> DESERIALIZE deserializeObject(Class<DESERIALIZE> type, File file) {
 
 		try {
-			File file = new File(filename);
-			Gson gson = new GsonBuilder().setPrettyPrinting().excludeFieldsWithoutExposeAnnotation().serializeNulls().enableComplexMapKeySerialization().create();
-			DESERIALIZE deserializeObject = null;
 			if ((file.exists()))
-				deserializeObject = (gson.fromJson(new JsonReader(new BufferedReader(new FileReader(file))), type));
-			return deserializeObject;
+			return type.cast(gson.fromJson(new JsonReader(new BufferedReader(new FileReader(file))), type));
 		} catch (IOException e) {
 			e.printStackTrace();
-			return null;
 		}
+		return null;
 	}
 
 
