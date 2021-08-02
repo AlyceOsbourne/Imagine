@@ -26,7 +26,13 @@ public class Character {
 	@Nullable
 	private final Skills skills;
 
-	Character(String nickname, Info info, Physical physical, Personality personality, History history, Relationships relationships, Skills skills){
+	Character(@NotNull String nickname,
+	          @Nullable Info info,
+	          @Nullable Physical physical,
+	          @Nullable Personality personality,
+	          @Nullable History history,
+	          @Nullable Relationships relationships,
+	          @Nullable Skills skills){
 		this.nickname = nickname;
 		this.info = info;
 		this.physical = physical;
@@ -40,16 +46,16 @@ public class Character {
 
 
 		@Nullable
-		Integer age;
+		Integer age; //
 
 		@Nullable
-		String title,
-		forename,
-		middlename,
-		surname,
-		gender,
-		sex,
-		sexuality;
+		String title, //
+		forename, //
+		middlename, //
+		surname, //
+		gender, //
+		sex, //
+		sexuality; //
 
 
 
@@ -58,38 +64,38 @@ public class Character {
 	class Physical{
 
 		@Nullable
-		String weight,
-		height,
-		physique,
-		haircolour,
-		skincolour,
-		eyecolour,
-		race,
-		disabilities,
-		markings,
-		gait,
-		voice;
+		String weight, //
+		height, //
+		physique, //
+		haircolour, //
+		skincolour, //
+		eyecolour, //
+		race, //
+		disabilities, //
+		markings, //
+		gait, //
+		voice; //
 	}
 
 	class Personality{
 
 		@Nullable
-		String alignment,
-		drive,
-		fear,
-		education,
-		openness,
-		conscientiousness,
-		extraversion,
-		agreebleness,
-		neuroticism;
+		String alignment, //
+		drive, //
+		fear, //
+		education, //
+		openness, //
+		conscientiousness, //
+		extraversion, //
+		agreebleness, //
+		neuroticism; //
 
 		@Nullable
-		String theology,
-		honor,
-		honesty,
-		generosity,
-		kindness,
+		String theology, //
+		honor, //
+		honesty, //
+		generosity, //
+		kindness, //
 		pleasures,
 		dislikes,
 		clothingstyle,

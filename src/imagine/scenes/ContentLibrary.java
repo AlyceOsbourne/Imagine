@@ -9,6 +9,7 @@
 package imagine.scenes;
 
 import imagine.scenes.characterbio.CharacterScreen;
+import imagine.scenes.characterbio.CreateCharacter;
 import imagine.scenes.core.Window;
 import imagine.scenes.menus.MainMenu;
 import javafx.scene.Parent;
@@ -28,7 +29,7 @@ public class ContentLibrary {
 	public enum CharacterBiograpies{
 
 		LoadCharacterScreen(new CharacterScreen()),
-		LoadCreateCharacter(null);
+		LoadCreateCharacter(new CreateCharacter());
 
 		public Parent content;
 		CharacterBiograpies(Parent parent){

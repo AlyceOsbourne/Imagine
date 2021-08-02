@@ -19,7 +19,7 @@
         <SOURCES />
       </library>
     </orderEntry>
-    <orderEntry type="library" name="com.google.code.gson:gson:2.8.5" level="application" />
     <orderEntry type="library" name="org.reflections:reflections:0.9.12" level="application" />
+    <orderEntry type="library" name="com.google.code.gson:gson:2.8.5" level="application" />
   </component>
 </module>

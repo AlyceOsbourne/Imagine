@@ -5,6 +5,7 @@
 package imagine.scenes.core;
 
 import imagine.Main;
+import imagine.data.SaveData;
 import imagine.scenes.ContentLibrary;
 import imagine.scenes.menus.MainMenu;
 import javafx.fxml.FXML;
@@ -12,11 +13,10 @@ import javafx.scene.Node;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.SplitPane;
 import javafx.scene.layout.BorderPane;
-import javafx.stage.FileChooser;
 import lib.fxml.LoadsFXML;
 import lib.serialization.gson.GsonDataSerialization;
 
-import java.io.File;
+import java.util.Map;
 
 public class Window extends SplitPane implements LoadsFXML, GsonDataSerialization {
 
@@ -48,11 +48,10 @@ public class Window extends SplitPane implements LoadsFXML, GsonDataSerializatio
 		this.content.setCenter(node);
 		doToggles();
 	}
-	FileChooser filechooser = new FileChooser();
-	File file;
+
 	public void loadControls() {
-		this.saveFile.setOnAction(e -> file = filechooser.showOpenDialog(Main.stage));
-		//this.loadFile.setOnAction();
+		this.saveFile.setOnAction(e -> {});
+		this.loadFile.setOnAction(e -> {});
 		this.close.setOnAction(event -> Main.stage.close());
 		this.returnToMenu.setOnAction(event -> this.changeContent(menu));
 		this.newFile.setOnAction(event -> this.changeContent(menu));
@@ -62,6 +61,6 @@ public class Window extends SplitPane implements LoadsFXML, GsonDataSerializatio
 		this.returnToMenu.setVisible(!(this.content.getCenter() instanceof MainMenu));
 	}
 
+	public static final SaveData<String, Map<?, ?>> SaveData = new SaveData<>() {
 
-
-}
+	};}

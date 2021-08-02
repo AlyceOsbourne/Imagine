@@ -4,6 +4,7 @@
 
 package imagine.scenes.characterbio;
 
+import imagine.scenes.ContentLibrary;
 import imagine.scenes.characterbio.data.Character;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -71,6 +72,6 @@ public class CharacterScreen extends SplitPane implements LoadsFXML {
 	 */
 	@Override
 	public void loadControls() {
-
+		create.setOnAction(e -> ContentLibrary.window.changeContent(ContentLibrary.CharacterBiograpies.LoadCreateCharacter.content));
  	}
 }
