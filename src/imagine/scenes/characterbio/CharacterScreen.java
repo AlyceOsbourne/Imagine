@@ -4,7 +4,8 @@
 
 package imagine.scenes.characterbio;
 
-import imagine.scenes.ContentLibrary;
+import imagine.Main;
+import imagine.data.SaveData;
 import imagine.scenes.characterbio.data.Character;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -12,32 +13,15 @@ import javafx.scene.control.*;
 import javafx.scene.image.ImageView;
 import lib.fxml.LoadsFXML;
 
-import java.util.HashMap;
-import java.util.Map;
-
 /**
  * The type Character screen.
  */
 public class CharacterScreen extends SplitPane implements LoadsFXML {
 
-	/**
-	 * The Loader.
-	 */
 	FXMLLoader loader = loadFXML();
-	/**
-	 * The Protagonists.
-	 */
-	public Map<String,Character> protagonists = new HashMap<>();
-	/**
-	 * The Antagonists.
-	 */
-	public Map<String, Character> antagonists = new HashMap<>();
+	Character currentCharacter = null;
 	@FXML
-	private TreeItem<Map<String,Character>> protagonistslist = new TreeItem<>(this.protagonists);
-	@FXML
-	private TreeItem<Map<String,Character>> antagonistslist = new TreeItem<>(this.antagonists);
-	@FXML
-	private TreeView<Map<String, Character>> characterlibrary;
+	private TreeView<String> characterlibrary;
 	@FXML
 	private TextField title;
 	@FXML
@@ -72,6 +56,34 @@ public class CharacterScreen extends SplitPane implements LoadsFXML {
 	 */
 	@Override
 	public void loadControls() {
-		create.setOnAction(e -> ContentLibrary.window.changeContent(ContentLibrary.CharacterBiograpies.LoadCreateCharacter.content));
- 	}
+		create.setOnAction(e -> Main.window.changeContent(new CreateCharacter()));
+		edit.setOnAction(e -> Main.window.changeContent(new CreateCharacter().loadCharacter(currentCharacter)));
+		TreeItem<String> root = new TreeItem<>("Characters");
+		characterlibrary.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
+		characterlibrary.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, value) -> handle(value));
+		for (Character character :SaveData.data.getCharacters().values())
+		{
+			TreeItem<String> child = new TreeItem<>(character.getNickname());
+			root.getChildren().add(child);
+		}
+		characterlibrary.setRoot(root);
+		characterlibrary.setShowRoot(false);
+	}
+
+	void handle(TreeItem<String> s){
+		String name = s.getValue();
+		if (SaveData.data.getCharacters().containsKey(name))
+		{
+			currentCharacter = SaveData.data.getCharacters().get(name);
+			nickname.setText(currentCharacter.getNickname());
+			title.setText(currentCharacter.getInfo().getTitle());
+			forename.setText(currentCharacter.getInfo().getForename());
+			middlename.setText(currentCharacter.getInfo().getMiddlename());
+			surname.setText(currentCharacter.getInfo().getSurname());
+			age.setText(currentCharacter.getInfo().getAge());
+			gender.setText(currentCharacter.getInfo().getGender());
+			sex.setText(currentCharacter.getInfo().getSex());
+			sexuality.setText(currentCharacter.getInfo().getSexuality());
+		}
+	}
 }

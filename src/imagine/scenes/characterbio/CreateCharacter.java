@@ -4,8 +4,13 @@
 
 package imagine.scenes.characterbio;
 
+import imagine.Main;
+import imagine.data.SaveData;
+import imagine.scenes.characterbio.data.Character;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.control.MenuItem;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.BorderPane;
@@ -14,6 +19,8 @@ import lib.fxml.LoadsFXML;
 public class CreateCharacter extends BorderPane implements LoadsFXML {
 
 	FXMLLoader loader = loadFXML();
+	Character character;
+
 
 	@FXML
 	private TextField race;
@@ -26,7 +33,7 @@ public class CreateCharacter extends BorderPane implements LoadsFXML {
 	@FXML
 	private TextField skincolour;
 	@FXML
-	private TextField hiarcolour;
+	private TextField haircolour;
 	@FXML
 	private TextField eyecolour;
 	@FXML
@@ -34,7 +41,7 @@ public class CreateCharacter extends BorderPane implements LoadsFXML {
 	@FXML
 	private TextField gait;
 	@FXML
-	private TextField voicr;
+	private TextField voice;
 	@FXML
 	private TextField drives;
 	@FXML
@@ -58,7 +65,7 @@ public class CreateCharacter extends BorderPane implements LoadsFXML {
 	@FXML
 	private TextField honor;
 	@FXML
-	private TextField honestly;
+	private TextField honesty;
 	@FXML
 	private TextField generosity;
 	@FXML
@@ -84,6 +91,8 @@ public class CreateCharacter extends BorderPane implements LoadsFXML {
 	@FXML
 	private TextArea longhistory;
 	@FXML
+	private TextField markings;
+	@FXML
 	private TextField title;
 	@FXML
 	private TextField forename;
@@ -106,10 +115,96 @@ public class CreateCharacter extends BorderPane implements LoadsFXML {
 	 * Load controls.
 	 */
 	@Override
-	public void loadControls() throws Exception {
-
+	public void loadControls() {
+		Main.window.getEditMenu().getItems().clear();
+		Main.window.getEditMenu().setVisible(true);
+		MenuItem saveChar = new MenuItem("Save Character");
+		saveChar.setOnAction(this::saveCharacter);
+		Main.window.getEditMenu().getItems().add(saveChar);
 	}
 
 
 
+
+	private void saveCharacter(ActionEvent event) {
+		String nick = nickname.getText();
+		character = new Character(nick);
+
+		character.getInfo()
+				.setTitle(title.getText())
+				.setForename(forename.getText())
+				.setMiddlename(middlename.getText())
+				.setSurname(surname.getText())
+				.setAge(age.getText())
+				.setGender(gender.getText())
+				.setSex(sex.getText())
+				.setSexuality(sexuality.getText());
+
+		character.getPhysical()
+				.setHeight(height.getText())
+				.setWeight(weight.getText())
+				.setPhysique(physique.getText())
+				.setHaircolour(haircolour.getText())
+				.setEyecolour(eyecolour.getText())
+				.setSkincolour(skincolour.getText())
+				.setRace(race.getText())
+				.setDisabilities(disabilities.getText())
+				.setMarkings(markings.getText())
+				.setGait(gait.getText())
+				.setVoice(voice.getText());
+
+		character.getPersonality()
+				.setAgreebleness(agreeableness.getText())
+				.setAlignment(alignment.getText())
+				.setClothingstyle(clothingstyle.getText())
+				.setConscientiousness(conscientiousness.getText())
+				.setDislikes(dislikes.getText())
+				.setDrive(drives.getText())
+				.setEducation(education.getText())
+				.setExtraversion(extroversion.getText())
+				.setFear(fears.getText())
+				.setGenerosity(generosity.getText())
+				.setHonesty(honesty.getText())
+				.setHonor(honor.getText())
+				.setKindness(kindness.getText())
+				.setMannerisms(mannerisms.getText())
+				.setNeuroticism(neuroticism.getText())
+				.setOpenness(openness.getText())
+				.setLikes(likes.getText())
+				.setTheology(theology.getText());
+
+		character.getHistory()
+				.setBriefhistory(briefhistory.getText())
+				.setLonghistory(longhistory.getText())
+				.setHometown(hometown.getText())
+				.setHomeregion(homeregion.getText())
+				.setHomecountry(homecountry.getText());
+
+		character.getRelationships();
+
+		character.getSkills();
+
+		SaveData.data.getCharacters().put(nick, character);
+	}
+
+	CreateCharacter loadCharacter(Character characterIn){
+		character = characterIn;
+		nickname.setText(character.getNickname());
+		Character.Info info = character.getInfo();
+		title.setText(info.getTitle());
+		forename.setText(info.getForename());
+		middlename.setText(info.getMiddlename());
+		surname.setText(info.getSurname());
+		age.setText(info.getAge());
+		gender.setText(info.getGender());
+		sex.setText(info.getSex());
+		sexuality.setText(info.getSexuality());
+		Character.Skills skills = character.getSkills();
+		//todo finish loading from the character info
+		Character.Relationships relationships = character.getRelationships();
+		Character.Physical physical = character.getPhysical();
+		Character.History history = character.getHistory();
+		Character.Personality personality = character.getPersonality();
+		return this;
+	}
 }
