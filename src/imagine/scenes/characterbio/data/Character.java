@@ -267,7 +267,7 @@ public class Character {
 				education, //
 				openness, //
 				conscientiousness, //
-				extraversion, //
+				extroversion, //
 				agreebleness, //
 				neuroticism; //
 		@Nullable
@@ -279,7 +279,8 @@ public class Character {
 				pleasures,
 				dislikes,
 				clothingstyle,
-				mannerisms;
+				mannerisms,
+				intelligence;
 
 		public @Nullable String getAlignment() {
 			return alignment;
@@ -335,12 +336,12 @@ public class Character {
 			return this;
 		}
 
-		public @Nullable String getExtraversion() {
-			return extraversion;
+		public @Nullable String getExtroversion() {
+			return extroversion;
 		}
 
 		public @NotNull Personality setExtraversion(String extraversion) {
-			this.extraversion = extraversion;
+			this.extroversion = extraversion;
 			return this;
 		}
 
@@ -407,7 +408,7 @@ public class Character {
 			return this;
 		}
 
-		public @Nullable String getPleasures() {
+		public @Nullable String getLikes() {
 			return pleasures;
 		}
 
@@ -440,6 +441,15 @@ public class Character {
 
 		public @NotNull Personality setMannerisms(String mannerisms) {
 			this.mannerisms = mannerisms;
+			return this;
+		}
+
+		public String getIntelligence() {
+			return intelligence;
+		}
+
+		public Personality setIntelligence(String intelligence){
+			this.intelligence = intelligence;
 			return this;
 		}
 	}

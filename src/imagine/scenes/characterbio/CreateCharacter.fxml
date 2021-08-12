@@ -248,7 +248,7 @@
                                     <Font name="Blackadder ITC" size="24.0" />
                                  </font>
                               </Label>
-                              <Label alignment="CENTER" contentDisplay="CENTER" text="Extraversion" GridPane.halignment="CENTER" GridPane.hgrow="NEVER" GridPane.rowIndex="2" GridPane.valignment="CENTER" GridPane.vgrow="SOMETIMES">
+                              <Label alignment="CENTER" contentDisplay="CENTER" text="Extroversion" GridPane.halignment="CENTER" GridPane.hgrow="NEVER" GridPane.rowIndex="2" GridPane.valignment="CENTER" GridPane.vgrow="SOMETIMES">
                                  <font>
                                     <Font name="Blackadder ITC" size="24.0" />
                                  </font>

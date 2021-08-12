@@ -118,7 +118,7 @@ public class CreateCharacter extends BorderPane implements LoadsFXML {
 	public void loadControls() {
 		Main.window.getEditMenu().getItems().clear();
 		Main.window.getEditMenu().setVisible(true);
-		MenuItem saveChar = new MenuItem("Save Character and return to Character Library");
+		MenuItem saveChar = new MenuItem("Save Character and return to Character Biographies");
 		saveChar.setOnAction(e -> {
 			saveCharacter(e);
 			Main.window.changeContent(new CharacterScreen());
@@ -179,7 +179,9 @@ public class CreateCharacter extends BorderPane implements LoadsFXML {
 					.setNeuroticism(neuroticism.getText())
 					.setOpenness(openness.getText())
 					.setLikes(likes.getText())
-					.setTheology(theology.getText());
+					.setTheology(theology.getText())
+					.setIntelligence(intelligence.getText());
+
 		}
 
 		{
@@ -251,6 +253,24 @@ public class CreateCharacter extends BorderPane implements LoadsFXML {
 		{
 			Character.Personality personality = character.getPersonality();
 			//todo fill
+			alignment.setText(personality.getAlignment());
+			drives.setText(personality.getDrive());
+			fears.setText(personality.getEducation());
+			theology.setText(personality.getTheology());
+			openness.setText(personality.getOpenness());
+			conscientiousness.setText(personality.getConscientiousness());
+			extroversion.setText(personality.getExtroversion());
+			agreeableness.setText(personality.getAgreebleness());
+			neuroticism.setText(personality.getNeuroticism());
+			honor.setText(personality.getHonor());
+			honesty.setText(personality.getHonesty());
+			generosity.setText(personality.getGenerosity());
+			kindness.setText(personality.getKindness());
+			intelligence.setText(personality.getIntelligence());
+			likes.setText(personality.getLikes());
+			dislikes.setText(personality.getDislikes());
+			mannerisms.setText(personality.getMannerisms());
+			education.setText(personality.getEducation());
 		}//character personality
 		return this;
 	}
