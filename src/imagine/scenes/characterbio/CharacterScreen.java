@@ -57,9 +57,16 @@ public class CharacterScreen extends SplitPane implements LoadsFXML {
 	@Override
 	public void loadControls() {
 		create.setOnAction(e -> Main.window.changeContent(new CreateCharacter()));
+
 		edit.setOnAction(e -> Main.window.changeContent(new CreateCharacter().loadCharacter(currentCharacter)));
-		delete.setOnAction(e -> SaveData.data.getCharacters().remove(currentCharacter.getNickname()));
+
+		delete.setOnAction(e -> {
+			SaveData.data.getCharacters().remove(currentCharacter.getNickname());
+			Main.window.changeContent(new CharacterScreen());
+		});
+
 		TreeItem<String> root = new TreeItem<>("Characters");
+
 		characterlibrary.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
 		characterlibrary.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, value) -> handle(value));
 		for (Character character : SaveData.data.getCharacters().values())

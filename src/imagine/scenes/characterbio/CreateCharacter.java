@@ -118,8 +118,11 @@ public class CreateCharacter extends BorderPane implements LoadsFXML {
 	public void loadControls() {
 		Main.window.getEditMenu().getItems().clear();
 		Main.window.getEditMenu().setVisible(true);
-		MenuItem saveChar = new MenuItem("Save Character");
-		saveChar.setOnAction(this::saveCharacter);
+		MenuItem saveChar = new MenuItem("Save Character and return to Character Library");
+		saveChar.setOnAction(e -> {
+			saveCharacter(e);
+			Main.window.changeContent(new CharacterScreen());
+		});
 		Main.window.getEditMenu().getItems().add(saveChar);
 	}
 
@@ -130,59 +133,73 @@ public class CreateCharacter extends BorderPane implements LoadsFXML {
 		String nick = nickname.getText();
 		character = new Character(nick);
 
-		character.getInfo()
-				.setTitle(title.getText())
-				.setForename(forename.getText())
-				.setMiddlename(middlename.getText())
-				.setSurname(surname.getText())
-				.setAge(age.getText())
-				.setGender(gender.getText())
-				.setSex(sex.getText())
-				.setSexuality(sexuality.getText());
+		{
+			character.getInfo()
+					.setTitle(title.getText())
+					.setForename(forename.getText())
+					.setMiddlename(middlename.getText())
+					.setSurname(surname.getText())
+					.setAge(age.getText())
+					.setGender(gender.getText())
+					.setSex(sex.getText())
+					.setSexuality(sexuality.getText());
+		}
 
-		character.getPhysical()
-				.setHeight(height.getText())
-				.setWeight(weight.getText())
-				.setPhysique(physique.getText())
-				.setHaircolour(haircolour.getText())
-				.setEyecolour(eyecolour.getText())
-				.setSkincolour(skincolour.getText())
-				.setRace(race.getText())
-				.setDisabilities(disabilities.getText())
-				.setMarkings(markings.getText())
-				.setGait(gait.getText())
-				.setVoice(voice.getText());
+		{
+			character.getPhysical()
+					.setHeight(height.getText())
+					.setWeight(weight.getText())
+					.setPhysique(physique.getText())
+					.setHaircolour(haircolour.getText())
+					.setEyecolour(eyecolour.getText())
+					.setSkincolour(skincolour.getText())
+					.setRace(race.getText())
+					.setDisabilities(disabilities.getText())
+					.setMarkings(markings.getText())
+					.setGait(gait.getText())
+					.setVoice(voice.getText());
+		}
 
-		character.getPersonality()
-				.setAgreebleness(agreeableness.getText())
-				.setAlignment(alignment.getText())
-				.setClothingstyle(clothingstyle.getText())
-				.setConscientiousness(conscientiousness.getText())
-				.setDislikes(dislikes.getText())
-				.setDrive(drives.getText())
-				.setEducation(education.getText())
-				.setExtraversion(extroversion.getText())
-				.setFear(fears.getText())
-				.setGenerosity(generosity.getText())
-				.setHonesty(honesty.getText())
-				.setHonor(honor.getText())
-				.setKindness(kindness.getText())
-				.setMannerisms(mannerisms.getText())
-				.setNeuroticism(neuroticism.getText())
-				.setOpenness(openness.getText())
-				.setLikes(likes.getText())
-				.setTheology(theology.getText());
+		{
+			character.getPersonality()
+					.setAgreebleness(agreeableness.getText())
+					.setAlignment(alignment.getText())
+					.setClothingstyle(clothingstyle.getText())
+					.setConscientiousness(conscientiousness.getText())
+					.setDislikes(dislikes.getText())
+					.setDrive(drives.getText())
+					.setEducation(education.getText())
+					.setExtraversion(extroversion.getText())
+					.setFear(fears.getText())
+					.setGenerosity(generosity.getText())
+					.setHonesty(honesty.getText())
+					.setHonor(honor.getText())
+					.setKindness(kindness.getText())
+					.setMannerisms(mannerisms.getText())
+					.setNeuroticism(neuroticism.getText())
+					.setOpenness(openness.getText())
+					.setLikes(likes.getText())
+					.setTheology(theology.getText());
+		}
 
-		character.getHistory()
-				.setBriefhistory(briefhistory.getText())
-				.setLonghistory(longhistory.getText())
-				.setHometown(hometown.getText())
-				.setHomeregion(homeregion.getText())
-				.setHomecountry(homecountry.getText());
+		{
+			character.getHistory()
+					.setBriefhistory(briefhistory.getText())
+					.setLonghistory(longhistory.getText())
+					.setHometown(hometown.getText())
+					.setHomeregion(homeregion.getText())
+					.setHomecountry(homecountry.getText());
+		}
 
-		character.getRelationships();
+		{
+			character.getRelationships();
+			//todo fill
+		}
 
-		character.getSkills();
+		{
+			character.getSkills();
+			//todo fill
+		}
 
 		SaveData.data.getCharacters().put(nick, character);
 	}
@@ -203,9 +220,11 @@ public class CreateCharacter extends BorderPane implements LoadsFXML {
 		}//character info
 		{
 			Character.Skills skills = character.getSkills();
+			//todo fill
 		}//character skills
 		{
 			Character.Relationships relationships = character.getRelationships();
+			//todo fill
 		}//character relationships
 		{
 			Character.Physical physical = character.getPhysical();
@@ -220,8 +239,6 @@ public class CreateCharacter extends BorderPane implements LoadsFXML {
 			gait.setText(physical.getGait());
 			markings.setText(physical.getMarkings());
 			voice.setText(physical.getVoice());
-
-
 		}//character physical
 		{
 			Character.History history = character.getHistory();
@@ -233,6 +250,7 @@ public class CreateCharacter extends BorderPane implements LoadsFXML {
 		}//character history
 		{
 			Character.Personality personality = character.getPersonality();
+			//todo fill
 		}//character personality
 		return this;
 	}
