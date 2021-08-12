@@ -190,21 +190,50 @@ public class CreateCharacter extends BorderPane implements LoadsFXML {
 	CreateCharacter loadCharacter(Character characterIn){
 		character = characterIn;
 		nickname.setText(character.getNickname());
-		Character.Info info = character.getInfo();
-		title.setText(info.getTitle());
-		forename.setText(info.getForename());
-		middlename.setText(info.getMiddlename());
-		surname.setText(info.getSurname());
-		age.setText(info.getAge());
-		gender.setText(info.getGender());
-		sex.setText(info.getSex());
-		sexuality.setText(info.getSexuality());
-		Character.Skills skills = character.getSkills();
-		//todo finish loading from the character info
-		Character.Relationships relationships = character.getRelationships();
-		Character.Physical physical = character.getPhysical();
-		Character.History history = character.getHistory();
-		Character.Personality personality = character.getPersonality();
+		{
+			Character.Info info = character.getInfo();
+			title.setText(info.getTitle());
+			forename.setText(info.getForename());
+			middlename.setText(info.getMiddlename());
+			surname.setText(info.getSurname());
+			age.setText(info.getAge());
+			gender.setText(info.getGender());
+			sex.setText(info.getSex());
+			sexuality.setText(info.getSexuality());
+		}//character info
+		{
+			Character.Skills skills = character.getSkills();
+		}//character skills
+		{
+			Character.Relationships relationships = character.getRelationships();
+		}//character relationships
+		{
+			Character.Physical physical = character.getPhysical();
+			race.setText(physical.getRace());
+			weight.setText(physical.getWeight());
+			height.setText(physical.getHeight());
+			physique.setText(physical.getPhysique());
+			skincolour.setText(physical.getSkincolour());
+			eyecolour.setText(physical.getEyecolour());
+			haircolour.setText(physical.getHaircolour());
+			disabilities.setText(physical.getDisabilities());
+			gait.setText(physical.getGait());
+			markings.setText(physical.getMarkings());
+			voice.setText(physical.getVoice());
+
+
+		}//character physical
+		{
+			Character.History history = character.getHistory();
+			hometown.setText(history.getHometown());
+			homeregion.setText(history.getHomeregion());
+			homecountry.setText(history.getHomecountry());
+			longhistory.setText(history.getLonghistory());
+			briefhistory.setText(history.getBriefhistory());
+		}//character history
+		{
+			Character.Personality personality = character.getPersonality();
+		}//character personality
 		return this;
 	}
 }

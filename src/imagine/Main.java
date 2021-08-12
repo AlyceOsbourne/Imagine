@@ -12,9 +12,9 @@ import javafx.scene.Scene;
 import javafx.stage.Stage;
 import lib.general.Screen;
 
-public class Main extends Application implements Screen{
+public class Main extends Application implements Screen {
 
-    public static final Window window = new Window();
+    public static Window window;
 
     @FXML
     public static Stage stage;
@@ -24,6 +24,7 @@ public class Main extends Application implements Screen{
         stage = primaryStage;
         primaryStage.setTitle("Imagine");
         primaryStage.setMaximized(true);
+        window = new Window();
         Scene scene = new Scene(window);
         scene.setRoot(window);
         primaryStage.setScene(scene);
@@ -31,8 +32,6 @@ public class Main extends Application implements Screen{
     }
 
     void show(){stage.show();}
-
-    void kill() throws Exception {stage.close(); stop();}
 
     public static void main(String[] args) {
         launch(args);
