@@ -12,9 +12,9 @@ import org.jetbrains.annotations.Nullable;
 import java.util.Objects;
 
 /**
- * Fxml loader interface for, can be implemented, used as functional interface.
- * I usually implement and then call FXMLLoader loader = loadFXML();
- * this gives a constructed loader representative of the implementing class.
+	consider this class to be the reverse implementation of assigning a controller in an FXML file.
+    simply allows you to get a fully instantiated FXMLLoader and fully loads the function assignments to the FXMLs controls
+    can either return the FXMLLoader or you can just call loadFXML() to fire and forget.
  */
 public interface LoadsFXML {
 
@@ -30,23 +30,19 @@ public interface LoadsFXML {
 	 */
 	@FXML
 	default FXMLLoader loadFXML(){
-		setControllerAndRoot();
-		setLocation(null);
-		loadController();
-		return loader;
+		return loadFXML(null);
 	}
 	/**
 	 * this is the secondary loader method, allows you to point towards a specific FXML file,
-	 * this can be used to either have things like a FXML folder or have a FXML file with multiple controllers.
 	 * can be returned or just called as it handles the loading of the class, assigning the root and then the actual FXMLLoader.load() method.
 	*/
+	@SuppressWarnings("SameReturnValue")
 	default FXMLLoader loadFXML(String fxmlLocation){
 		setControllerAndRoot();
 		setLocation(fxmlLocation);
 		loadController();
 		return loader;
 	}
-
 
 	/**
 	 * method that runs FXMLLoader.load(), then calls loadControls().
@@ -69,6 +65,7 @@ public interface LoadsFXML {
 	default void setControllerAndRoot(){
 		loader.setController(this);
 		loader.setRoot(this);
+		System.out.println("Controller and root set too: " + this);
 	}
 
 	/**
@@ -77,7 +74,7 @@ public interface LoadsFXML {
 	 */
 	default void setLocation(@Nullable String location){
 		loader.setLocation(this.getClass().getResource(Objects.requireNonNullElseGet(location, () -> this.getClass().getSimpleName() + ".fxml")));
+		System.out.println("FXML loaded from: " + loader.getLocation());
 	}
-
-	void loadControls() throws Exception;
+	void loadControls();
 }

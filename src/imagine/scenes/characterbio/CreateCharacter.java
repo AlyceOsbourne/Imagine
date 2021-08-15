@@ -5,7 +5,7 @@
 package imagine.scenes.characterbio;
 
 import imagine.Main;
-import imagine.data.SaveData;
+import imagine.scenes.core.data.SaveData;
 import imagine.scenes.characterbio.data.Character;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -194,11 +194,13 @@ public class CreateCharacter extends BorderPane implements LoadsFXML {
 		}
 
 		{
+			//noinspection ResultOfMethodCallIgnored
 			character.getRelationships();
 			//todo fill
 		}
 
 		{
+			//noinspection ResultOfMethodCallIgnored
 			character.getSkills();
 			//todo fill
 		}
@@ -271,6 +273,7 @@ public class CreateCharacter extends BorderPane implements LoadsFXML {
 			dislikes.setText(personality.getDislikes());
 			mannerisms.setText(personality.getMannerisms());
 			education.setText(personality.getEducation());
+			clothingstyle.setText(personality.getClothingstyle());
 		}//character personality
 		return this;
 	}

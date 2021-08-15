@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<!--
+  ~ © Owned by Alyce Kat Osbourne, AKA Alycrafticus, All Rights Reserved.
+  -->
+
+<fx:root prefHeight="400.0" prefWidth="600.0" type="AnchorPane" xmlns="http://javafx.com/javafx/16"
+         xmlns:fx="http://javafx.com/fxml/1">
+    <SplitPane dividerPositions="0.25" layoutX="220.0" layoutY="100.0" orientation="VERTICAL" prefHeight="400.0"
+               prefWidth="600.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0"
+               AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+        <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="100.0" prefWidth="160.0"
+                    SplitPane.resizableWithParent="false">
+            <TextField layoutX="225.0" layoutY="36.0" prefHeight="96.0" prefWidth="599.2"
+                       AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0"
+                       AnchorPane.topAnchor="0.0"/>
+        </AnchorPane>
+        <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="100.0" prefWidth="160.0"
+                    SplitPane.resizableWithParent="false">
+            <SplitPane dividerPositions="0.25" layoutX="200.0" layoutY="59.0" prefHeight="296.0"
+                       prefWidth="599.2" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0"
+                       AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="100.0"
+                            SplitPane.resizableWithParent="false">
+                    <TreeView layoutX="-27.0" layoutY="47.0" prefHeight="294.4" prefWidth="146.4"
+                              AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0"
+                              AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0"/>
+                </AnchorPane>
+                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="100.0"
+                            SplitPane.resizableWithParent="false">
+                    <SplitPane dividerPositions="0.75" layoutX="143.0" layoutY="47.0" orientation="VERTICAL"
+                               prefHeight="294.4" prefWidth="445.6" AnchorPane.bottomAnchor="0.0"
+                               AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0"
+                               AnchorPane.topAnchor="0.0">
+                        <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="100.0" prefWidth="160.0"/>
+                        <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="100.0" prefWidth="160.0">
+                            <HBox alignment="CENTER" layoutX="122.0" layoutY="-15.0" prefHeight="70.4"
+                                  prefWidth="444.0" spacing="10.0" AnchorPane.bottomAnchor="0.0"
+                                  AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0"
+                                  AnchorPane.topAnchor="0.0">
+                                <padding>
+                                    <Insets bottom="10.0" left="10.0" right="10.0" top="10.0"/>
+                                </padding>
+                                <Button maxHeight="1.7976931348623157E308"
+                                        maxWidth="1.7976931348623157E308" mnemonicParsing="false"
+                                        text="Button" HBox.hgrow="ALWAYS"/>
+                                <Button layoutX="206.0" layoutY="32.0" maxHeight="1.7976931348623157E308"
+                                        maxWidth="1.7976931348623157E308" mnemonicParsing="false"
+                                        text="Button" HBox.hgrow="ALWAYS"/>
+                                <Button layoutX="232.0" layoutY="32.0" maxHeight="1.7976931348623157E308"
+                                        maxWidth="1.7976931348623157E308" mnemonicParsing="false"
+                                        text="Button" HBox.hgrow="ALWAYS"/>
+                                <Button layoutX="258.0" layoutY="32.0" maxHeight="1.7976931348623157E308"
+                                        maxWidth="1.7976931348623157E308" mnemonicParsing="false"
+                                        text="Button" HBox.hgrow="ALWAYS"/>
+                                <Button layoutX="284.0" layoutY="32.0" maxHeight="1.7976931348623157E308"
+                                        maxWidth="1.7976931348623157E308" mnemonicParsing="false"
+                                        text="Button" HBox.hgrow="ALWAYS"/>
+                                <Button layoutX="310.0" layoutY="32.0" maxHeight="1.7976931348623157E308"
+                                        maxWidth="1.7976931348623157E308" mnemonicParsing="false"
+                                        text="Button" HBox.hgrow="ALWAYS"/>
+                            </HBox>
+                        </AnchorPane>
+                    </SplitPane>
+                </AnchorPane>
+            </SplitPane>
+        </AnchorPane>
+    </SplitPane>
+</fx:root>

@@ -5,7 +5,7 @@
 package imagine.scenes.core;
 
 import imagine.Main;
-import imagine.data.SaveData;
+import imagine.scenes.core.data.SaveData;
 import imagine.scenes.menus.MainMenu;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
@@ -16,13 +16,17 @@ import javafx.scene.control.SplitPane;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.FileChooser;
 import lib.fxml.LoadsFXML;
+import lib.gson.JsonFileHandler;
+
+import java.io.File;
 
 
 public class Window extends SplitPane implements LoadsFXML {
 
-	MainMenu menu = new MainMenu();
 
-	FileChooser fileChooser = new FileChooser();
+	final MainMenu menu = new MainMenu();
+
+	final FileChooser fileChooser = new FileChooser();
 
 
 	@FXML
@@ -47,7 +51,6 @@ public class Window extends SplitPane implements LoadsFXML {
 
 
 	public Window() {
-		loadFXML();
 		this.changeContent(menu);
 	}
 
@@ -57,13 +60,17 @@ public class Window extends SplitPane implements LoadsFXML {
 	}
 
 	public void loadControls() {
+		JsonFileHandler<SaveData.Data> handler = new JsonFileHandler<>(){};
 		fileChooser.setTitle("Load Imagine File");
-		fileChooser.setSelectedExtensionFilter(new FileChooser.ExtensionFilter(".json",".json"));
-		fileChooser.setInitialFileName("SaveData.json");
-		this.saveFile.setOnAction(e -> SaveData.save(fileChooser.showSaveDialog(Main.stage)));
+		fileChooser.setSelectedExtensionFilter(new FileChooser.ExtensionFilter("Imagine Save Data",".data"));
+		fileChooser.setInitialFileName("SaveData.data");
+		this.saveFile.setOnAction(e -> handler.save(fileChooser.showSaveDialog(Main.stage),SaveData.data,SaveData.Data.class));
 		this.loadFile.setOnAction(e -> {
-			SaveData.load(fileChooser.showOpenDialog(Main.stage));
-			this.changeContent(new MainMenu());
+			File file = fileChooser.showOpenDialog(Main.stage);
+			if (handler.load(file,SaveData.Data.class) != null) {
+				SaveData.data = handler.load(file,SaveData.Data.class);
+				this.changeContent(new MainMenu());
+			}
 		});
 		this.close.setOnAction(event -> Main.stage.close());
 		this.returnToMenu.setOnAction(event -> {
@@ -82,5 +89,5 @@ public class Window extends SplitPane implements LoadsFXML {
 		this.returnToMenu.setVisible(!(this.content.getCenter() instanceof MainMenu));
 	}
 
-
-	}
+	{loadFXML();}
+}

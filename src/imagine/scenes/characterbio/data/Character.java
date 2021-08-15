@@ -11,12 +11,41 @@ import java.util.List;
 
 public class Character {
 
+	public Info getInfo() {
+		return info;
+	}
+
+	public Physical getPhysical() {
+		return physical;
+	}
+
+	public Personality getPersonality() {
+		return personality;
+	}
+
+	public History getHistory() {
+		return history;
+	}
+
+	public Relationships getRelationships() {
+		return relationships;
+	}
+
+	public Skills getSkills() {
+		return skills;
+	}
+
 	private final Info info = new Info();
 	private final Physical physical = new Physical();
 	private final Personality personality = new Personality();
 	private final History history = new History();
 	private final Relationships relationships = new Relationships();
 	private final Skills skills = new Skills();
+
+	public @NotNull String getNickname() {
+		return nickname;
+	}
+
 	@NotNull
 	String nickname;
 
@@ -24,40 +53,12 @@ public class Character {
 		this.nickname = nickname;
 	}
 
-	public @NotNull Info getInfo() {
-		return info;
-	}
-
-	public @NotNull Physical getPhysical() {
-		return physical;
-	}
-
-	public @NotNull Personality getPersonality() {
-		return personality;
-	}
-
-	public @NotNull History getHistory() {
-		return history;
-	}
-
-	public @NotNull Relationships getRelationships() {
-		return relationships;
-	}
-
-	public @NotNull Skills getSkills() {
-		return skills;
-	}
-
-	public @NotNull String getNickname() {
-		return nickname;
-	}
-
 	public @NotNull Character setNickname(@NotNull String nickname) {
 		this.nickname = nickname;
 		return this;
 	}
 
-	public class Info {
+	public static class Info {
 
 
 		@Nullable
@@ -138,15 +139,14 @@ public class Character {
 			return sexuality;
 		}
 
-		public @NotNull Info setSexuality(String sexuality) {
+		public void setSexuality(@Nullable String sexuality) {
 			this.sexuality = sexuality;
-			return this;
 		}
 	}
 
-	public class Physical {
+	public static class Physical {
 
-		public String getWeight() {
+		public @Nullable String getWeight() {
 			return weight;
 		}
 
@@ -155,7 +155,7 @@ public class Character {
 			return this;
 		}
 
-		public String getHeight() {
+		public @Nullable String getHeight() {
 			return height;
 		}
 
@@ -164,7 +164,7 @@ public class Character {
 			return this;
 		}
 
-		public String getPhysique() {
+		public @Nullable String getPhysique() {
 			return physique;
 		}
 
@@ -173,7 +173,7 @@ public class Character {
 			return this;
 		}
 
-		public String getHaircolour() {
+		public @Nullable String getHaircolour() {
 			return haircolour;
 		}
 
@@ -182,7 +182,7 @@ public class Character {
 			return this;
 		}
 
-		public String getSkincolour() {
+		public @Nullable String getSkincolour() {
 			return skincolour;
 		}
 
@@ -191,7 +191,7 @@ public class Character {
 			return this;
 		}
 
-		public String getEyecolour() {
+		public @Nullable String getEyecolour() {
 			return eyecolour;
 		}
 
@@ -200,7 +200,7 @@ public class Character {
 			return this;
 		}
 
-		public String getRace() {
+		public @Nullable String getRace() {
 			return race;
 		}
 
@@ -209,7 +209,7 @@ public class Character {
 			return this;
 		}
 
-		public String getDisabilities() {
+		public @Nullable String getDisabilities() {
 			return disabilities;
 		}
 
@@ -218,7 +218,7 @@ public class Character {
 			return this;
 		}
 
-		public String getMarkings() {
+		public @Nullable String getMarkings() {
 			return markings;
 		}
 
@@ -227,7 +227,7 @@ public class Character {
 			return this;
 		}
 
-		public String getGait() {
+		public @Nullable String getGait() {
 			return gait;
 		}
 
@@ -236,13 +236,12 @@ public class Character {
 			return this;
 		}
 
-		public String getVoice() {
+		public @Nullable String getVoice() {
 			return voice;
 		}
 
-		public Physical setVoice(String voice) {
+		public void setVoice(@Nullable String voice) {
 			this.voice = voice;
-			return this;
 		}
 
 		@Nullable
@@ -259,7 +258,7 @@ public class Character {
 				voice;
 	}
 
-	public class Personality {
+	public static class Personality {
 		@Nullable
 		String alignment, //
 				drive, //
@@ -298,10 +297,6 @@ public class Character {
 		public @NotNull Personality setDrive(String drive) {
 			this.drive = drive;
 			return this;
-		}
-
-		public @Nullable String getFear() {
-			return fear;
 		}
 
 		public @NotNull Personality setFear(String fear) {
@@ -444,17 +439,16 @@ public class Character {
 			return this;
 		}
 
-		public String getIntelligence() {
+		public @Nullable String getIntelligence() {
 			return intelligence;
 		}
 
-		public Personality setIntelligence(String intelligence){
+		public void setIntelligence(@Nullable String intelligence){
 			this.intelligence = intelligence;
-			return this;
 		}
 	}
 
-	public class History {
+	public static class History {
 		@Nullable
 		String placeofbirth,
 				homecountry,
@@ -466,22 +460,12 @@ public class Character {
 				aversememories,
 				definingmoments;
 
-		public @Nullable String getPlaceofbirth() {
-			return placeofbirth;
-		}
-
-		public @NotNull History setPlaceofbirth(String placeofbirth) {
-			this.placeofbirth = placeofbirth;
-			return this;
-		}
-
 		public @Nullable String getHomecountry() {
 			return homecountry;
 		}
 
-		public @NotNull History setHomecountry(String homecountry) {
+		public void setHomecountry(@Nullable String homecountry) {
 			this.homecountry = homecountry;
-			return this;
 		}
 
 		public @Nullable String getHomeregion() {
@@ -520,35 +504,9 @@ public class Character {
 			return this;
 		}
 
-		public @Nullable String getFondmemories() {
-			return fondmemories;
-		}
-
-		public @NotNull History setFondmemories(String fondmemories) {
-			this.fondmemories = fondmemories;
-			return this;
-		}
-
-		public @Nullable String getAversememories() {
-			return aversememories;
-		}
-
-		public @NotNull History setAversememories(String aversememories) {
-			this.aversememories = aversememories;
-			return this;
-		}
-
-		public @Nullable String getDefiningmoments() {
-			return definingmoments;
-		}
-
-		public @NotNull History setDefiningmoments(String definingmoments) {
-			this.definingmoments = definingmoments;
-			return this;
-		}
 	}
 
-	public class Relationships {
+	public static class Relationships {
 		@Nullable
 		String clan,
 				faction;
@@ -627,7 +585,7 @@ public class Character {
 		}
 	}
 
-	public class Skills {
+	public static class Skills {
 
 		@Nullable
 		String majorclass,

@@ -2,7 +2,6 @@
  * © Owned by Alyce Kat Osbourne, AKA Alycrafticus, All Rights Reserved.
  */
 
-
 package imagine;
 
 import imagine.scenes.core.Window;
@@ -10,12 +9,8 @@ import javafx.application.Application;
 import javafx.fxml.FXML;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
-import lib.general.Screen;
-
-public class Main extends Application implements Screen {
-
+public class Main extends Application {
     public static Window window;
-
     @FXML
     public static Stage stage;
 

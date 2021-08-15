@@ -5,7 +5,7 @@
 package imagine.scenes.characterbio;
 
 import imagine.Main;
-import imagine.data.SaveData;
+import imagine.scenes.core.data.SaveData;
 import imagine.scenes.characterbio.data.Character;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
