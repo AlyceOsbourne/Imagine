@@ -28,6 +28,8 @@ public abstract class MapImage {
 	boolean hasTitle;
 	boolean hasBorder;
 
+	Byte[][]Layers;
+
 	WritableImage image;
 
 	BorderStyle borderstyle;

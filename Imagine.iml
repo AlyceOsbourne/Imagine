@@ -19,5 +19,7 @@
       </library>
     </orderEntry>
     <orderEntry type="library" name="com.google.code.gson:gson:2.8.5" level="application" />
+    <orderEntry type="library" name="com.google.guava:guava:18.0" level="application" />
+    <orderEntry type="library" name="org.apache.commons:commons-math3:3.3" level="application" />
   </component>
 </module>
