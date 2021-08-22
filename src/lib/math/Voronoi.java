@@ -26,7 +26,8 @@ import static lib.math.Voronoi.MathUtils.getPerpendicularBisector;
 //but when you really abstract it its just a data processor for a 2d/3d dataset,
 //so we should be able to make use of it to create voronoi data that can be applied to things later.
 //I have chosen this approach due o the efficient nature of the data clustering
-
+// link to jump flood algorithm paper https://www.comp.nus.edu.sg/~tants/jfa/i3d06.pdf
+// link to video on voronoi data structures https://www.youtube.com/watch?v=2g9LJVVcnyU
 public abstract class Voronoi {
 
 	// ok, lets break down what makes an voronoi diagram
