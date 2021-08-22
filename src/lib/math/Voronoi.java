@@ -64,6 +64,7 @@ public abstract class Voronoi {
 	}
 
 	private void init(Point... p) {
+		//will have to pop an out of bounds check here
 		//initialize by adding input sites into list
 		Sites = new LinkedList<>(Arrays.stream(p).toList());
 		Edges = new ArrayList<>();
