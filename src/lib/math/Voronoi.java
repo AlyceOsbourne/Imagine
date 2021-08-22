@@ -6,17 +6,36 @@ package lib.math;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.LinkedList;
 import java.util.List;
 
-public class Voronoi {
+import static lib.math.Voronoi.MathUtils.getPerpendicularBisector;
+
+
+//intentions of this class: to create a generified voronoi algorithm that can use different distances such as manhatten distances.
+//I guess then end product should be an abstract class so that we can wrap it to utilize for various uses such as image creation, pathfinding on a 2d plane,
+//to calculate distances from vectors etc
+//note, if this only works for a single use case I have failed
+
+//a few rules for this class, it should be able to run at as close to realtime as possible, even with points in the 10,000-100,000 range
+//should be able to be dynamic, so if a new site is added it does not need to update the whole graph but the local neighbours that are adjacent
+//now, while I do like the look of the beach line approach I am not sure if that is actually the best approach given the intentions of the class.
+//now, I have done some study into the jump flood algorithm and it seems hugely efficient, and there are several approaches so I am sure I can
+//achieve a high level of accuracy while maintaining performance.
+//now, we are taking an abstract approach here, jump flooding was intended fo gpu applications,
+//but when you really abstract it its just a data processor for a 2d/3d dataset,
+//so we should be able to make use of it to create voronoi data that can be applied to things later.
+//I have chosen this approach due o the efficient nature of the data clustering
+
+public abstract class Voronoi {
 
 	// ok, lets break down what makes an voronoi diagram
 
-	//it needs bounds
+	//it needs bounds, these bounds represent the visible image area
 	float width, height;
 
 	//within those bounds we have sites
-	ArrayList<Point> Sites;
+	LinkedList<Point> Sites;
 
 	//these sites are the center of cells
 	ArrayList<Cell> Cells;
@@ -46,7 +65,7 @@ public class Voronoi {
 
 	private void init(Point... p) {
 		//initialize by adding input sites into list
-		Sites = new ArrayList<>(Arrays.stream(p).toList());
+		Sites = new LinkedList<>(Arrays.stream(p).toList());
 		Edges = new ArrayList<>();
 		Cells = new ArrayList<>();
 		Vertices = new ArrayList<>();
@@ -56,10 +75,13 @@ public class Voronoi {
 	//these should be outside of the draw area to the N,E,S,W
 	private void createBounds(List<Cell> c, Float width, Float height) {
 		//now, to figure out the best placement for the bound cells, this include the point and edge locations
+		//these should be placed say half the distance of the axis out of bounds? so if width is 1024 then the cell would be 512 units outside of the bounds
+
+		//after consideration it may be better to directly calculate the verts here, as we know which each edge is for the bounds we can take the image corners on that side as our inner verts and then just *1.5 the coords to get a scaled corner
 	}
 
 	//placing sites into graph
-	private void populateWithSites(ArrayList<Cell> c, ArrayList<Point> s) {
+	private void populateWithSites(ArrayList<Cell> c, LinkedList<Point> s) {
 		for (Point p : Sites) {
 			c.add(new Cell(p));
 		}
@@ -75,16 +97,19 @@ public class Voronoi {
 		for (Cell left : c) {
 			for (Cell right : c) {
 				if (left != right) {
-					Utils.getPerpendicularBisector(left, right);
+					getPerpendicularBisector(left, right);
 				}
 			}
 		}
 	}
 
-	//this should be the companion to the Edges
+//this should calculate the intersections of the edges, adjust their length and replace their points with vertices
 	private void calculateIntersections(ArrayList<Cell> c, ArrayList<Vertex> v) {
 		//we need to check each cells edges vs its intersecting edges to create verts.
 		//replace edge points to verts linking everything in this pass
+
+		//I think I should do a run to see if edges have been intersected, if they have add those edges to the queue, then process,
+		// I think this'll allow me to plop in new points and only process the neighbours
 	}
 
 	private static class Point {
@@ -99,6 +124,7 @@ public class Voronoi {
 
 	private static class Edge<Link extends Point> {
 		//an edge is a tuple of points essentially, also holds neighbour info, again data held for map generation
+		//during the initial pass this holds Points, which get replaced with verts, this may be a good idea, it may not, we'll see
 		Link a, b;
 
 		Edge(Link a, Link b) {
@@ -108,7 +134,11 @@ public class Voronoi {
 	}
 
 	private static class Cell {
+
+		//a cells edges
 		List<Edge<? super Vertex>> edges;
+
+		//its site
 		Point site;
 
 		Cell(Point site) {
@@ -133,6 +163,8 @@ public class Voronoi {
 	private static class Vertex extends Point {
 
 		//vertex location
+
+		//this datatype may get deleted, refactored or reworked, depends purely on efficiency
 
 		//we have this list set up as such so when we iterate we can skip already constructed verts, maybe?
 		List<? super Vertex> adjoiningVertices;
@@ -177,16 +209,11 @@ public class Voronoi {
 	}
 
 	// here we are storing some utility functions
-	private static class Utils {
-		private static Edge clipEdges(Edge in, Vertex a, Vertex b) {
-			return new Edge<>(a, b);
-		}
+	static class MathUtils {
+		//mainly math utils, such as finding the average, finding the midpoint, and perp bisector, split up to make sure each math component is correct
 
-		private static void getPerpendicularBisector(Cell left, Cell right) {
+		static void getPerpendicularBisector(Cell left, Cell right) {
 			//todo perpendicular bisector math
-			Point a = left.site;
-			Point b = right.site;
-			Point midpoint = midpoint(a, b);
 		}
 
 		private static Point midpoint(Point a, Point b) {
@@ -194,7 +221,9 @@ public class Voronoi {
 			float mY = average(a.y, b.y);
 			return new Point(mX, mY);
 		}
-
+		private static float rise_run(float a, float b){return a-b;}
+		private static float slope(float rise,float run){return rise/run;}
+		private static float perpendicularSlope(float rise, float run){return run/-rise;}
 		private static float average(float a, float b) {
 			return (a * b) / 2;
 		}
