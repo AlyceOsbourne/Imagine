@@ -35,13 +35,13 @@ public abstract class Voronoi {
 	float width, height;
 
 	//within those bounds we have sites
-	LinkedList<Point> Sites;
+	LinkedList<? extends Point> Sites;
 
 	//these sites are the center of cells
 	ArrayList<Cell> Cells;
 
 	//each cell has bounding edges
-	ArrayList<Edge> Edges;
+	ArrayList<Edge<? extends Point>> Edges;
 
 	//and those edges meet in vertices
 	ArrayList<Vertex> Vertices;
@@ -74,7 +74,7 @@ public abstract class Voronoi {
 
 	//here we need to create 4 bounding cells for our "points of infinity"
 	//these should be outside of the draw area to the N,E,S,W
-	private void createBounds(List<Cell> c, Float width, Float height) {
+	private void createBounds(ArrayList<? extends Cell> c, Float width, Float height) {
 		//now, to figure out the best placement for the bound cells, this include the point and edge locations
 		//these should be placed say half the distance of the axis out of bounds? so if width is 1024 then the cell would be 512 units outside of the bounds
 
@@ -82,7 +82,7 @@ public abstract class Voronoi {
 	}
 
 	//placing sites into graph
-	private void populateWithSites(ArrayList<Cell> c, LinkedList<Point> s) {
+	private void populateWithSites(ArrayList<Cell> c, LinkedList<? extends Point> s) {
 		for (Point p : Sites) {
 			c.add(new Cell(p));
 		}
