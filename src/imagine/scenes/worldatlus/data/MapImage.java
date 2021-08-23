@@ -21,9 +21,9 @@ public abstract class MapImage {
 
 	String mapName;
 
-	float width;
-	float height;
-	float scale;
+	double width;
+	double height;
+	double scale;
 
 	boolean hasTitle;
 	boolean hasBorder;

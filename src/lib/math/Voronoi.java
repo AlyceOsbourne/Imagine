@@ -4,7 +4,9 @@
 
 package lib.math;
 
-import java.util.*;
+import java.util.Arrays;
+import java.util.LinkedList;
+import java.util.List;
 
 /*
 intentions of this class:
@@ -34,7 +36,7 @@ public abstract class Voronoi {
 	// ok, lets break down what makes an voronoi diagram
 
 	//it needs bounds, these bounds represent the visible image area
-	float width,height;
+	double width, height;
 
 	//within those bounds we have sites
 	LinkedList<Point> Sites;
@@ -47,12 +49,12 @@ public abstract class Voronoi {
 
 
 	//we initialize with the bounds and our given points
-	Voronoi(Float width, Float height, List<Point> sitesIn) {
+	protected Voronoi(double width, double height, List<? extends Point> sitesIn) {
 		this.width = width;
 		this.height = height;
 		//we create our empty lists
 		init(sitesIn);
-		
+
 		//we create 4 cells to act as points of infinity, they should be placed outside of the image bounds
 		createBounds(this.Cells, width, height);
 
@@ -72,7 +74,7 @@ public abstract class Voronoi {
 		*/
 	}
 
-	private void init(List<Point> sitesIn) {
+	private void init(List<? extends Point> sitesIn) {
 
 		/*
 		will have to pop an out of bounds check here
@@ -84,8 +86,9 @@ public abstract class Voronoi {
 	}
 
 	//here we need to create 4 bounding cells for our "points of infinity"
-	//these should be outside of the draw area to the N,E,S,W
-	private void createBounds(LinkedList<Cell> c, Float width, Float height) {
+	//these should be outside of the draw area to the N,E,S,W, this is cause
+	// without bounds the math would be infinite thus the calculation would take infinite time
+	private void createBounds(LinkedList<Cell> c, double width, double height) {
 		/*
 		now, to figure out the best placement for the bound cells,
 		this includes the point and edge locations these should be placed
@@ -100,18 +103,18 @@ public abstract class Voronoi {
 		//distance factor for math, should be able to scale by tweaking this
 		int f = 2;
 
-		float NX,NY,EX,EY,SX,SY,WX,WY;
+		double NX, NY, EX, EY, SX, SY, WX, WY;
 
-		Cell N,E,S,W;
+		Cell N, E, S, W;
 
-		Point nSite,eSite,sSite,wSite;
+		Point nSite, eSite, sSite, wSite;
 
-		Point iNW,iNE,iSE,iSW,oNW,oNE,oSE,oSW;
+		Point iNW, iNE, iSE, iSW, oNW, oNE, oSE, oSW;
 
-		Edge nRight,nLeft,nUp,nDown;
-		Edge eRight,eLeft,eUp,eDown;
-		Edge sRight,sLeft,sUp,sDown;
-		Edge wRight,wLeft,wUp,wDown;
+		Edge nRight, nLeft, nUp, nDown;
+		Edge eRight, eLeft, eUp, eDown;
+		Edge sRight, sLeft, sUp, sDown;
+		Edge wRight, wLeft, wUp, wDown;
 
 
 		//center point coords
@@ -131,30 +134,30 @@ public abstract class Voronoi {
 
 		// coords for Cell Sites
 		{
-			nSite =  new Point(NX, NY);
-			eSite =  new Point(EX, EY);
-			sSite =  new Point(SX, SY);
-			wSite =  new Point(WX, WY);
+			nSite = new Point(NX, NY);
+			eSite = new Point(EX, EY);
+			sSite = new Point(SX, SY);
+			wSite = new Point(WX, WY);
 		}
 
 		//SO MANY DEFINITIONS!!!  <-0->____<-0->
 
 		//inner edge bounds
 		{
-			iNE =  new Point(0, height);
-			iNW =  new Point(width, height);
-			iSE =  new Point(0, 0);
-			iSW =  new Point(width, 0);
+			iNE = new Point(0, height);
+			iNW = new Point(width, height);
+			iSE = new Point(0, 0);
+			iSW = new Point(width, 0);
 		}
 
 		//outer edge bounds
 		{
-			oNE =  new Point(-(width / f), height / f);
-			oNW =  new Point(width / f, height / f);
-			oSE =  new Point(-(width / f), -height);
-			oSW =  new Point(width / f, -(height / f));
+			oNE = new Point(-(width / f), height / f);
+			oNW = new Point(width / f, height / f);
+			oSE = new Point(-(width / f), -height);
+			oSW = new Point(width / f, -(height / f));
 		}
-		
+
 		//cell edges
 		{
 			nDown = new Edge(iNE, iNW);
@@ -214,13 +217,44 @@ public abstract class Voronoi {
 		*/
 	}
 
-	protected static class Point {
+	public static class Point {
 		//simply an x and y location
-		float x, y;
+		double x, y;
 
-		Point(float x, float y) {
+		Point(double x, double y) {
 			this.x = x;
 			this.y = y;
+		}
+
+		private double distance(double x1, double y1) {
+			double a = getX() - x1;
+			double b = getY() - y1;
+			return Math.sqrt(a * a + b * b);
+		}
+
+		double getX() {
+			return x;
+		}
+
+		double getY() {
+			return y;
+		}
+
+		public double angle(double x, double y) {
+			final double ax = getX();
+			final double ay = getY();
+
+			final double delta = (ax * x + ay * y) / Math.sqrt(
+					(ax * ax + ay * ay) * (x * x + y * y));
+
+			if (delta > 1.0) {
+				return 0.0;
+			}
+			if (delta < -1.0) {
+				return 180.0;
+			}
+
+			return Math.toDegrees(Math.acos(delta));
 		}
 	}
 
@@ -228,6 +262,7 @@ public abstract class Voronoi {
 		/* an edge is a tuple of points essentially, also holds neighbour info, again data held for map generation
 		//during the initial pass this holds Points, which get replaced with verts, this may be a good idea, it may not, we'll see */
 		Point a, b;
+
 		Edge(Point a, Point b) {
 			this.a = a;
 			this.b = b;
@@ -263,46 +298,51 @@ public abstract class Voronoi {
 	}
 
 	// here we are storing some utility functions
-	static class MathUtils  {
+	static class MathUtils {
 		//mainly math utils, such as finding the average, finding the midpoint, and perp bisector, split up to make sure each math component is correct
 
 		static void getPerpendicularBisector(Cell cellA, Cell cellB) {
 			//todo perpendicular bisector math
-			float XA,XB,YA,YB,m,x1,y1,y,x;
-			float rise,run;
+			double XA, XB, YA, YB, m, x1, y1, y, x;
+			double rise, run;
 			XA = cellA.site.x;
 			XB = cellB.site.x;
 			YA = cellA.site.y;
 			YB = cellB.site.y;
 
 			rise = difference(YA, YB); //the difference in the Y coordinate
-			run = difference(XA,XB); //the difference in the X coordinate
+			run = difference(XA, XB); //the difference in the X coordinate
 			//slope is rise/run, but for the perpendicular bisector we need the negative reciprocal
-			m = negativeReciprocal(rise , run); //slopes negative reciprocal
-			x1 = average(XA,XB); //average midpoint x
-			y1 = average(YA,YB); //average midpoint y
+			m = negativeReciprocal(rise, run); //slopes negative reciprocal
+			x1 = average(XA, XB); //average midpoint x
+			y1 = average(YA, YB); //average midpoint y
 
 			//trying to solve (y - y1 = m(x - x1)) in the java sense
 
 		}
 
+		private static double difference(double a, double b) {
+			return a - b;
+		}
+
+		private static double negativeReciprocal(double a, double b) {
+			return -1 / (a / b);
+		}
+
+		private static double average(double a, double b) {
+			return (a + b) / 2;
+		}
+
 		private static Point midpoint(Point a, Point b) {
-			float mX = average(a.x, b.x);
-			float mY = average(a.y, b.y);
+			double mX = average(a.x, b.x);
+			double mY = average(a.y, b.y);
 			return new Point(mX, mY);
 		}
 
-		private static float average(float a, float b) {
-			return (a + b) / 2;
-		}
-		private static float difference(float a,float b){return a-b;}
-
-		private static float negativeReciprocal(float a,float b){
-			return -1/(a/b);
-		}
-
-		private static float perpendicularSlope(float rise, float run) {
+		private static double perpendicularSlope(double rise, double run) {
 			return run / -rise;
 		}
+
+
 	}
 }

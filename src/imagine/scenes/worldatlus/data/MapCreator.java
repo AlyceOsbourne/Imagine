@@ -20,24 +20,25 @@
 
 package imagine.scenes.worldatlus.data;
 
-import lib.math.VoronoiTest;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.layout.AnchorPane;
 import lib.fxml.LoadsFXML;
 import lib.image.ImageTools;
+import lib.math.Voronoi;
 
 import javax.imageio.ImageIO;
 import java.io.File;
 import java.io.IOException;
+import java.util.LinkedList;
 import java.util.Map;
 
 public abstract class MapCreator <CreatedMap extends MapImage> extends AnchorPane implements LoadsFXML, ImageTools {
 	CreatedMap map;
-	int width, height;
+	double width, height;
 	Canvas[] layers;
-	VoronoiTest v;
+	Voronoi v;
 	protected MapCreator() {
-		v = new VoronoiTest(width,height,null);
+		v = new Voronoi(width, height, new LinkedList<>()) {};
 	}
 
 	void exportToSaveDataMap(Map<String, CreatedMap> saveDataMap){saveDataMap.put(map.mapName,map);}
