@@ -293,7 +293,7 @@ public abstract class Voronoi {
 		}
 
 		private static float average(float a, float b) {
-			return (a * b) / 2;
+			return (a + b) / 2;
 		}
 		private static float difference(float a,float b){return a-b;}
 
