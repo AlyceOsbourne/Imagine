@@ -266,7 +266,7 @@ public abstract class Voronoi {
 	static class MathUtils  {
 		//mainly math utils, such as finding the average, finding the midpoint, and perp bisector, split up to make sure each math component is correct
 
-		static Edge getPerpendicularBisector(Cell cellA, Cell cellB) {
+		static void getPerpendicularBisector(Cell cellA, Cell cellB) {
 			//todo perpendicular bisector math
 			float XA,XB,YA,YB,m,x1,y1,y,x;
 			float rise,run;
@@ -284,10 +284,6 @@ public abstract class Voronoi {
 
 			//trying to solve (y - y1 = m(x - x1)) in the java sense
 
-
-			Edge out = null;
-
-			return out;
 		}
 
 		private static Point midpoint(Point a, Point b) {
