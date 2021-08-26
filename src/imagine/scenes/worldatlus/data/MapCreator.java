@@ -24,12 +24,11 @@ import javafx.scene.canvas.Canvas;
 import javafx.scene.layout.AnchorPane;
 import lib.fxml.LoadsFXML;
 import lib.image.ImageTools;
-import lib.math.Voronoi;
+import lib.math.voronoi.Voronoi;
 
 import javax.imageio.ImageIO;
 import java.io.File;
 import java.io.IOException;
-import java.util.LinkedList;
 import java.util.Map;
 
 public abstract class MapCreator <CreatedMap extends MapImage> extends AnchorPane implements LoadsFXML, ImageTools {
@@ -37,21 +36,13 @@ public abstract class MapCreator <CreatedMap extends MapImage> extends AnchorPan
 	double width, height;
 	Canvas[] layers;
 	Voronoi v;
-	protected MapCreator() {
-		v = new Voronoi(width, height, new LinkedList<>()) {};
-	}
+	protected MapCreator() {}
 
 	void exportToSaveDataMap(Map<String, CreatedMap> saveDataMap){saveDataMap.put(map.mapName,map);}
 
 	void exportToPng(File file){
-		try {
-			ImageIO.write(ImageTools.convertToBuffered(map.image),"png",file);
-
-			//todo check this function works
-
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+		try {ImageIO.write(ImageTools.convertToBuffered(map.image),"png",file);}
+		catch (IOException e) {e.printStackTrace();}
 	}
 
 	public abstract void draw();
