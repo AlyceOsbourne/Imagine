@@ -82,7 +82,7 @@ public class JumpFlood extends Voronoi {
 		*/
 	}
 
-	private void init(List<Point.Site> sitesIn) {
+	private void init(List<Point> sitesIn) {
 
 
 		/*
