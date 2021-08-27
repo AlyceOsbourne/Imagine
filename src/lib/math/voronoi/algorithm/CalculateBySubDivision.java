@@ -112,12 +112,10 @@ public class CalculateBySubDivision extends Voronoi {
 	 * so having a smaller list to check per lookup is better
 	 **/
 	private List<Point> getOptimizedCluster(int xStart, int xFinish, int yStart, int yFinish, List<? extends Point> sites) {
-
 		List<Point> cluster = new ArrayList<>();
 		for (Point p : sites)
-			if ((p.x > xStart && p.x < xFinish) && p.y > yStart && p.y < yFinish)
+			if ((p.x >= xStart && p.x <= xFinish) && (p.y >= yStart && p.y <= yFinish))
 				cluster.add(p);
-
 		return cluster;
 	}
 
