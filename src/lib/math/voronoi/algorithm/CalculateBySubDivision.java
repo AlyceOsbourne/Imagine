@@ -17,15 +17,18 @@ import lib.math.voronoi.datasubtypes.Quad;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Queue;
 
 public class CalculateBySubDivision extends Voronoi {
 
-	final Point[][] voronoiMatrix;
+	Point[][] voronoiMatrix;
 
 	/**
 	 * The inputted sites to process.
 	 */
-	final List<Point> sites = new LinkedList<>();
+	List<Point> sites = new LinkedList<>();
+	Queue<Quad> toProcess = new LinkedList<>();
+
 
 	/**
 	 * initiates calculating a voronoi diagram by a subdivision algorithm.
@@ -46,47 +49,42 @@ public class CalculateBySubDivision extends Voronoi {
 		for (Point site : sitesIn) {
 			if (site.x < width - 1 && site.y < height - 1 && site.x >= 0 && site.y >= 0) {
 				sites.add(site);
+				site.isSeed = true;
 				voronoiMatrix[site.x][site.y] = site;
-			}
+				System.out.println("Added site (" + site.x + "," + site.x + ")");
+			} else System.out.println("Discarded site due to it being out of range");
 		}
-		start(voronoiMatrix, sites);
+		start();
 	}
 
 	/**
 	 * starts the algorithm, creates a starting Quad with the bounds of the image,
 	 * passes said quad to #checkAndSubdivide
 	 */
-	private void start(Point[][] voronoiMatrix, List<? extends Point> sites) {
+	private void start() {
 		int xMax, yMax, xMin, yMin;
 		yMin = 0;
 		xMin = 0;
 		xMax = voronoiMatrix.length - 1;
 		yMax = voronoiMatrix[0].length - 1;
 		Quad startingQuad = new Quad(voronoiMatrix[xMax][xMin], voronoiMatrix[xMax][yMax], voronoiMatrix[xMin][yMin], voronoiMatrix[xMin][yMax]);
-		checkAndSubdivide(startingQuad, sites);
+		checkAndSubdivide(startingQuad);
 	}
 
-	/**
-	 * checks to see if quad corners closest sites are the same, if they are not the subdivide the quad to 4
-	 * new quads and pass each back to this method, this in theory should iterate through each quad until each
-	 * point is assigned a nearest Site.
-	 **/
-	private void checkAndSubdivide(Quad quad, List<? extends Point> sites) {
-		System.out.println("Checking quad.");
-		if (!checkQuad(quad, sites, voronoiMatrix)) {
-			System.out.println("Check Failed, proceeding to subdivide.");
-			List<Quad> subdivision = subDivideQuad(quad);
-			for (Quad sub : subdivision) {
-				checkAndSubdivide(sub, sites);
+	private void checkAndSubdivide(Quad quad) {
+		while (!checkQuad(quad)) {
+			toProcess.addAll(subDivideQuad(quad));
+			while (!toProcess.isEmpty()) {
+				checkAndSubdivide(toProcess.poll());
 			}
-		} else System.out.println("Check Passed");
+		}
 	}
 
 	/**
 	 * checks quad corners vs sites, if quad corners sites are all equal assigns all
 	 * points in matrix to that site and returns true, otherwise fails and returns false
 	 **/
-	private boolean checkQuad(Quad quad, List<? extends Point> sites, Point[][] voronoiMatrix) {
+	private boolean checkQuad(Quad quad) {
 		//collect nearest site for each corner of quad
 		int xStart = quad.sw.x;
 		int xFinish = quad.se.x;
@@ -95,8 +93,6 @@ public class CalculateBySubDivision extends Voronoi {
 
 		System.out.println("Checking range X:" + xStart + " " + xFinish);
 		System.out.println("Checking range X:" + yStart + " " + yFinish);
-		// this should only check sites that are located within the quad
-		List<Point> cluster = getOptimizedCluster(xStart, xFinish, yStart, yFinish, sites);
 
 		Point nearestSiteNE = getNearestSite(quad.ne, sites);
 		System.out.println(nearestSiteNE + "found");
@@ -123,7 +119,7 @@ public class CalculateBySubDivision extends Voronoi {
 	 * once for each corner of the quad, more quads = more runs and more lookups,
 	 * so having a smaller list to check per lookup is better
 	 **/
-	private List<Point> getOptimizedCluster(int xStart, int xFinish, int yStart, int yFinish, List<? extends Point> sites) {
+	private List<Point> getOptimizedCluster(int xStart, int xFinish, int yStart, int yFinish) {
 
 		List<Point> cluster = new ArrayList<>();
 
@@ -131,8 +127,6 @@ public class CalculateBySubDivision extends Voronoi {
 			if ((p.x >= xStart && p.x <= xFinish) && (p.y >= yStart && p.y <= yFinish)) {
 				cluster.add(p);
 			}
-		if (cluster.size() == 0) getOptimizedCluster(xStart - 1, xFinish + 1, yStart - 1, yFinish + 1, sites);
-
 		return cluster;
 	}
 

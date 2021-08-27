@@ -24,7 +24,7 @@ public class Voronoi {
 		if (p == null || p.isEmpty()) {
 			p = new ArrayList<>();
 			Random r = new Random();
-			int bound = r.nextInt(((width - 1) * (height - 1)) / 400);
+			int bound = r.nextInt(((width - 1) * (height - 1)) / 4000);
 			for (int i = 0; i < bound; i++) {
 				Point randomize = new Point(r.nextInt(width - 1), r.nextInt(height - 1), true);
 				p.add(randomize);
