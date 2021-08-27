@@ -12,24 +12,38 @@ import javafx.scene.layout.AnchorPane;
 import lib.fxml.LoadsFXML;
 import lib.image.ImageTools;
 import lib.math.voronoi.Voronoi;
+import lib.math.voronoi.datasubtypes.Point;
 
 import javax.imageio.ImageIO;
 import java.io.File;
 import java.io.IOException;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
 
-public abstract class MapCreator <CreatedMap extends MapImage> extends AnchorPane implements LoadsFXML, ImageTools {
+public abstract class MapCreator<CreatedMap extends MapImage> extends AnchorPane implements LoadsFXML, ImageTools {
 	CreatedMap map;
-	double width, height;
+	int width, height;
 	Canvas[] layers;
 	Voronoi v;
-	protected MapCreator() {}
 
-	void exportToSaveDataMap(Map<String, CreatedMap> saveDataMap){saveDataMap.put(map.mapName,map);}
+	protected MapCreator(Voronoi.Algorithm algorithm, int width, int height, Point... sites) {
+		this.width = width;
+		this.height = height;
+		List<Point> siteList = Arrays.stream(sites).toList();
+		v = Voronoi.create(algorithm, width, height, siteList);
+	}
 
-	void exportToPng(File file){
-		try {ImageIO.write(ImageTools.convertToBuffered(map.image),"png",file);}
-		catch (IOException e) {e.printStackTrace();}
+	void exportToSaveDataMap(Map<String, CreatedMap> saveDataMap) {
+		saveDataMap.put(map.mapName, map);
+	}
+
+	void exportToPng(File file) {
+		try {
+			ImageIO.write(ImageTools.convertToBuffered(map.image), "png", file);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 
 	public abstract void draw();

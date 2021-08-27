@@ -10,12 +10,10 @@
 
 package lib.math.voronoi.datasubtypes;
 
-import java.util.Random;
-
 public class Point {
 	//simply an x and y location
 	public int x, y;
-
+	public boolean isSeed;
 	public Point nearestSeed;
 
 	public Point(int x, int y) {
@@ -23,27 +21,9 @@ public class Point {
 		this.y = y;
 	}
 
-	public Point randomize(int width, int height) {
-		Random r = new Random();
-		this.x = r.nextInt(width - 1);
-		this.y = r.nextInt(height - 1);
-		return this;
-	}
-
-	@Override
-	public int hashCode() {
-		int result = x;
-		result = 31 * result + y;
-		result = 31 * result + (nearestSeed != null ? nearestSeed.hashCode() : 0);
-		return result;
-	}
-
-	@Override
-	public boolean equals(Object o) {
-		if (this == o) return true;
-		if (!(o instanceof Point point)) return false;
-		if (x != point.x || y != point.y) return false;
-		return ((nearestSeed != null) && nearestSeed.equals(point.nearestSeed)) || ((nearestSeed == null) && (point.nearestSeed == null));
+	public Point(int x, int y, boolean isSeed) {
+		this(x, y);
+		this.isSeed = isSeed;
 	}
 
 	public <P extends Point> int distance(P point) {

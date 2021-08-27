@@ -10,37 +10,47 @@ package lib.math.voronoi;
 import lib.math.voronoi.algorithm.CalculateBySubDivision;
 import lib.math.voronoi.algorithm.JumpFlood;
 import lib.math.voronoi.datasubtypes.Point;
+import org.jetbrains.annotations.Nullable;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-import static java.util.stream.IntStream.range;
-
 public class Voronoi {
 
-	static Voronoi create(Algorithm algorithm, int width, int height ,List<Point> sites) {
+	public static <V extends Voronoi> Voronoi create(Algorithm algorithm, int width, int height, @Nullable List<Point> sites) {
 
-		Voronoi diagram;
-
-		if (sites.isEmpty()) {
+		List<Point> p = sites;
+		if (p == null || p.isEmpty()) {
+			p = new ArrayList<>();
 			Random r = new Random();
-			range(0, r.nextInt(width * height / 4)).mapToObj(i ->
-					new Point(0, 0).randomize(width, height)).forEach(sites::add);
+			int bound = r.nextInt(((width - 1) * (height - 1)) / 400);
+			for (int i = 0; i < bound; i++) {
+				Point randomize = new Point(r.nextInt(width - 1), r.nextInt(height - 1), true);
+				p.add(randomize);
+			}
+			System.out.println("Number of sites " + p.size());
 		}
 
 		switch (algorithm) {
 
-			case CalculateByJumpFlood -> diagram = new JumpFlood(width, height, sites);
+			case CalculateByJumpFlood -> {
+				return new JumpFlood(width, height, p);
+			}
 
-			case CalculateBySubDivision -> diagram = new CalculateBySubDivision(width, height, sites);
+			case CalculateBySubDivision -> {
+				return new CalculateBySubDivision(width, height, p);
+			}
 
-			default -> diagram = null;
+			default -> {
+				return null;
+			}
 		}
+	}
 
-		return diagram;
-	}
-	enum Algorithm { CalculateByJumpFlood, CalculateBySubDivision }
-	}
+
+	public enum Algorithm {CalculateByJumpFlood, CalculateBySubDivision}
+}
 
 
 
