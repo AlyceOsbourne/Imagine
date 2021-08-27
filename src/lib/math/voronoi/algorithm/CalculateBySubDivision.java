@@ -10,6 +10,11 @@
  * Do what the F**k you want
  */
 
+
+/*
+ * Do what the F**k you want
+ */
+
 /*
  Based on and owned by : https://www.youtube.com/watch?v=8mjUUNi1AaA&ab_channel=MichiganSpaceGrantConsortium
  */
@@ -120,7 +125,7 @@ public class CalculateBySubDivision extends Voronoi {
 	private List<Point> getOptimizedCluster(int xStart, int xFinish, int yStart, int yFinish, List<? extends Point> sites, Point[][] voronoiMatrix) {
 
 		List<Point> cluster = new LinkedList<>();
-
+		//this may be better as parallel streams
 		for (int x = xStart; x < xFinish; x++)
 			for (int y = yStart; y < yFinish; y++)
 				for (var p : sites)
