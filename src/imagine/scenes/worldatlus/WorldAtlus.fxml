@@ -1,13 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.geometry.*?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
+<!--
+  ~ © Owned by Alyce Kat Osbourne, AKA Alycrafticus, All Rights Reserved.
+  -->
 
 <!--
   ~ © Owned by Alyce Kat Osbourne, AKA Alycrafticus, All Rights Reserved.
   -->
 
+<!--
+  ~ © Owned by Alyce Kat Osbourne, AKA Alycrafticus, All Rights Reserved.
+  -->
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
 <fx:root prefHeight="400.0" prefWidth="600.0" type="AnchorPane" xmlns="http://javafx.com/javafx/16"
          xmlns:fx="http://javafx.com/fxml/1">
     <SplitPane dividerPositions="0.25" layoutX="220.0" layoutY="100.0" orientation="VERTICAL" prefHeight="400.0"

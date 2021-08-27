@@ -1,5 +1,13 @@
 
 
+/*
+ * Do what the F**k you want
+ */
+
+/*
+ * Do what the F**k you want
+ */
+
 package lib.math.voronoi.datasubtypes;
 
 import com.google.common.base.Objects;

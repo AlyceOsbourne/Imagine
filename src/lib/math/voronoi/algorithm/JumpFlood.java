@@ -1,5 +1,13 @@
 
 
+/*
+ * Do what the F**k you want
+ */
+
+/*
+ * Do what the F**k you want
+ */
+
 package lib.math.voronoi.algorithm;
 
 import lib.math.voronoi.Voronoi;

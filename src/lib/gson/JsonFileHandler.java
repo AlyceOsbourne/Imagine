@@ -1,5 +1,13 @@
 
 
+/*
+ * Do what the F**k you want
+ */
+
+/*
+ * Do what the F**k you want
+ */
+
 package lib.gson;
 
 import com.google.gson.Gson;

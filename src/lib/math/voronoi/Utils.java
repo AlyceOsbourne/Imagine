@@ -1,14 +1,23 @@
 
 
+/*
+ * Do what the F**k you want
+ */
+
+/*
+ * Do what the F**k you want
+ */
+
 package lib.math.voronoi;
 
 import lib.math.voronoi.datasubtypes.Point;
 
-public class Utils {static void getPerpendicularBisector(Point a, Point b) {
-	//todo perpendicular bisector math
-	int XA, XB, YA, YB, m, x1, y1, y, x;
-	int rise, run;
-	XA = a.x;
+public class Utils {
+	static void getPerpendicularBisector(Point a, Point b) {
+		//todo perpendicular bisector math
+		int XA, XB, YA, YB, m, x1, y1, y, x;
+		int rise, run;
+		XA = a.x;
 	XB = b.x;
 	YA = a.y;
 	YB = b.y;
