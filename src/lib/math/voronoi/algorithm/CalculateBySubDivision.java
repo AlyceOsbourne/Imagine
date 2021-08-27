@@ -88,7 +88,7 @@ public class CalculateBySubDivision extends Voronoi {
 		int yFinish = quad.nw.y;
 
 		// this should only check sites that are located within the quad
-		List<Point> cluster = getOptimizedCluster(xStart, xFinish, yStart, yFinish, sites, voronoiMatrix);
+		List<Point> cluster = getOptimizedCluster(xStart, xFinish, yStart, yFinish, sites);
 
 		Point nearestSiteNE = getNearestSite(quad.ne, cluster);
 		Point nearestSiteNW = getNearestSite(quad.nw, cluster);
@@ -111,18 +111,12 @@ public class CalculateBySubDivision extends Voronoi {
 	 * once for each corner of the quad, more quads = more runs and more lookups,
 	 * so having a smaller list to check per lookup is better
 	 **/
-	private List<Point> getOptimizedCluster(int xStart, int xFinish, int yStart, int yFinish, List<? extends Point> sites, Point[][] voronoiMatrix) {
+	private List<Point> getOptimizedCluster(int xStart, int xFinish, int yStart, int yFinish, List<? extends Point> sites) {
 
 		List<Point> cluster = new ArrayList<>();
-
-		//searches a defined portion of an 2d array, x is the outer array range, y is the inner array range, these are likely to be in the 1000*1000s range
-		for (int x = xStart; x < xFinish; x++)
-			for (int y = yStart; y < yFinish; y++)
-				//now for each point in this array we are comparing against this list, this list could have 100000 points + this is inefficient
-				for (Point p : sites)
-					//and then if Point exists on both lists it is clustered for a nearest neighbour search
-					if (voronoiMatrix[x][y].equals(p))
-						cluster.add(p);
+		for (Point p : sites)
+			if ((p.x > xStart && p.x < xFinish) && p.y > yStart && p.y < yFinish)
+				cluster.add(p);
 
 		return cluster;
 	}
