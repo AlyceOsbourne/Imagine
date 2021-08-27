@@ -158,6 +158,7 @@ public class CalculateBySubDivision extends Voronoi {
 		return passCheck;
 	}
 
+
 	/**
 	 * Gets nearest site to said point
 	 */
@@ -192,6 +193,10 @@ public class CalculateBySubDivision extends Voronoi {
 		s = Utils.midpoint(se, sw);
 		w = Utils.midpoint(sw, nw);
 		center = Utils.midpoint(Utils.midpoint(n, s), Utils.midpoint(e, w));
+		System.out.println("Got nodes for quad");
+		System.out.println("(" + nw + ")" + "(" + n + ")" + "(" + ne + ")");
+		System.out.println("(" + w + ")" + "(" + center + ")" + "(" + e + ")");
+		System.out.println("(" + sw + ")" + "(" + s + ")" + "(" + se + ")");
 		//creating the 4 quads and adding them to the list to return
 		seCorner = new Quad(se, e, s, center);
 		subdivision.add(seCorner);
