@@ -8,6 +8,10 @@
  * Do what the F**k you want
  */
 
+/*
+ * Do what the F**k you want
+ */
+
 /* Based on and owned by : https://www.youtube.com/watch?v=8mjUUNi1AaA&ab_channel=MichiganSpaceGrantConsortium*/
 
 package lib.math.voronoi.algorithm;
@@ -144,7 +148,7 @@ public class CalculateBySubDivision extends Voronoi {
 	 */
 	private Point getNearestSite(Point p, List<? extends Point> s) {
 		//I reckon this could be more efficient
-		var currentClosestSite = s.stream().findFirst().orElseThrow();
+		Point currentClosestSite = s.stream().findFirst().orElseThrow();
 
 		/*
 		I feel this will get super inefficient with much higher numbers of sites, maybe need to find a way to cluster points together,
