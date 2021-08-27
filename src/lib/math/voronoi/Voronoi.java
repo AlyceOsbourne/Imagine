@@ -1,14 +1,8 @@
-/*
- * © Owned by Alyce Kat Osbourne, AKA Alycrafticus, All Rights Reserved.
- */
 
-/*
- * © Owned by Alyce Kat Osbourne, AKA Alycrafticus, All Rights Reserved.
- */
 
-/*
- * © Owned by Alyce Kat Osbourne, AKA Alycrafticus, All Rights Reserved.
- */
+
+
+
 
 package lib.math.voronoi;
 
@@ -35,7 +29,6 @@ public class Voronoi {
 
 		return diagram;
 	}
-
 	enum Algorithm { CalculateByJumpFlood, CalculateBySubDivision }
 	}
 
