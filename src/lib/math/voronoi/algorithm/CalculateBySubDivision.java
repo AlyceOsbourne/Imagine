@@ -1,16 +1,4 @@
 
-
-
-/*
- * Do what the F**k you want
- */
-
-
-/*
- * Do what the F**k you want
- */
-
-
 /*
  * Do what the F**k you want
  */
@@ -27,6 +15,7 @@ import lib.math.voronoi.Voronoi;
 import lib.math.voronoi.datasubtypes.Point;
 import lib.math.voronoi.datasubtypes.Quad;
 
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -124,11 +113,14 @@ public class CalculateBySubDivision extends Voronoi {
 	 **/
 	private List<Point> getOptimizedCluster(int xStart, int xFinish, int yStart, int yFinish, List<? extends Point> sites, Point[][] voronoiMatrix) {
 
-		List<Point> cluster = new LinkedList<>();
-		//this may be better as parallel streams
+		List<Point> cluster = new ArrayList<>();
+
+		//searches a defined portion of an 2d array, x is the outer array range, y is the inner array range, these are likely to be in the 1000*1000s range
 		for (int x = xStart; x < xFinish; x++)
 			for (int y = yStart; y < yFinish; y++)
-				for (var p : sites)
+				//now for each point in this array we are comparing against this list, this list could have 100000 points + this is inefficient
+				for (Point p : sites)
+					//and then if Point exists on both lists it is clustered for a nearest neighbour search
 					if (voronoiMatrix[x][y].equals(p))
 						cluster.add(p);
 

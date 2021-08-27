@@ -16,6 +16,11 @@
   -->
 
 
+<!--
+  ~ © Owned by Alyce Kat Osbourne, AKA Alycrafticus, All Rights Reserved.
+  -->
+
+
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>

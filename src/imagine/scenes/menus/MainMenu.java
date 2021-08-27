@@ -1,9 +1,9 @@
 
 
 
-/*
- * © Owned by Alyce Kat Osbourne, AKA Alycrafticus, All Rights Reserved.
- */
+
+
+
 
 
 /*
@@ -31,10 +31,12 @@ public  class MainMenu extends SplitPane implements LoadsFXML {
 	public Button encyclopaediaButton;
 	@FXML
 	public Button optionsButton;
+
 	@Override
 	public void loadControls() {
 		this.characterBioButton.setOnAction(event -> Main.window.changeContent(new CharacterScreen()));
 		this.worldAtlasButton.setOnAction(event -> Main.window.changeContent(new WorldAtlus()));
 	}
+
 	{loadFXML();}
 }

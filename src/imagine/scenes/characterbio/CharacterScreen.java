@@ -1,8 +1,8 @@
 
 
-/*
- * © Owned by Alyce Kat Osbourne, AKA Alycrafticus, All Rights Reserved.
- */
+
+
+
 
 /*
  * © Owned by Alyce Kat Osbourne, AKA Alycrafticus, All Rights Reserved.
@@ -75,8 +75,7 @@ public class CharacterScreen extends SplitPane implements LoadsFXML {
 
 		characterlibrary.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
 		characterlibrary.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, value) -> handle(value));
-		for (Character character : SaveData.data.getCharacters().values())
-		{
+		for (Character character : SaveData.data.getCharacters().values()) {
 			TreeItem<String> child = new TreeItem<>(character.getNickname());
 			root.getChildren().add(child);
 		}
@@ -86,8 +85,7 @@ public class CharacterScreen extends SplitPane implements LoadsFXML {
 
 	void handle(TreeItem<String> s){
 		String name = s.getValue();
-		if (SaveData.data.getCharacters().containsKey(name))
-		{
+		if (SaveData.data.getCharacters().containsKey(name)) {
 			currentCharacter = SaveData.data.getCharacters().get(name);
 			nickname.setText(currentCharacter.getNickname());
 			title.setText(currentCharacter.getInfo().getTitle());

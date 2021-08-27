@@ -1,8 +1,8 @@
 
 
-/*
- * © Owned by Alyce Kat Osbourne, AKA Alycrafticus, All Rights Reserved.
- */
+
+
+
 
 /*
  * © Owned by Alyce Kat Osbourne, AKA Alycrafticus, All Rights Reserved.
@@ -76,7 +76,7 @@ public class Character {
 				sex,
 				sexuality,
 
-				age;
+		age;
 
 		public @Nullable String getAge() {
 			return age;

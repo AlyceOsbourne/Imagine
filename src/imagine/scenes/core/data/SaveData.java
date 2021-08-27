@@ -1,8 +1,8 @@
 
 
-/*
- * © Owned by Alyce Kat Osbourne, AKA Alycrafticus, All Rights Reserved.
- */
+
+
+
 
 /*
  * © Owned by Alyce Kat Osbourne, AKA Alycrafticus, All Rights Reserved.
@@ -23,6 +23,7 @@ public class SaveData {
 		public HashMap<String, Character> getCharacters() {
 			return Characters;
 		}
+
 		final HashMap<String, Character> Characters = new HashMap<>();
 		final HashMap<String, String> StoredWorldMaps = new HashMap<>();
 		final HashMap<String, String> StoredRegionMaps = new HashMap<>();

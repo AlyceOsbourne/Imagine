@@ -1,8 +1,8 @@
 
 
-/*
- * © Owned by Alyce Kat Osbourne, AKA Alycrafticus, All Rights Reserved.
- */
+
+
+
 
 /*
  * © Owned by Alyce Kat Osbourne, AKA Alycrafticus, All Rights Reserved.
@@ -131,8 +131,6 @@ public class CreateCharacter extends BorderPane implements LoadsFXML {
 		});
 		Main.window.getEditMenu().getItems().add(saveChar);
 	}
-
-
 
 
 	private void saveCharacter(ActionEvent event) {

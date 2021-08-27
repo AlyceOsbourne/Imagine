@@ -1,11 +1,4 @@
 
-
-
-/*
- * Do what the F**k you want
- */
-
-
 /*
  * Do what the F**k you want
  */

@@ -12,6 +12,10 @@
   ~ © Owned by Alyce Kat Osbourne, AKA Alycrafticus, All Rights Reserved.
   -->
 
+<!--
+  ~ © Owned by Alyce Kat Osbourne, AKA Alycrafticus, All Rights Reserved.
+  -->
+
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.BorderPane?>
 <fx:root dividerPositions="0.5" orientation="VERTICAL" type="SplitPane" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1">

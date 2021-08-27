@@ -1,25 +1,6 @@
 
 
 
-
-
-
-
-
-
-
-/*
- * © Owned by Alyce Kat Osbourne, AKA Alycrafticus, All Rights Reserved.
- */
-
-
-
-
-
-
-
-
-
 /*
  * © Owned by Alyce Kat Osbourne, AKA Alycrafticus, All Rights Reserved.
  */
