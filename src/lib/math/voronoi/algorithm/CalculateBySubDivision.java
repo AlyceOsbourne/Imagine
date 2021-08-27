@@ -1,18 +1,18 @@
 
 
+
 /*
  * Do what the F**k you want
  */
+
 
 /*
  * Do what the F**k you want
  */
 
 /*
- * Do what the F**k you want
+ Based on and owned by : https://www.youtube.com/watch?v=8mjUUNi1AaA&ab_channel=MichiganSpaceGrantConsortium
  */
-
-/* Based on and owned by : https://www.youtube.com/watch?v=8mjUUNi1AaA&ab_channel=MichiganSpaceGrantConsortium*/
 
 package lib.math.voronoi.algorithm;
 
@@ -25,20 +25,13 @@ import lib.math.voronoi.datasubtypes.Quad;
 import java.util.LinkedList;
 import java.util.List;
 
-/**
- * The type Calculate by sub division.
- */
 public class CalculateBySubDivision extends Voronoi {
-	/**
-	 * The Voronoi matrix.
-	 */
-
-	Point[][] voronoiMatrix;
+	final Point[][] voronoiMatrix;
 
 	/**
 	 * The inputted sites to process.
 	 */
-	List<Point> sites = new LinkedList<>();
+	final List<Point> sites = new LinkedList<>();
 
 	/**
 	 * initiates calculating a voronoi diagram by a subdivision algorithm.
@@ -89,7 +82,6 @@ public class CalculateBySubDivision extends Voronoi {
 		}
 	}
 
-
 	/**
 	 * checks quad corners vs sites, if quad corners sites are all equal assigns all
 	 * points in matrix to that site and returns true, otherwise fails and returns false
@@ -103,11 +95,39 @@ public class CalculateBySubDivision extends Voronoi {
 
 		// this should only check sites that are located within the quad
 		List<Point> cluster = getOptimizedCluster(xStart, xFinish, yStart, yFinish, sites, voronoiMatrix);
+
 		Point nearestSiteNE = getNearestSite(quad.ne, cluster);
 		Point nearestSiteNW = getNearestSite(quad.nw, cluster);
 		Point nearestSiteSE = getNearestSite(quad.se, cluster);
 		Point nearestSiteSW = getNearestSite(quad.sw, cluster);
-		return areSitesEqual(voronoiMatrix, xStart, xFinish, yStart, yFinish, nearestSiteNE, nearestSiteNW, nearestSiteSE, nearestSiteSW);
+
+		return areSitesEqual(voronoiMatrix,
+				xStart,
+				xFinish,
+				yStart,
+				yFinish,
+				nearestSiteNE,
+				nearestSiteNW,
+				nearestSiteSE,
+				nearestSiteSW);
+	}
+
+	/**
+	 * Should in theory return a smaller list for lookup as we have to compare this 4 times
+	 * once for each corner of the quad, more quads = more runs and more lookups,
+	 * so having a smaller list to check per lookup is better
+	 **/
+	private List<Point> getOptimizedCluster(int xStart, int xFinish, int yStart, int yFinish, List<? extends Point> sites, Point[][] voronoiMatrix) {
+
+		List<Point> cluster = new LinkedList<>();
+
+		for (int x = xStart; x < xFinish; x++)
+			for (int y = yStart; y < yFinish; y++)
+				for (var p : sites)
+					if (voronoiMatrix[x][y].equals(p))
+						cluster.add(p);
+
+		return cluster;
 	}
 
 	/**
@@ -115,7 +135,7 @@ public class CalculateBySubDivision extends Voronoi {
 	 **/
 	private boolean areSitesEqual(Point[][] voronoiMatrix, int xStart, int xFinish, int yStart, int yFinish, Point nearestSiteNE, Point nearestSiteNW, Point nearestSiteSE, Point nearestSiteSW) {
 		boolean passCheck;
-		if ((nearestSiteNE == nearestSiteSE) && (nearestSiteSE == nearestSiteSW) && (nearestSiteSW == nearestSiteNW)) {
+		if ((nearestSiteNE.equals(nearestSiteSE)) && (nearestSiteSE.equals(nearestSiteSW)) && (nearestSiteSW.equals(nearestSiteNW))) {
 			passCheck = true;
 			for (int x = xStart; x < xFinish; x++)
 				for (int y = yStart; y < yFinish; y++)
@@ -124,23 +144,6 @@ public class CalculateBySubDivision extends Voronoi {
 			passCheck = false;
 		}
 		return passCheck;
-	}
-
-	/**
-	 * Should in theory return a smaller list for lookup as we have to compare this 4 times
-	 * once for each corner of the quad
-	 **/
-	private List<Point> getOptimizedCluster(int xStart, int xFinish, int yStart, int yFinish, List<? extends Point> sites, Point[][] voronoiMatrix) {
-
-		List<Point> cluster = new LinkedList<>();
-
-		for (int x = xStart; x < xFinish; x++)
-			for (int y = yStart; y < yFinish; y++)
-				for (Point p : sites)
-					if (voronoiMatrix[x][y] == p)
-						cluster.add(p);
-
-		return cluster;
 	}
 
 	/**
