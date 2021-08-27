@@ -4,11 +4,23 @@
 
 
 
+/*
+ * Do what the F**k you want
+ */
+
+
+
+
+
+/*
+ * Do what the F**k you want
+ */
+
 package lib.math.voronoi;
 
-import lib.math.voronoi.datasubtypes.*;
 import lib.math.voronoi.algorithm.CalculateBySubDivision;
 import lib.math.voronoi.algorithm.JumpFlood;
+import lib.math.voronoi.datasubtypes.Point;
 
 import java.util.List;
 

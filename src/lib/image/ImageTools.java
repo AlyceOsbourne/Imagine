@@ -1,5 +1,10 @@
 
 
+
+/*
+ * Do what the F**k you want
+ */
+
 package lib.image;
 
 import javafx.embed.swing.SwingFXUtils;

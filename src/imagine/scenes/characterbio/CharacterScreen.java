@@ -1,10 +1,18 @@
 
 
+/*
+ * © Owned by Alyce Kat Osbourne, AKA Alycrafticus, All Rights Reserved.
+ */
+
+/*
+ * © Owned by Alyce Kat Osbourne, AKA Alycrafticus, All Rights Reserved.
+ */
+
 package imagine.scenes.characterbio;
 
 import imagine.Main;
-import imagine.scenes.core.data.SaveData;
 import imagine.scenes.characterbio.data.Character;
+import imagine.scenes.core.data.SaveData;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.*;

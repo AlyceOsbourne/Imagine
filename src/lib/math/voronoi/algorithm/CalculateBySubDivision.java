@@ -1,4 +1,9 @@
 
+
+/*
+ * Do what the F**k you want
+ */
+
 /* Based on and owned by : https://www.youtube.com/watch?v=8mjUUNi1AaA&ab_channel=MichiganSpaceGrantConsortium*/
 
 package lib.math.voronoi.algorithm;

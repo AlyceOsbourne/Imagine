@@ -1,5 +1,10 @@
 
 
+
+/*
+ * Do what the F**k you want
+ */
+
 package lib.math.voronoi.datasubtypes;
 
 import java.util.Arrays;

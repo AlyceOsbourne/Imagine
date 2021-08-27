@@ -1,5 +1,13 @@
 
 
+/*
+ * © Owned by Alyce Kat Osbourne, AKA Alycrafticus, All Rights Reserved.
+ */
+
+/*
+ * © Owned by Alyce Kat Osbourne, AKA Alycrafticus, All Rights Reserved.
+ */
+
 package imagine.scenes.core.data;
 
 import imagine.scenes.characterbio.data.Character;
