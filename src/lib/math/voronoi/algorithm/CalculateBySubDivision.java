@@ -4,6 +4,10 @@
  * Do what the F**k you want
  */
 
+/*
+ * Do what the F**k you want
+ */
+
 /* Based on and owned by : https://www.youtube.com/watch?v=8mjUUNi1AaA&ab_channel=MichiganSpaceGrantConsortium*/
 
 package lib.math.voronoi.algorithm;
@@ -52,90 +56,6 @@ public class CalculateBySubDivision extends Voronoi {
 		start(voronoiMatrix, sites);
 	}
 
-	/**
-	 * checks quad corners vs sites, if quad corners sites are all equal assigns all
-	 * points in matrix to that site and returns true, otherwise fails and returns false
-	 **/
-	static boolean checkQuad(@NamedArg("Quad to be checked") Quad quad, @NamedArg("List of Sites to compare against") List<? extends Point> sites, @NamedArg("Matrix") Point[][] voronoiMatrix) {
-		//collect nearest site for each corner of quad
-		Point nearestSiteNE, nearestSiteNW, nearestSiteSE, nearestSiteSW;
-		nearestSiteNE = getNearestSite(quad.ne, sites);
-		nearestSiteNW = getNearestSite(quad.nw, sites);
-		nearestSiteSE = getNearestSite(quad.se, sites);
-		nearestSiteSW = getNearestSite(quad.sw, sites);
-		//checks to see if if the found sites are equal and then if true sets the nearest site for each point to that of the site
-		return compare(quad, voronoiMatrix, nearestSiteNE, nearestSiteNW, nearestSiteSE, nearestSiteSW);
-	}
-	private static boolean compare(Quad quad, Point[][] voronoiMatrix, Point nearestSiteNE, Point nearestSiteNW, Point nearestSiteSE, Point nearestSiteSW) {
-		boolean passCheck;
-		if ((nearestSiteNE == nearestSiteSE) && (nearestSiteSE == nearestSiteSW) && (nearestSiteSW == nearestSiteNW)) {
-			passCheck = true;
-			int xStart, xFinish, yStart, yFinish;
-			xStart = quad.sw.x;
-			xFinish = quad.se.x;
-			yStart = quad.sw.y;
-			yFinish = quad.nw.y;
-			for (int x = xStart; x < xFinish; x++)
-				for (int y = yStart; y < yFinish; y++)
-					voronoiMatrix[x][y].nearestSeed = nearestSiteNW;
-		} else {
-			passCheck = false;
-		}
-		return passCheck;
-	}
-
-
-
-	/**
-	 * Gets nearest site to said point
-	 */
-	static Point getNearestSite(Point p, List<? extends Point> s) {
-		//I reckon this could be more efficient
-		Point currentClosestSite;
-		currentClosestSite = s.stream().findFirst().orElseThrow();
-
-		for (Point site : s) {
-			/*
-				I feel this will get super inefficient with much higher numbers of sites, maybe need to find a way to cluster points together,
-				 then only check promising clusters
-				 @See Point.distance
-			*/
-			if (p.distance(site) < p.distance(currentClosestSite)) currentClosestSite = site;
-		}
-
-		return currentClosestSite;
-	}
-
-	/**
-	 * returns 4 quads in a list from inputted quad
-	 **/
-	static private List<Quad> subDivideQuad(Quad currentQuad) {
-		LinkedList<Quad> subdivision = new LinkedList<>();
-		//the 4 quads inputted quad will be split into
-		Quad seCorner, swCorner, neCorner, nwCorner;
-		//points for easier working out of quad placement
-		Point center, n, e, s, w, ne, nw, se, sw;
-		ne = currentQuad.ne;
-		nw = currentQuad.nw;
-		se = currentQuad.se;
-		sw = currentQuad.sw;
-		n = Utils.midpoint(ne, nw);
-		e = Utils.midpoint(se, ne);
-		s = Utils.midpoint(se, sw);
-		w = Utils.midpoint(sw, nw);
-		center = Utils.midpoint(Utils.midpoint(n, s), Utils.midpoint(e, w));
-		//creating the 4 quads and adding them to the list to return
-		seCorner = new Quad(se, e, s, center);
-		subdivision.add(seCorner);
-		swCorner = new Quad(s, center, sw, w);
-		subdivision.add(swCorner);
-		neCorner = new Quad(e, ne, center, w);
-		subdivision.add(neCorner);
-		nwCorner = new Quad(center, n, w, nw);
-		subdivision.add(nwCorner);
-		//return constructed list
-		return subdivision;
-	}
 
 	/**
 	 * starts the algorithm, creates a starting Quad with the bounds of the image,
@@ -163,6 +83,108 @@ public class CalculateBySubDivision extends Voronoi {
 				checkAndSubdivide(sub, sites);
 			}
 		}
+	}
+
+
+	/**
+	 * checks quad corners vs sites, if quad corners sites are all equal assigns all
+	 * points in matrix to that site and returns true, otherwise fails and returns false
+	 **/
+	private boolean checkQuad(@NamedArg("Quad to be checked") Quad quad, @NamedArg("List of Sites to compare against") List<? extends Point> sites, @NamedArg("Matrix") Point[][] voronoiMatrix) {
+		//collect nearest site for each corner of quad
+		int xStart = quad.sw.x;
+		int xFinish = quad.se.x;
+		int yStart = quad.sw.y;
+		int yFinish = quad.nw.y;
+
+		// this should only check sites that are located within the quad
+		List<Point> cluster = getOptimizedCluster(xStart, xFinish, yStart, yFinish, sites, voronoiMatrix);
+		Point nearestSiteNE = getNearestSite(quad.ne, cluster);
+		Point nearestSiteNW = getNearestSite(quad.nw, cluster);
+		Point nearestSiteSE = getNearestSite(quad.se, cluster);
+		Point nearestSiteSW = getNearestSite(quad.sw, cluster);
+		return areSitesEqual(voronoiMatrix, xStart, xFinish, yStart, yFinish, nearestSiteNE, nearestSiteNW, nearestSiteSE, nearestSiteSW);
+	}
+
+	/**
+	 * compares a quads sites and make sure they are equal, if true then assign all points in said quad to the site
+	 **/
+	private boolean areSitesEqual(Point[][] voronoiMatrix, int xStart, int xFinish, int yStart, int yFinish, Point nearestSiteNE, Point nearestSiteNW, Point nearestSiteSE, Point nearestSiteSW) {
+		boolean passCheck;
+		if ((nearestSiteNE == nearestSiteSE) && (nearestSiteSE == nearestSiteSW) && (nearestSiteSW == nearestSiteNW)) {
+			passCheck = true;
+			for (int x = xStart; x < xFinish; x++)
+				for (int y = yStart; y < yFinish; y++)
+					voronoiMatrix[x][y].nearestSeed = nearestSiteNW;
+		} else {
+			passCheck = false;
+		}
+		return passCheck;
+	}
+
+	/**
+	 * Should in theory return a smaller list for lookup as we have to compare this 4 times
+	 * once for each corner of the quad
+	 **/
+	private List<Point> getOptimizedCluster(int xStart, int xFinish, int yStart, int yFinish, List<? extends Point> sites, Point[][] voronoiMatrix) {
+
+		List<Point> cluster = new LinkedList<>();
+
+		for (int x = xStart; x < xFinish; x++)
+			for (int y = yStart; y < yFinish; y++)
+				for (Point p : sites)
+					if (voronoiMatrix[x][y] == p)
+						cluster.add(p);
+
+		return cluster;
+	}
+
+	/**
+	 * Gets nearest site to said point
+	 */
+	private Point getNearestSite(Point p, List<? extends Point> s) {
+		//I reckon this could be more efficient
+		var currentClosestSite = s.stream().findFirst().orElseThrow();
+
+		/*
+		I feel this will get super inefficient with much higher numbers of sites, maybe need to find a way to cluster points together,
+		then only check promising clusters
+		@See Point.distance
+		*/
+		for (Point site : s) if (p.distance(site) < p.distance(currentClosestSite)) currentClosestSite = site;
+
+		return currentClosestSite;
+	}
+
+	/**
+	 * returns 4 quads in a list from inputted quad
+	 **/
+	private List<Quad> subDivideQuad(Quad currentQuad) {
+		LinkedList<Quad> subdivision = new LinkedList<>();
+		//the 4 quads inputted quad will be split into
+		Quad seCorner, swCorner, neCorner, nwCorner;
+		//points for easier working out of quad placement
+		Point center, n, e, s, w, ne, nw, se, sw;
+		ne = currentQuad.ne;
+		nw = currentQuad.nw;
+		se = currentQuad.se;
+		sw = currentQuad.sw;
+		n = Utils.midpoint(ne, nw);
+		e = Utils.midpoint(se, ne);
+		s = Utils.midpoint(se, sw);
+		w = Utils.midpoint(sw, nw);
+		center = Utils.midpoint(Utils.midpoint(n, s), Utils.midpoint(e, w));
+		//creating the 4 quads and adding them to the list to return
+		seCorner = new Quad(se, e, s, center);
+		subdivision.add(seCorner);
+		swCorner = new Quad(s, center, sw, w);
+		subdivision.add(swCorner);
+		neCorner = new Quad(e, ne, center, w);
+		subdivision.add(neCorner);
+		nwCorner = new Quad(center, n, w, nw);
+		subdivision.add(nwCorner);
+		//return constructed list
+		return subdivision;
 	}
 
 

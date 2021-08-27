@@ -5,9 +5,14 @@
  * Do what the F**k you want
  */
 
+
+/*
+ * Do what the F**k you want
+ */
+
 package lib.math.voronoi.datasubtypes;
 
-import com.google.common.base.Objects;
+import java.util.Random;
 
 public class Point {
 	//simply an x and y location
@@ -20,37 +25,49 @@ public class Point {
 		this.y = y;
 	}
 
-	@Override
-	public boolean equals(Object o) {
-		if (this == o) return true;
-		if (!(o instanceof Point point)) return false;
-		return Double.compare(point.x, x) == 0 && Double.compare(point.y, y) == 0;
+	public Point randomize(int width, int height) {
+		Random r = new Random();
+		this.x = r.nextInt(width - 1);
+		this.y = r.nextInt(height - 1);
+		return this;
 	}
 
 	@Override
 	public int hashCode() {
-		return Objects.hashCode(x, y);
+		int result = x;
+		result = 31 * result + y;
+		result = 31 * result + (nearestSeed != null ? nearestSeed.hashCode() : 0);
+		return result;
 	}
 
-	public <P extends Point> int distance(P point){
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (!(o instanceof Point point)) return false;
+		if (x != point.x || y != point.y) return false;
+		return ((nearestSeed != null) && nearestSeed.equals(point.nearestSeed)) || ((nearestSeed == null) && (point.nearestSeed == null));
+	}
+
+	public <P extends Point> int distance(P point) {
 		return distance(point.x, point.y);
 	}
-	private int distance(double x1, double y1) {
-		double a = getX() - x1;
-		double b = getY() - y1;
+
+	private int distance(int x1, int y1) {
+		int a = getX() - x1;
+		int b = getY() - y1;
 		return (int) Math.sqrt(a * a + b * b);
 	}
 
-	double getX() {
+	int getX() {
 		return x;
 	}
 
-	double getY() {
+	int getY() {
 		return y;
 	}
 
-	public double angle(Point p){
-		return angle(p.x,p.y);
+	public double angle(Point p) {
+		return angle(p.x, p.y);
 	}
 
 	public double angle(double x, double y) {
