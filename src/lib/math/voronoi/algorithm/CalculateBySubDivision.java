@@ -132,18 +132,11 @@ public class CalculateBySubDivision extends Voronoi {
 		return cluster;
 	}
 
+
 	/**
 	 * compares a quads sites and make sure they are equal, if true then assign all points in said quad to the site
 	 **/
-	private boolean areSitesEqual(Point[][] voronoiMatrix,
-	                              int xStart,
-	                              int xFinish,
-	                              int yStart,
-	                              int yFinish,
-	                              Point nearestSiteNE,
-	                              Point nearestSiteNW,
-	                              Point nearestSiteSE,
-	                              Point nearestSiteSW) {
+	private boolean areSitesEqual(Point[][] voronoiMatrix, int xStart, int xFinish, int yStart, int yFinish, Point nearestSiteNE, Point nearestSiteNW, Point nearestSiteSE, Point nearestSiteSW) {
 		boolean passCheck;
 		if ((nearestSiteNE.equals(nearestSiteSE)) && (nearestSiteSE.equals(nearestSiteSW)) && (nearestSiteSW.equals(nearestSiteNW))) {
 			System.out.print("Passed Check");
@@ -157,7 +150,6 @@ public class CalculateBySubDivision extends Voronoi {
 		}
 		return passCheck;
 	}
-
 
 	/**
 	 * Gets nearest site to said point
@@ -173,6 +165,7 @@ public class CalculateBySubDivision extends Voronoi {
 		System.out.println(p + "s nearest site is " + currentClosestSite);
 		return currentClosestSite;
 	}
+
 
 	/**
 	 * returns 4 quads in a list from inputted quad
@@ -215,6 +208,4 @@ public class CalculateBySubDivision extends Voronoi {
 		}
 		return subdivision;
 	}
-
-
 }
