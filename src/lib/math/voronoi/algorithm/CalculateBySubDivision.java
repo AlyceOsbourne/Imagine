@@ -19,7 +19,7 @@ import java.util.List;
 import java.util.Random;
 import java.util.logging.Logger;
 
-public class CalculateBySubDivision extends Voronoi {
+public class CalculateBySubDivision<Data extends Point> extends Voronoi {
 
 	Logger log = Logger.getLogger(this.getClass().getSimpleName());
 
@@ -28,7 +28,7 @@ public class CalculateBySubDivision extends Voronoi {
 	/**
 	 * The inputted sites to process.
 	 */
-	List<Point> sites = new ArrayList<>();
+	List<Data> sites = new ArrayList<>();
 	List<Quad> toProcess = new ArrayList<>();
 
 
@@ -37,14 +37,14 @@ public class CalculateBySubDivision extends Voronoi {
 	 * checks sites to make sure they are in bounds, discards those outside and then adds the remaining to the matrix
 	 * plus stores sites in a list for faster lookup
 	 */
-	public CalculateBySubDivision(int width, int height, List<Point> sitesIn) {
+	public CalculateBySubDivision(int width, int height, List<Data> sitesIn) {
 		voronoiMatrix = new Point[width][height];
 		for (int i = 0; i < voronoiMatrix.length; i++)
 			for (int j = 0; j < voronoiMatrix[i].length; j++)
 				voronoiMatrix[i][j] = new Point(i, j);
 
 
-		for (Point site : sitesIn) {
+		for (Data site : sitesIn) {
 			if (site.x < width - 1 && site.y < height - 1 && site.x >= 0 && site.y >= 0) {
 				sites.add(site);
 				site.isSeed = true;
@@ -165,13 +165,10 @@ public class CalculateBySubDivision extends Voronoi {
 		toProcess.addAll(subdivision);
 	}
 
-	/**
-	 * Gets nearest site to said point
-	 */
+
 	private Point getNearestSite(Point p) {
 
 		System.out.println("Searching for nearest site too (" + p.x + "," + p.y + ")");
-		List<Point> equadistantPoints = new ArrayList<>();
 		//starting with a node that should be well outside the diagram, just so we have something to check against in the first cycle
 		Point currentClosestSite = new Point(Integer.MAX_VALUE, Integer.MAX_VALUE);
 
