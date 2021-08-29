@@ -19,11 +19,12 @@ import java.util.Random;
 public abstract class Voronoi {
 	public static Voronoi create(Algorithm algorithm, int width, int height, @Nullable List<Point> sites) {
 
+		//these are some test lines to populate the site list.
 		List<Point> p = sites;
 		if (p == null || p.isEmpty()) {
 			p = new ArrayList<>();
 			Random r = new Random();
-			int bound = 300; //r.nextInt(((width - 1) * (height - 1)) / 30);
+			int bound = r.nextInt(((width - 1) * (height - 1)) / 30);
 			for (int i = 0; i < bound; i++) {
 				Point randomize = new Point(r.nextInt(width - 1), r.nextInt(height - 1), true);
 				p.add(randomize);
