@@ -30,10 +30,6 @@ public class Point {
 		this.y = y;
 	}
 
-	public Point(int x, int y, boolean isSeed) {
-		this(x, y);
-		this.isSeed = isSeed;
-	}
 
 	public <P extends Point> double distance(P point) {
 		return distance(point.x, point.y);
@@ -80,5 +76,10 @@ public class Point {
 
 	public String printCoords() {
 		return "(" + getX() + "," + getY() + ")";
+	}
+
+	public void setSeed() {
+		this.isSeed = true;
+		this.nearestSeed = this;
 	}
 }

@@ -23,9 +23,9 @@ public class Voronoi {
 		if (p == null || p.isEmpty()) {
 			p = new ArrayList<>();
 			Random r = new Random();
-			int bound = r.nextInt(((width - 1) * (height - 1)) / 300);
+			int bound = 4;
 			for (int i = 0; i < bound; i++) {
-				Point randomize = new Point(r.nextInt(width - 1), r.nextInt(height - 1), true);
+				Point randomize = new Point(r.nextInt(width - 1), r.nextInt(height - 1));
 				p.add(randomize);
 			}
 			System.out.println("Number of sites " + p.size());

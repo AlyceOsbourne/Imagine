@@ -9,25 +9,28 @@
 
 package lib.math.voronoi.algorithm;
 
+import com.google.common.base.Stopwatch;
 import lib.math.voronoi.Point;
 import lib.math.voronoi.Utils;
 import lib.math.voronoi.Voronoi;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
-import java.util.Random;
+import java.util.concurrent.TimeUnit;
 import java.util.logging.Logger;
 
 public class CalculateBySubDivision<Data extends Point> extends Voronoi {
 
 	Logger log = Logger.getLogger(this.getClass().getSimpleName());
 
+	int width, height;
 	Point[][] voronoiMatrix;
 
 	/**
 	 * The inputted sites to process.
 	 */
-	List<Data> sites = new ArrayList<>();
+	List<Point> sites = new ArrayList<>();
 	List<Quad> toProcess = new ArrayList<>();
 
 
@@ -36,23 +39,32 @@ public class CalculateBySubDivision<Data extends Point> extends Voronoi {
 	 * checks sites to make sure they are in bounds, discards those outside and then adds the remaining to the matrix
 	 * plus stores sites in a list for faster lookup
 	 */
+	@SuppressWarnings("UnstableApiUsage")
 	public CalculateBySubDivision(int width, int height, List<Data> sitesIn) {
+		Stopwatch s = Stopwatch.createStarted();
 		voronoiMatrix = new Point[width][height];
-		for (int i = 0; i < voronoiMatrix.length; i++)
-			for (int j = 0; j < voronoiMatrix[i].length; j++)
+		this.width = width;
+		this.height = height;
+		for (int i = 0; i < voronoiMatrix.length; i++) {
+			for (int j = 0; j < voronoiMatrix[i].length; j++) {
 				voronoiMatrix[i][j] = new Point(i, j);
-
-
+			}
+		}
 		for (Data site : sitesIn) {
 			if (site.x < width - 1 && site.y < height - 1 && site.x >= 0 && site.y >= 0) {
-				sites.add(site);
-				site.isSeed = true;
-				voronoiMatrix[site.x][site.y] = site;
+				Point p = voronoiMatrix[site.x][site.y];
+				p.setSeed();
+				sites.add(p);
 				System.out.println("Added site (" + site.x + "," + site.x + ")");
 			} else log.info("Discarded site due to it being out of range");
 		}
+		System.out.println("Initiated matrix with " + sites.size() + " points");
+		printMatrix();
 		start();
-		log.info("Finished");
+		System.out.println("Finished calculating voronoi matrix");
+		s.stop();
+		System.out.println("Time Took:" + s.elapsed(TimeUnit.MILLISECONDS));
+		printMatrix();
 	}
 
 	/**
@@ -90,6 +102,21 @@ public class CalculateBySubDivision<Data extends Point> extends Voronoi {
 
 	}
 
+	public void printMatrix() {
+		Arrays.stream(voronoiMatrix).forEach((row) -> {
+			System.out.print("[");
+			Arrays.stream(row).forEach((el) -> {
+				if (el.nearestSeed != null) {
+					System.out.print(" " + el.nearestSeed.printCoords() + " ");
+				} else if (el.x < 10 && el.y < 10) System.out.print(" " + "(x,x)" + " ");
+				else if (el.x < 10) System.out.print(" " + "(x,xx)" + " ");
+				else if (el.y < 10) System.out.print(" " + "(xx,x)" + " ");
+				else System.out.print(" " + "(xx,xx)" + " ");
+			});
+			System.out.println("]");
+		});
+	}
+
 	/**
 	 * passes the quad the checkQuad, if it passes this should be the end of the line for that quad, otherwise it
 	 * subdivides the quad into 4 sections and adds them to the process queue
@@ -98,13 +125,9 @@ public class CalculateBySubDivision<Data extends Point> extends Voronoi {
 		toProcess.remove(quad);
 		if (!checkQuad(quad) && quad.size() > 1) subDivideQuad(quad);
 		else {
-			System.out.println("found quad with a size of 1, calculating single point");
-			checkSingleCell(quad.nw);
+			//System.out.println("found quad with a size of 1, calculating single point");
+			checkSingleCell(quad.nw.x,quad.nw.y);
 		}
-	}
-
-	private void checkSingleCell(Point p) {
-		getNearestSite(p);
 	}
 
 	/**
@@ -113,10 +136,10 @@ public class CalculateBySubDivision<Data extends Point> extends Voronoi {
 	 **/
 	private boolean checkQuad(Quad quad) {
 		//collect nearest site for each corner of quad
-		Point nearestSiteNE = getNearestSite(quad.ne);
-		Point nearestSiteNW = getNearestSite(quad.nw);
-		Point nearestSiteSE = getNearestSite(quad.se);
-		Point nearestSiteSW = getNearestSite(quad.sw);
+		Point nearestSiteNE = getNearestSite(quad.ne.x, quad.ne.y);
+		Point nearestSiteNW = getNearestSite(quad.nw.x, quad.nw.y);
+		Point nearestSiteSE = getNearestSite(quad.se.x, quad.se.y);
+		Point nearestSiteSW = getNearestSite(quad.sw.x, quad.se.y);
 		return areSitesEqual(nearestSiteNE, nearestSiteNW, nearestSiteSE, nearestSiteSW);
 	}
 
@@ -136,12 +159,12 @@ public class CalculateBySubDivision<Data extends Point> extends Voronoi {
 		se = currentQuad.se;
 		sw = currentQuad.sw;
 
-		n = Utils.midpoint(nw, ne);
-		e = Utils.midpoint(se, ne);
-		s = Utils.midpoint(sw, se);
-		w = Utils.midpoint(sw, nw);
+		n = Utils.midpoint(nw, ne, voronoiMatrix);
+		e = Utils.midpoint(se, ne, voronoiMatrix);
+		s = Utils.midpoint(sw, se, voronoiMatrix);
+		w = Utils.midpoint(sw, nw, voronoiMatrix);
 
-		center = Utils.midpoint(Utils.midpoint(n, s), Utils.midpoint(e, w));
+		center = Utils.midpoint(Utils.midpoint(n, s, voronoiMatrix), Utils.midpoint(e, w, voronoiMatrix), voronoiMatrix);
 		//creating the 4 quads and adding them to the list to return
 
 		nwCorner = new Quad(nw, w, n, center);
@@ -164,37 +187,38 @@ public class CalculateBySubDivision<Data extends Point> extends Voronoi {
 		toProcess.addAll(subdivision);
 	}
 
-	private Point getNearestSite(Point p) {
+	private void checkSingleCell(int x, int y) {
+		getNearestSite(x, y);
+	}
 
-		System.out.println("Searching for nearest site too (" + p.x + "," + p.y + ")");
+	private Point getNearestSite(int x, int y) {
+
+		Point p = voronoiMatrix[x][y];
+
+		//System.out.println("Searching for nearest site too (" + p.x + "," + p.y + ")");
 		//starting with a node that should be well outside the diagram, just so we have something to check against in the first cycle
-		Point currentClosestSite = new Point(Integer.MAX_VALUE, Integer.MAX_VALUE);
+		Point currentClosestSite = null;
 
-		//well clearly if this point is a site its nearest site is itself
-		if (p.isSeed) {
-			return p;
-		}
-
+		//well clearly if this point is a site its nearest site is itsel
 		//line to cute down some method calls, means each tested point only needs to do a distance check once
-		else if (p.nearestSeed != null) {
-			return p.nearestSeed;
-		} else {
-			for (Point site : sites) {
-				//if new site is closer than current replace current and assigns the points nearest site
-				if (site == p.nearestSeed) {
-					if (new Random().nextBoolean())
-						continue;
-				}
-				if (p.distance(site) < p.distance(currentClosestSite))
-					currentClosestSite = site;
-			}
+		for (Point site : sites) {
+			Point s = voronoiMatrix[site.x][site.y];
+			if (currentClosestSite == null) currentClosestSite = s;
+			//if new site is closer than current replace current and assigns the points nearest site
+			if (p.distance(s) < p.distance(currentClosestSite))
+				currentClosestSite = s;
 		}
+
 
 		p.nearestSeed = currentClosestSite;
 
-		System.out.println("Nearest site found at (" + currentClosestSite.x + "," + currentClosestSite.y + ")");
+		//System.out.println("Nearest site found at (" + currentClosestSite.x + "," + currentClosestSite.y + ")");
 
 		return currentClosestSite;
+	}
+
+	public Point[][] getMatrix() {
+		return this.voronoiMatrix;
 	}
 
 	/**
@@ -203,24 +227,16 @@ public class CalculateBySubDivision<Data extends Point> extends Voronoi {
 	private boolean areSitesEqual(Point nearestSiteNE, Point nearestSiteNW, Point nearestSiteSE, Point nearestSiteSW) {
 
 		boolean passCheck;
-		System.out.println("Checking sites for equality");
-		System.out.println("Sites:");
-		System.out.println(nearestSiteNE.printCoords() + " " + nearestSiteNW.printCoords());
-		System.out.println(nearestSiteSE.printCoords() + " " + nearestSiteSW.printCoords());
-		if ((nearestSiteNE.areEqual(nearestSiteSE))
+		//System.out.println("Checking sites for equality");
+		//System.out.println("Sites:");
+		//System.out.println(nearestSiteNE.printCoords() + " " + nearestSiteNW.printCoords());
+		//System.out.println(nearestSiteSE.printCoords() + " " + nearestSiteSW.printCoords());
+		//log.finer("Sites are Equal, flagging points");
+		//log.severe("Sites are Not Equal");
+		passCheck = (nearestSiteNE.areEqual(nearestSiteSE))
 				&& (nearestSiteSE.areEqual(nearestSiteSW))
-				&& (nearestSiteSW.areEqual(nearestSiteNW))) {
-			passCheck = true;
-			log.finer("Sites are Equal, flagging points");
-		} else {
-			log.severe("Sites are Not Equal");
-			passCheck = false;
-		}
+				&& (nearestSiteSW.areEqual(nearestSiteNW));
 		return passCheck;
-	}
-
-	public Point[][] getMatrix() {
-		return this.voronoiMatrix;
 	}
 
 	public static class Quad {

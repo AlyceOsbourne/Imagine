@@ -41,8 +41,8 @@ public class Utils {
 		return (a + b) / 2;
 	}
 
-	public static Point midpoint(Point a, Point b) {
-		return new Point(average(a.x, b.x), average(a.y, b.y)){};
+	public static Point midpoint(Point a, Point b, Point[][] matrix) {
+		return matrix[average(a.x, b.x)][average(a.y, b.y)];
 	}
 
 	private static int perpendicularSlope(int rise, int run) {
