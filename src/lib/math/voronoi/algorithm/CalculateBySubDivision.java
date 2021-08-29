@@ -14,9 +14,14 @@ import lib.math.voronoi.Voronoi;
 import lib.math.voronoi.datasubtypes.Point;
 import lib.math.voronoi.datasubtypes.Quad;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
+import java.util.logging.Logger;
 
 public class CalculateBySubDivision extends Voronoi {
+
+	Logger log = Logger.getLogger(this.getClass().getSimpleName());
 
 	Point[][] voronoiMatrix;
 
@@ -24,7 +29,7 @@ public class CalculateBySubDivision extends Voronoi {
 	 * The inputted sites to process.
 	 */
 	List<Point> sites = new ArrayList<>();
-	Queue<Quad> toProcess = new ArrayDeque<>();
+	List<Quad> toProcess = new ArrayList<>();
 
 
 	/**
@@ -33,9 +38,6 @@ public class CalculateBySubDivision extends Voronoi {
 	 * plus stores sites in a list for faster lookup
 	 */
 	public CalculateBySubDivision(int width, int height, List<Point> sitesIn) {
-
-		//might have to minus width and height by 1 to account for the fact that array starts at 0
-
 		voronoiMatrix = new Point[width][height];
 		for (int i = 0; i < voronoiMatrix.length; i++)
 			for (int j = 0; j < voronoiMatrix[i].length; j++)
@@ -48,11 +50,10 @@ public class CalculateBySubDivision extends Voronoi {
 				site.isSeed = true;
 				voronoiMatrix[site.x][site.y] = site;
 				System.out.println("Added site (" + site.x + "," + site.x + ")");
-			}// else System.out.println("Discarded site due to it being out of range");
+			} else log.info("Discarded site due to it being out of range");
 		}
 		start();
-
-		System.out.println("Finished");
+		log.info("Finished");
 	}
 
 	/**
@@ -65,93 +66,125 @@ public class CalculateBySubDivision extends Voronoi {
 		xMin = 0;
 		xMax = voronoiMatrix.length - 1;
 		yMax = voronoiMatrix[0].length - 1;
-		toProcess.add(new Quad(voronoiMatrix[xMax][xMin], voronoiMatrix[xMax][yMax], voronoiMatrix[xMin][yMin], voronoiMatrix[xMin][yMax]));
-		do checkAndSubdivide(toProcess.poll()); while (!toProcess.isEmpty());
-	}
+		toProcess.add(
+				new Quad(
+						voronoiMatrix[xMin][yMax],
+						voronoiMatrix[xMin][yMin],
+						voronoiMatrix[xMax][yMax],
+						voronoiMatrix[xMax][yMin]
+				)
+		);
 
-	private void checkAndSubdivide(Quad quad) {
-		if (!checkQuad(quad)) {
-			toProcess.addAll(subDivideQuad(quad));
+		int Cycle = 1;
+		while (!toProcess.isEmpty()) {
+			System.out.println("Starting Cycle: " + Cycle++);
+			toProcess.stream().parallel().findFirst().ifPresent(this::checkAndSubdivide);
+
+
 		}
+
 	}
 
 	/**
-	 * checks quad corners vs sites, if quad corners sites are all equal assigns all
-	 * points in matrix to that site and returns true, otherwise fails and returns false
+	 * passes the quad the checkQuad, if it passes this should be the end of the line for that quad, otherwise it
+	 * subdivides the quad into 4 sections and adds them to the process queue
+	 **/
+	private void checkAndSubdivide(Quad quad) {
+		toProcess.remove(quad);
+		if (!checkQuad(quad)) subDivideQuad(quad);
+	}
+
+	/**
+	 * checks quad corners for their nearest site, comparing against a list of sites to squeeze out some more speed.
+	 * Then passes along to areSitesEqual to perform equality check
 	 **/
 	private boolean checkQuad(Quad quad) {
 		//collect nearest site for each corner of quad
-		int xStart = quad.sw.x;
-		int xFinish = quad.se.x;
-		int yStart = quad.se.y;
-		int yFinish = quad.ne.y;
-		System.out.println("Checking range X:" + xStart + " " + xFinish);
-		System.out.println("Checking range Y:" + yStart + " " + yFinish);
 		Point nearestSiteNE = getNearestSite(quad.ne);
-		System.out.println(nearestSiteNE + "found");
 		Point nearestSiteNW = getNearestSite(quad.nw);
-		System.out.println(nearestSiteNW + "found");
 		Point nearestSiteSE = getNearestSite(quad.se);
-		System.out.println(nearestSiteSE + "found");
 		Point nearestSiteSW = getNearestSite(quad.sw);
-		System.out.println(nearestSiteSW + "found");
-		boolean areEqual = areSitesEqual(nearestSiteNE, nearestSiteNW, nearestSiteSE, nearestSiteSW);
-		if (areEqual) assignPointsToSite(nearestSiteNW, xStart, xFinish, yStart, yFinish);
-		return areEqual;
+
+		return areSitesEqual(nearestSiteNE, nearestSiteNW, nearestSiteSE, nearestSiteSW);
 	}
 
 	/**
 	 * returns 4 quads in a list from inputted quad
 	 **/
-	private List<Quad> subDivideQuad(Quad currentQuad) {
-		LinkedList<Quad> subdivision = new LinkedList<>();
+	private void subDivideQuad(Quad currentQuad) {
+
+		ArrayList<Quad> subdivision = new ArrayList<>();
 		//the 4 quads inputted quad will be split into
 		Quad seCorner, swCorner, neCorner, nwCorner;
 		//points for easier working out of quad placement
 		Point center, n, e, s, w, ne, nw, se, sw;
+
 		ne = currentQuad.ne;
 		nw = currentQuad.nw;
 		se = currentQuad.se;
 		sw = currentQuad.sw;
+
 		n = Utils.midpoint(nw, ne);
 		e = Utils.midpoint(se, ne);
 		s = Utils.midpoint(sw, se);
 		w = Utils.midpoint(sw, nw);
-		center = Utils.midpoint(Utils.midpoint(nw, se), Utils.midpoint(ne, sw));
+
+		center = Utils.midpoint(Utils.midpoint(n, s), Utils.midpoint(e, w));
 		//creating the 4 quads and adding them to the list to return
-		seCorner = new Quad(se, e, s, center);
-		subdivision.add(seCorner);
-		swCorner = new Quad(s, center, sw, w);
-		subdivision.add(swCorner);
-		neCorner = new Quad(e, ne, center, w);
-		subdivision.add(neCorner);
-		nwCorner = new Quad(center, n, w, nw);
+
+		nwCorner = new Quad(nw, w, n, center);
 		subdivision.add(nwCorner);
+		swCorner = new Quad(w, sw, center, s);
+		subdivision.add(swCorner);
+		neCorner = new Quad(n, center, ne, e);
+		subdivision.add(neCorner);
+		seCorner = new Quad(center, s, e, se);
+		subdivision.add(seCorner);
+
 		for (Quad q : subdivision) {
 			System.out.println(q + "created with corners");
 			System.out.println("North East: (" + q.ne.x + "," + q.ne.y + ")");
-			System.out.println("North West: (" + q.nw.x + "," + q.nw.y + ")");
 			System.out.println("South East: (" + q.se.x + "," + q.se.y + ")");
+			System.out.println("North West: (" + q.nw.x + "," + q.nw.y + ")");
 			System.out.println("South West: (" + q.sw.x + "," + q.sw.y + ")");
 		}
 		//return constructed list
-		return subdivision;
+		toProcess.addAll(subdivision);
 	}
 
 	/**
 	 * Gets nearest site to said point
 	 */
 	private Point getNearestSite(Point p) {
+
 		System.out.println("Searching for nearest site too (" + p.x + "," + p.y + ")");
-		Point currentClosestSite = sites.get(sites.size() - 1);
+		List<Point> equadistantPoints = new ArrayList<>();
+		//starting with a node that should be well outside the diagram, just so we have something to check against in the first cycle
+		Point currentClosestSite = new Point(Integer.MAX_VALUE, Integer.MAX_VALUE);
+
+		//well clearly if this point is a site its nearest site is itself
 		if (p.isSeed) {
 			return p;
-		} else {
-			for (Point site : sites)
-				if (p.distance(site) < p.distance(currentClosestSite)) {
-					currentClosestSite = site;
-				}
 		}
+
+		//line to cute down some method calls, means each tested point only needs to do a distance check once
+		//else if (p.nearestSeed != null)  {return p.nearestSeed;}
+
+
+		else {
+			for (Point site : sites) {
+				//if new site is closer than current replace current and assigns the points nearest site
+				if (site == p.nearestSeed) {
+					if (new Random().nextBoolean())
+						continue;
+				}
+				if (p.distance(site) < p.distance(currentClosestSite))
+					currentClosestSite = site;
+			}
+		}
+
+		p.nearestSeed = currentClosestSite;
+
 		System.out.println("Nearest site found at (" + currentClosestSite.x + "," + currentClosestSite.y + ")");
 
 		return currentClosestSite;
@@ -164,44 +197,17 @@ public class CalculateBySubDivision extends Voronoi {
 
 		boolean passCheck;
 		System.out.println("Checking sites for equality");
-		if ((nearestSiteNE == nearestSiteSE)
-				&& (nearestSiteSE == nearestSiteSW)
-				&& (nearestSiteSW == nearestSiteNW)) {
+		if ((nearestSiteNE.areEqual(nearestSiteSE))
+				&& (nearestSiteSE.areEqual(nearestSiteSW))
+				&& (nearestSiteSW.areEqual(nearestSiteNW))) {
 			passCheck = true;
-			System.out.println("Sites are Equal, flagging points");
+			log.finer("Sites are Equal, flagging points");
 		} else {
-			System.out.println("Sites are Not Equal");
+			log.severe("Sites are Not Equal");
 			passCheck = false;
 		}
 		return passCheck;
 	}
-
-	private void assignPointsToSite(Point nearestSiteNW, int xStart, int xFinish, int yStart, int yFinish) {
-		for (int x = xStart; x <= xFinish; x++)
-			for (int y = yStart; y <= yFinish; y++)
-				voronoiMatrix[x][y].nearestSeed = nearestSiteNW;
-	}
-
-	/**
-	 * Should in theory return a smaller list for lookup as we have to compare this 4 times
-	 * once for each corner of the quad, more quads = more runs and more lookups,
-	 * so having a smaller list to check per lookup is better
-	 **/
-	private List<Point> getOptimizedCluster(Quad quad) {
-
-		int xStart = quad.sw.x;
-		int xFinish = quad.se.x;
-		int yStart = quad.se.y;
-		int yFinish = quad.ne.y;
-		List<Point> cluster = new ArrayList<>();
-
-		for (Point p : sites)
-			if ((p.x >= xStart && p.x <= xFinish) && (p.y >= yStart && p.y <= yFinish)) {
-				cluster.add(p);
-			}
-		return cluster;
-	}
-
 	public Point[][] getMatrix() {
 		return this.voronoiMatrix;
 	}

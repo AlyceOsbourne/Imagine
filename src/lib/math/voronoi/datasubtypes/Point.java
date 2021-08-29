@@ -26,14 +26,14 @@ public class Point {
 		this.isSeed = isSeed;
 	}
 
-	public <P extends Point> int distance(P point) {
+	public <P extends Point> double distance(P point) {
 		return distance(point.x, point.y);
 	}
 
-	private int distance(int x1, int y1) {
+	private double distance(int x1, int y1) {
 		int a = getX() - x1;
 		int b = getY() - y1;
-		return (int) Math.sqrt(a * a + b * b);
+		return Math.hypot(a, b);
 	}
 
 	int getX() {
@@ -63,5 +63,9 @@ public class Point {
 		}
 
 		return Math.toDegrees(Math.acos(delta));
+	}
+
+	public boolean areEqual(Point p) {
+		return (getX() == p.x && getY() == p.y);
 	}
 }

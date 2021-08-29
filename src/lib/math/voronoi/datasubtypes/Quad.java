@@ -11,9 +11,9 @@ package lib.math.voronoi.datasubtypes;
 public class Quad {
 	public Point ne, nw, se, sw;
 
-	int width, height;
+	double width, height;
 
-	public Quad(Point se, Point ne, Point sw, Point nw) {
+	public Quad(Point nw, Point sw, Point ne, Point se) {
 		this.ne = ne;
 		this.nw = nw;
 		this.se = se;
