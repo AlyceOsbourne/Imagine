@@ -8,11 +8,10 @@
 
 package lib.math.voronoi.algorithm;
 
+import lib.math.voronoi.Point;
 import lib.math.voronoi.Voronoi;
-import lib.math.voronoi.datasubtypes.Cell;
-import lib.math.voronoi.datasubtypes.Edge;
-import lib.math.voronoi.datasubtypes.Point;
 
+import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -43,7 +42,7 @@ import java.util.List;
 	 something to consider is splitting calculations into clusters via parallel streams the create the final image by concating said streams,
 	 maybe using queues to add streams to process, this way we can do some clever subdividing of the data and get accurate data.
 	*/
-public class JumpFlood extends Voronoi {
+public class JumpFlood<Data extends Point> extends Voronoi {
 
 	// ok, lets break down what makes an voronoi diagram
 
@@ -51,7 +50,7 @@ public class JumpFlood extends Voronoi {
 	double width, height;
 
 	//within those bounds we have sites
-	LinkedList<Point> Sites;
+	LinkedList<Data> Sites;
 
 	//these sites are the center of cells
 	LinkedList<Cell> Cells;
@@ -60,7 +59,7 @@ public class JumpFlood extends Voronoi {
 	LinkedList<Edge> Edges;
 
 	//we initialize with the bounds and our given points
-	public JumpFlood(int width, int height, List<Point> sitesIn) {
+	public JumpFlood(int width, int height, List<Data> sitesIn) {
 		this.width = width;
 		this.height = height;
 		//we create our empty lists
@@ -86,7 +85,7 @@ public class JumpFlood extends Voronoi {
 		*/
 	}
 
-	private void init(List<Point> sitesIn) {
+	private void init(List<Data> sitesIn) {
 
 
 		/*
@@ -267,5 +266,46 @@ public class JumpFlood extends Voronoi {
 		I think this'll allow me to plop in new points and only process the neighbours
 		*/
 	}
+
+	public static class Cell {
+
+		//its site
+		public Point site;
+		//a cells edges
+		List<Edge> edges;
+
+		public Cell(Point site) {
+			this.site = site;
+		}
+
+		void addEdge(Edge edge) {
+			edges.add(edge);
+		}
+
+		public void addEdges(Edge... edges) {
+			this.edges.addAll(Arrays.asList(edges));
+		}
+
+		List<Edge> getCellEdges() {
+			return this.edges;
+		}
+	}
+
+	public static class Edge {
+		/* an edge is a tuple of points essentially, also holds neighbour info, again data held for map generation
+		//during the initial pass this holds Points, which get replaced with verts, this may be a good idea, it may not, we'll see */
+		Point a, b;
+
+		public Edge(Point a, Point b) {
+			this.a = a;
+			this.b = b;
+		}
+
+		double length() {
+			return a.distance(b);
+		}
+
+	}
+
 
 }

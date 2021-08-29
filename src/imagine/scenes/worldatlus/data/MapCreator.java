@@ -11,8 +11,8 @@ import javafx.scene.canvas.Canvas;
 import javafx.scene.layout.AnchorPane;
 import lib.fxml.LoadsFXML;
 import lib.image.ImageTools;
+import lib.math.voronoi.Point;
 import lib.math.voronoi.Voronoi;
-import lib.math.voronoi.datasubtypes.Point;
 
 import javax.imageio.ImageIO;
 import java.io.File;
@@ -31,7 +31,7 @@ public abstract class MapCreator<CreatedMap extends MapImage> extends AnchorPane
 		this.width = width;
 		this.height = height;
 		List<Point> siteList = Arrays.stream(sites).toList();
-		v = Voronoi.create(algorithm, width, height, siteList);
+		v = new Voronoi().create(Voronoi.Algorithm.CalculateBySubDivision, width, height, siteList);
 	}
 
 	void exportToSaveDataMap(Map<String, CreatedMap> saveDataMap) {

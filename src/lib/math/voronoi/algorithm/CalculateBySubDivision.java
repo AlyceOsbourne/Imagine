@@ -9,10 +9,9 @@
 
 package lib.math.voronoi.algorithm;
 
+import lib.math.voronoi.Point;
 import lib.math.voronoi.Utils;
 import lib.math.voronoi.Voronoi;
-import lib.math.voronoi.datasubtypes.Point;
-import lib.math.voronoi.datasubtypes.Quad;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -165,7 +164,6 @@ public class CalculateBySubDivision<Data extends Point> extends Voronoi {
 		toProcess.addAll(subdivision);
 	}
 
-
 	private Point getNearestSite(Point p) {
 
 		System.out.println("Searching for nearest site too (" + p.x + "," + p.y + ")");
@@ -220,9 +218,29 @@ public class CalculateBySubDivision<Data extends Point> extends Voronoi {
 		}
 		return passCheck;
 	}
+
 	public Point[][] getMatrix() {
 		return this.voronoiMatrix;
 	}
 
+	public static class Quad {
+		public Point ne, nw, se, sw;
+
+		double width, height;
+
+		public Quad(Point nw, Point sw, Point ne, Point se) {
+			this.ne = ne;
+			this.nw = nw;
+			this.se = se;
+			this.sw = sw;
+			width = se.distance(sw);
+			height = se.distance(ne);
+		}
+
+
+		public double size() {
+			return width * height;
+		}
+	}
 
 }

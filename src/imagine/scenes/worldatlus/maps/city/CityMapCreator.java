@@ -11,8 +11,8 @@
 package imagine.scenes.worldatlus.maps.city;
 
 import imagine.scenes.worldatlus.data.MapCreator;
+import lib.math.voronoi.Point;
 import lib.math.voronoi.Voronoi;
-import lib.math.voronoi.datasubtypes.Point;
 
 public class CityMapCreator extends MapCreator<CityMapImage> {
 

@@ -8,8 +8,6 @@
 
 package lib.math.voronoi;
 
-import lib.math.voronoi.datasubtypes.Point;
-
 public class Utils {
 	static void getPerpendicularBisector(Point a, Point b) {
 		//todo perpendicular bisector math

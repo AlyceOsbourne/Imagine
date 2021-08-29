@@ -8,9 +8,18 @@
  * Do what the F**k you want
  */
 
-package lib.math.voronoi.datasubtypes;
+
+
+
+
+/*
+ * Do what the F**k you want
+ */
+
+package lib.math.voronoi;
 
 public class Point {
+
 	//simply an x and y location
 	public int x, y;
 	public boolean isSeed;
