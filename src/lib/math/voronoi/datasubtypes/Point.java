@@ -68,4 +68,8 @@ public class Point {
 	public boolean areEqual(Point p) {
 		return (getX() == p.x && getY() == p.y);
 	}
+
+	public String printCoords() {
+		return "(" + getX() + "," + getY() + ")";
+	}
 }

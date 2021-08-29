@@ -23,8 +23,8 @@ public class Quad {
 	}
 
 
-
-
-
+	public double size() {
+		return width * height;
+	}
 }
 

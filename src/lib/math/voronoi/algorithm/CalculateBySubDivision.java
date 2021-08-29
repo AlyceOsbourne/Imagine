@@ -78,7 +78,13 @@ public class CalculateBySubDivision extends Voronoi {
 		int Cycle = 1;
 		while (!toProcess.isEmpty()) {
 			System.out.println("Starting Cycle: " + Cycle++);
+
+			//Ok this line calculates all quads in parallel
+			//may be a better function to use here, but we'll see
 			toProcess.stream().parallel().findFirst().ifPresent(this::checkAndSubdivide);
+
+			//this line is for testing, runs calculations in sequence, makes logs more readable for debugging
+			//for (Quad q : toProcess) checkAndSubdivide(q);
 
 
 		}
@@ -91,7 +97,15 @@ public class CalculateBySubDivision extends Voronoi {
 	 **/
 	private void checkAndSubdivide(Quad quad) {
 		toProcess.remove(quad);
-		if (!checkQuad(quad)) subDivideQuad(quad);
+		if (!checkQuad(quad) && quad.size() > 1) subDivideQuad(quad);
+		else {
+			System.out.println("found quad with a size of 1, calculating single point");
+			checkSingleCell(quad.nw);
+		}
+	}
+
+	private void checkSingleCell(Point p) {
+		getNearestSite(p);
 	}
 
 	/**
@@ -104,7 +118,6 @@ public class CalculateBySubDivision extends Voronoi {
 		Point nearestSiteNW = getNearestSite(quad.nw);
 		Point nearestSiteSE = getNearestSite(quad.se);
 		Point nearestSiteSW = getNearestSite(quad.sw);
-
 		return areSitesEqual(nearestSiteNE, nearestSiteNW, nearestSiteSE, nearestSiteSW);
 	}
 
@@ -168,10 +181,9 @@ public class CalculateBySubDivision extends Voronoi {
 		}
 
 		//line to cute down some method calls, means each tested point only needs to do a distance check once
-		//else if (p.nearestSeed != null)  {return p.nearestSeed;}
-
-
-		else {
+		else if (p.nearestSeed != null) {
+			return p.nearestSeed;
+		} else {
 			for (Point site : sites) {
 				//if new site is closer than current replace current and assigns the points nearest site
 				if (site == p.nearestSeed) {
@@ -197,6 +209,9 @@ public class CalculateBySubDivision extends Voronoi {
 
 		boolean passCheck;
 		System.out.println("Checking sites for equality");
+		System.out.println("Sites:");
+		System.out.println(nearestSiteNE.printCoords() + " " + nearestSiteNW.printCoords());
+		System.out.println(nearestSiteSE.printCoords() + " " + nearestSiteSW.printCoords());
 		if ((nearestSiteNE.areEqual(nearestSiteSE))
 				&& (nearestSiteSE.areEqual(nearestSiteSW))
 				&& (nearestSiteSW.areEqual(nearestSiteNW))) {
