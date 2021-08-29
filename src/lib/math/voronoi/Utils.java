@@ -11,23 +11,16 @@ package lib.math.voronoi;
 public class Utils {
 	static void getPerpendicularBisector(Point a, Point b) {
 		//todo perpendicular bisector math
-		int XA, XB, YA, YB, m, x1, y1, y, x;
+		int XA, XB, YA, YB;
 		int rise, run;
 		XA = a.x;
-	XB = b.x;
-	YA = a.y;
-	YB = b.y;
+		XB = b.x;
+		YA = a.y;
+		YB = b.y;
 
-	rise = difference(YA, YB); //the difference in the Y coordinate
-	run = difference(XA, XB); //the difference in the X coordinate
-	//slope is rise/run, but for the perpendicular bisector we need the negative reciprocal
-	m = negativeReciprocal(rise, run); //slopes negative reciprocal
-	x1 = average(XA, XB); //average midpoint x
-	y1 = average(YA, YB); //average midpoint y
-
-	//trying to solve (y - y1 = m(x - x1)) in the java sense
-
-}
+		rise = difference(YA, YB); //the difference in the Y coordinate
+		run = difference(XA, XB); //the difference in the X coordinate
+	}
 
 	private static int difference(int a, int b) {
 		return a - b;

@@ -82,4 +82,11 @@ public class Point {
 		this.isSeed = true;
 		this.nearestSeed = this;
 	}
+
+	@Override
+	public String toString() {
+		if (nearestSeed != null)
+			return nearestSeed.printCoords();
+		else return "null ";
+	}
 }

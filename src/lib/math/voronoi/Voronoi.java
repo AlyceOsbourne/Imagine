@@ -23,7 +23,7 @@ public class Voronoi {
 		if (p == null || p.isEmpty()) {
 			p = new ArrayList<>();
 			Random r = new Random();
-			int bound = 4;
+			int bound = width + height / 4;
 			for (int i = 0; i < bound; i++) {
 				Point randomize = new Point(r.nextInt(width - 1), r.nextInt(height - 1));
 				p.add(randomize);
