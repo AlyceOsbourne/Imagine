@@ -16,6 +16,7 @@ import lib.math.voronoi.Utils;
 import lib.math.voronoi.Voronoi;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.Logger;
@@ -41,7 +42,7 @@ public class CalculateBySubDivision<Data extends Point> extends Voronoi {
 	 */
 	@SuppressWarnings("UnstableApiUsage")
 	public CalculateBySubDivision(int width, int height, List<Data> sitesIn) {
-
+		//test line for performance testing
 		Stopwatch s = Stopwatch.createStarted();
 
 		voronoiMatrix = new Point[width][height];
@@ -54,6 +55,15 @@ public class CalculateBySubDivision<Data extends Point> extends Voronoi {
 				voronoiMatrix[i][j] = new Point(i, j);
 			}
 		}
+
+		sitesIn.parallelStream().forEach(data -> {
+			Point p = voronoiMatrix[data.x][data.y] = data;
+			p.setSeed();
+			sites.add(p);
+			System.out.println("Added site (" + data.x + "," + data.x + ")");
+		});
+
+		/*
 		for (Data site : sitesIn) {
 			if (site.x < width - 1 && site.y < height - 1 && site.x >= 0 && site.y >= 0) {
 				Point p = voronoiMatrix[site.x][site.y];
@@ -61,13 +71,17 @@ public class CalculateBySubDivision<Data extends Point> extends Voronoi {
 				sites.add(p);
 				System.out.println("Added site (" + site.x + "," + site.x + ")");
 			} else log.info("Discarded site due to it being out of range");
-		}
+			}
+		 */
 
+
+		//lines for testing
 		System.out.println("Initiated matrix with " + sites.size() + " points");
-		System.out.println(Util2.arrayDebug2D(voronoiMatrix));
+		//System.out.println(Util2.arrayDebug2D(voronoiMatrix));
 
 		start();
 
+		//lines for testing
 		s.stop();
 		System.out.println("Finished calculating voronoi matrix");
 		System.out.println(Util2.arrayDebug2D(voronoiMatrix));
@@ -136,12 +150,28 @@ public class CalculateBySubDivision<Data extends Point> extends Voronoi {
 			xFinish = quad.ne.x;
 			yStart = quad.ne.y;
 			yFinish = quad.se.y;
+			Arrays.stream(voronoiMatrix)
+					.skip(xStart)
+					.limit(xFinish)
+					.parallel()
+					.forEach(points -> Arrays.stream(points)
+							.parallel()
+							.skip(yStart)
+							.limit(yFinish)
+							.toList()
+							.parallelStream()
+							.forEach(s -> voronoiMatrix[s.x][s.y].nearestSeed = quad.ne.nearestSeed));
+
+
+			/*
 			for (int i = xStart; i <= xFinish; i++)
 				for (int j = yStart; j <= yFinish; j++)
 					voronoiMatrix[i][j].nearestSeed = quad.se.nearestSeed;
+					*/
 			return true;
 		}
 		return false;
+
 	}
 
 	/**
@@ -188,27 +218,19 @@ public class CalculateBySubDivision<Data extends Point> extends Voronoi {
 	private Point getNearestSite(int x, int y) {
 
 		Point p = voronoiMatrix[x][y];
-
+		Point currentClosestSite = null;
 		//System.out.println("Searching for nearest site too (" + p.x + "," + p.y + ")");
 		//starting with a node that should be well outside the diagram, just so we have something to check against in the first cycle
-		Point currentClosestSite = null;
+		if (sites.stream().findAny().isPresent()) currentClosestSite = sites.stream().findAny().get();
 
-		//well clearly if this point is a site its nearest site is itsel
-		//line to cute down some method calls, means each tested point only needs to do a distance check once
-		for (Point site : sites) {
-			Point s = voronoiMatrix[site.x][site.y];
-			if (currentClosestSite == null) currentClosestSite = s;
-			//if new site is closer than current replace current and assigns the points nearest site
-			if (p.distance(s) < p.distance(currentClosestSite))
-				currentClosestSite = s;
-		}
-
-
-		p.nearestSeed = currentClosestSite;
+		p.nearestSeed = sites.parallelStream().reduce(currentClosestSite, (current, point) -> {
+			if (p.distance(point) < p.distance(current)) return point;
+			else return current;
+		});
 
 		//System.out.println("Nearest site found at (" + currentClosestSite.x + "," + currentClosestSite.y + ")");
 
-		return currentClosestSite;
+		return p.nearestSeed;
 	}
 
 	public Point[][] getMatrix() {

@@ -18,6 +18,6 @@ public class Launch {
 	}
 
 	private static void runTests() {
-		Voronoi v = new Voronoi().create(Voronoi.Algorithm.CalculateBySubDivision, 10, 10, null);
+		Voronoi v = new Voronoi().create(Voronoi.Algorithm.CalculateBySubDivision, 1000, 1000, null);
 	}
 }
