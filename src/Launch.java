@@ -12,7 +12,6 @@
 import imagine.Main;
 import javafx.application.Application;
 import lib.math.voronoi.Point;
-import lib.math.voronoi.Util2;
 import lib.math.voronoi.Voronoi;
 import lib.math.voronoi.algorithm.CalculateBySubDivision;
 
@@ -42,7 +41,6 @@ public class Launch {
 						testResolution,
 						null,
 						debugVoronoi)).getMatrix();
-				Util2.arrayDebug2D()
 			}
 			if (debugCalculateByJumpFlood) {
 				var calculateByJumpFlood = new Voronoi<Data>().create(
