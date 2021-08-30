@@ -17,18 +17,22 @@ import java.util.Random;
 
 public class Voronoi<Data extends Point> {
 
+	boolean debug = false;
+
 	int VORONOI_SCALE_FACTOR = 2;
 
-	public Voronoi<Data> create(Algorithm algorithm, Resolution res, @Nullable List<Data> sites) {
-		return create(algorithm, res.width, res.height, sites);
+	public Voronoi<Data> create(Algorithm algorithm, Resolution res, @Nullable List<Data> sites, boolean debug) {
+		return create(algorithm, res.width, res.height, sites, debug);
 	}
 
 	@SuppressWarnings("unchecked")
-	public Voronoi<Data> create(Algorithm algorithm, int widthIn, int heightIn, @Nullable List<Data> sites) {
+	public Voronoi<Data> create(Algorithm algorithm, int widthIn, int heightIn, @Nullable List<Data> sites, boolean debug) {
 
-		System.out.println("Processing image with width of " + widthIn + " and a height of " + heightIn);
+		if (debug) {
+			System.out.println("Processing image with width of " + widthIn + " and a height of " + heightIn);
 
-		System.out.println("Reducing scale by a factor of " + VORONOI_SCALE_FACTOR);
+			System.out.println("Reducing scale by a factor of " + VORONOI_SCALE_FACTOR);
+		}
 
 		int width = widthIn / VORONOI_SCALE_FACTOR;
 
@@ -44,17 +48,17 @@ public class Voronoi<Data extends Point> {
 				Data randomize = (Data) new Point(r.nextInt(width - 1), r.nextInt(height - 1));
 				p.add(randomize);
 			}
-			System.out.println("Number of sites " + p.size());
+			if (debug) System.out.println("Number of sites " + p.size());
 		}
 
 		switch (algorithm) {
 
 			case CalculateByJumpFlood -> {
-				return new JumpFlood<Data>(width, height, p);
+				return new JumpFlood<Data>(width, height, p, debug);
 			}
 
 			case CalculateBySubDivision -> {
-				return new CalculateBySubDivision<Data>(width, height, p);
+				return new CalculateBySubDivision<>(width, height, p, debug);
 			}
 
 			default -> {
@@ -63,6 +67,7 @@ public class Voronoi<Data extends Point> {
 		}
 	}
 
+
 	public enum Algorithm {CalculateByJumpFlood, CalculateBySubDivision}
 
 	public enum Resolution {
@@ -70,7 +75,8 @@ public class Voronoi<Data extends Point> {
 		HIGH(1920, 1200),
 		MEDIUM(1024, 768),
 		LOW(512, 384),
-		TEST(2000, 2000);
+		TESTXL(2000, 2000),
+		TESTXS(200, 200);
 
 
 		int width, height;

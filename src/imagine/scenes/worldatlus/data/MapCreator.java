@@ -32,7 +32,7 @@ public abstract class MapCreator<CreatedMap extends MapImage, Data extends Point
 		this.width = width;
 		this.height = height;
 		List<Data> siteList = Arrays.stream(sites).toList();
-		v = new Voronoi<Data>().create(Voronoi.Algorithm.CalculateBySubDivision, width, height, siteList);
+		v = new Voronoi<Data>().create(Voronoi.Algorithm.CalculateBySubDivision, width, height, siteList, false);
 	}
 
 	void exportToSaveDataMap(Map<String, CreatedMap> saveDataMap) {

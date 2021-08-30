@@ -59,7 +59,7 @@ public class JumpFlood<Data extends Point> extends Voronoi {
 	LinkedList<Edge> Edges;
 
 	//we initialize with the bounds and our given points
-	public JumpFlood(int width, int height, List<Data> sitesIn) {
+	public JumpFlood(int width, int height, List<Data> sitesIn, boolean debug) {
 		this.width = width;
 		this.height = height;
 		//we create our empty lists

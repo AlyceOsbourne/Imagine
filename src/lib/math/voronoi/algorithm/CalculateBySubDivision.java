@@ -22,6 +22,7 @@ import java.util.concurrent.TimeUnit;
 
 public class CalculateBySubDivision<Data extends Point> extends Voronoi<Data> {
 
+	boolean debug = false;
 	int width, height;
 	Point[][] voronoiMatrix;
 
@@ -39,18 +40,21 @@ public class CalculateBySubDivision<Data extends Point> extends Voronoi<Data> {
 	 * plus stores sites in a list for faster lookup
 	 */
 	@SuppressWarnings("UnstableApiUsage")
-	public CalculateBySubDivision(int width, int height, List<Data> sitesIn) {
-
+	public CalculateBySubDivision(int width, int height, List<Data> sitesIn, boolean debug) {
+		Stopwatch s = null;
+		this.debug = debug;
 		//test line for performance testing
-		Stopwatch s = Stopwatch.createStarted();
+		if (this.debug) s = Stopwatch.createStarted();
 
 		voronoiMatrix = new Point[width][height];
 
-		System.out.println("Matrix width: " + width);
-		System.out.println("Matrix Height: " + height);
+		if (this.debug) {
+			System.out.println("Matrix width: " + width);
+			System.out.println("Matrix Height: " + height);
+		}
 
 		var totalPoints = width * height;
-		System.out.println("Total points in matrix: " + totalPoints);
+		if (this.debug) System.out.println("Total points in matrix: " + totalPoints);
 
 		this.width = width;
 		this.height = height;
@@ -65,23 +69,27 @@ public class CalculateBySubDivision<Data extends Point> extends Voronoi<Data> {
 			Point p = voronoiMatrix[data.x][data.y] = data;
 			p.setSeed();
 			sites.add(p);
-			//System.out.println("Added site (" + data.x + "," + data.x + ")");
+			if (this.debug) System.out.println("Added site (" + data.x + "," + data.x + ")");
 		});
 
 		//lines for testing
-		System.out.println("Initiated matrix with " + sites.size() + " points");
+		if (this.debug) System.out.println("Initiated matrix with " + sites.size() + " points");
 
 		start();
 
 		//lines for testing
-		s.stop();
-		long nanos = s.elapsed(TimeUnit.MICROSECONDS);
-		long totalTime = TimeUnit.NANOSECONDS.toMicros(nanos);
-		System.out.println("Finished calculating voronoi matrix");
-		System.out.println(Util2.arrayDebug2D(voronoiMatrix));
-		System.out.println("Completed in " + formatTime(totalTime));
-		System.out.println("Each point took " + nanos / totalPoints + " nanoseconds to calculate");
-		System.out.println("Each cycle took " + nanos / cycle + " nanoseconds to calculate");
+		if (this.debug) {
+			s.stop();
+			long nanos = s.elapsed(TimeUnit.MICROSECONDS);
+			long totalTime = TimeUnit.NANOSECONDS.toMicros(nanos);
+			System.out.println("Finished calculating voronoi matrix");
+			System.out.println(Util2.arrayDebug2D((Data[][]) voronoiMatrix));
+
+			System.out.println("Completed in " + formatTime(totalTime));
+			System.out.println("Each point took " + nanos / totalPoints + " nanoseconds to calculate");
+			System.out.println("Each cycle took " + nanos / cycle + " nanoseconds to calculate");
+			System.out.println("Each site took " + nanos / sites.size() + " nanoseconds to calculate");
+		}
 	}
 
 	/**
@@ -108,18 +116,20 @@ public class CalculateBySubDivision<Data extends Point> extends Voronoi<Data> {
 
 
 		int loadingTicker = 0;
-		System.out.print("|");
+		if (debug) System.out.print("|");
 		while (!toProcess.isEmpty()) {
-			cycle++;
-			loadingTicker++;
-			if (loadingTicker == 1000) {
-				loadingTicker = 0;
-				System.out.print("=");
+			if (debug) {
+				cycle++;
+				loadingTicker++;
+				if (loadingTicker == 1000) {
+					loadingTicker = 0;
+					System.out.print("=");
+				}
 			}
 			toProcess.stream().parallel().findFirst().ifPresent(this::checkAndSubdivide);
 		}
-		System.out.print("|");
-		System.out.println("Total Cycles:" + cycle);
+		if (debug) System.out.print("|");
+		if (debug) System.out.println("Total Cycles:" + cycle);
 
 	}
 
@@ -210,7 +220,8 @@ public class CalculateBySubDivision<Data extends Point> extends Voronoi<Data> {
 									.limit(yFinish)
 									.toList()
 									.parallelStream()
-									.forEach(s -> voronoiMatrix[s.x][s.y].data = quad.ne.data));
+									.forEach(s ->
+											voronoiMatrix[s.x][s.y].data = quad.ne.data));
 
 			return true;
 		}
