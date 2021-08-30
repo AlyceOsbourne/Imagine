@@ -19,7 +19,7 @@ public class Voronoi<Data extends Point> {
 
 	boolean debug = false;
 
-	int VORONOI_SCALE_FACTOR = 2;
+	int VORONOI_SCALE_FACTOR = 1;
 
 	public Voronoi<Data> create(Algorithm algorithm, Resolution res, @Nullable List<Data> sites, boolean debug) {
 		return create(algorithm, res.width, res.height, sites, debug);
@@ -31,7 +31,7 @@ public class Voronoi<Data extends Point> {
 		if (debug) {
 			System.out.println("Processing image with width of " + widthIn + " and a height of " + heightIn);
 
-			System.out.println("Reducing scale by a factor of " + VORONOI_SCALE_FACTOR);
+			System.out.println("Voronoi scale is " + VORONOI_SCALE_FACTOR + ":1");
 		}
 
 		int width = widthIn / VORONOI_SCALE_FACTOR;
@@ -43,7 +43,7 @@ public class Voronoi<Data extends Point> {
 		if (p == null || p.isEmpty()) {
 			p = new ArrayList<>();
 			Random r = new Random();
-			int bound = 100;
+			int bound = 1000;
 			for (int i = 0; i < bound; i++) {
 				Data randomize = (Data) new Point(r.nextInt(width - 1), r.nextInt(height - 1));
 				p.add(randomize);
@@ -75,7 +75,7 @@ public class Voronoi<Data extends Point> {
 		HIGH(1920, 1200),
 		MEDIUM(1024, 768),
 		LOW(512, 384),
-		TESTXL(2000, 2000),
+		TESTXL(1000, 1000),
 		TESTXS(200, 200);
 
 

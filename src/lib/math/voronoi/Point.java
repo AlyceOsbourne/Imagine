@@ -23,7 +23,8 @@ public class Point {
 	public PointData data;
 
 	//simply an x and y location
-	public int x, y;
+	public int x;
+	public int y;
 	public boolean isSeed;
 
 	public Point(int x, int y) {

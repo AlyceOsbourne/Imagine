@@ -12,13 +12,12 @@ package lib.math.voronoi.algorithm;
 import com.google.common.base.Stopwatch;
 import lib.math.voronoi.Point;
 import lib.math.voronoi.Util2;
-import lib.math.voronoi.Utils;
 import lib.math.voronoi.Voronoi;
 
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
+
+import static lib.math.voronoi.Utils.midpoint;
 
 public class CalculateBySubDivision<Data extends Point> extends Voronoi<Data> {
 
@@ -65,12 +64,13 @@ public class CalculateBySubDivision<Data extends Point> extends Voronoi<Data> {
 			}
 		}
 
-		sitesIn.forEach(data -> {
+		for (int i = 0, sitesInSize = sitesIn.size(); i < sitesInSize; i++) {
+			Data data = sitesIn.get(i);
 			Point p = voronoiMatrix[data.x][data.y] = data;
 			p.setSeed();
 			sites.add(p);
 			if (this.debug) System.out.println("Added site (" + data.x + "," + data.x + ")");
-		});
+		}
 
 		//lines for testing
 		if (this.debug) System.out.println("Initiated matrix with " + sites.size() + " points");
@@ -79,16 +79,17 @@ public class CalculateBySubDivision<Data extends Point> extends Voronoi<Data> {
 
 		//lines for testing
 		if (this.debug) {
-			s.stop();
+			Objects.requireNonNull(s).stop();
+
 			long nanos = s.elapsed(TimeUnit.MICROSECONDS);
 			long totalTime = TimeUnit.NANOSECONDS.toMicros(nanos);
-			System.out.println("Finished calculating voronoi matrix");
-			System.out.println(Util2.arrayDebug2D((Data[][]) voronoiMatrix));
 
-			System.out.println("Completed in " + formatTime(totalTime));
-			System.out.println("Each point took " + nanos / totalPoints + " nanoseconds to calculate");
-			System.out.println("Each cycle took " + nanos / cycle + " nanoseconds to calculate");
-			System.out.println("Each site took " + nanos / sites.size() + " nanoseconds to calculate");
+			System.out.println("Finished calculating voronoi matrix");
+
+			for (String s1 : Arrays.asList(Util2.arrayDebug2D(voronoiMatrix), "Completed in " + formatTime(totalTime), "Each point took " + nanos / totalPoints + " nanoseconds to calculate", "Each cycle took " + nanos / cycle + " nanoseconds to calculate", "Each site took " + nanos / sites.size() + " nanoseconds to calculate")) {
+				System.out.println(s1);
+			}
+
 		}
 	}
 
@@ -98,12 +99,10 @@ public class CalculateBySubDivision<Data extends Point> extends Voronoi<Data> {
 	 */
 	private void start() {
 
-		int xMax, yMax, xMin, yMin;
-
-		yMin = 0;
-		xMin = 0;
-		xMax = voronoiMatrix.length - 1;
-		yMax = voronoiMatrix[0].length - 1;
+		int yMin = 0;
+		int xMin = 0;
+		int xMax = voronoiMatrix.length - 1;
+		int yMax = voronoiMatrix[0].length - 1;
 
 		toProcess.add(
 				new Quad(
@@ -117,19 +116,23 @@ public class CalculateBySubDivision<Data extends Point> extends Voronoi<Data> {
 
 		int loadingTicker = 0;
 		if (debug) System.out.print("|");
-		while (!toProcess.isEmpty()) {
-			if (debug) {
-				cycle++;
-				loadingTicker++;
-				if (loadingTicker == 1000) {
-					loadingTicker = 0;
-					System.out.print("=");
+		if (!toProcess.isEmpty()) {
+			do {
+				if (debug) {
+					cycle++;
+					loadingTicker++;
+					if (loadingTicker == 1000) {
+						loadingTicker = 0;
+						System.out.print("=");
+					}
 				}
-			}
-			for (Quad quad : toProcess) {
-				checkAndSubdivide(quad);
-				break;
-			}
+				for (int i = 0, toProcessSize = toProcess.size(); i < toProcessSize; i++) {
+					Quad quad = toProcess.get(i);
+					checkAndSubdivide(quad);
+					toProcess.remove(quad);
+					break;
+				}
+			} while (!toProcess.isEmpty());
 		}
 		if (debug) System.out.print("|");
 		if (debug) System.out.println("Total Cycles:" + cycle);
@@ -142,7 +145,6 @@ public class CalculateBySubDivision<Data extends Point> extends Voronoi<Data> {
 	 **/
 	private void checkAndSubdivide(Quad quad) {
 		int qSize = (int) quad.size();
-		toProcess.remove(quad);
 		if (!checkQuad(quad)) {
 			if (qSize > 1) subDivideQuad(quad);
 			else {
@@ -172,12 +174,12 @@ public class CalculateBySubDivision<Data extends Point> extends Voronoi<Data> {
 		se = currentQuad.se;
 		sw = currentQuad.sw;
 
-		n = Utils.midpoint(nw, ne, voronoiMatrix);
-		e = Utils.midpoint(se, ne, voronoiMatrix);
-		s = Utils.midpoint(sw, se, voronoiMatrix);
-		w = Utils.midpoint(sw, nw, voronoiMatrix);
+		n = midpoint(nw, ne, voronoiMatrix);
+		e = midpoint(se, ne, voronoiMatrix);
+		s = midpoint(sw, se, voronoiMatrix);
+		w = midpoint(sw, nw, voronoiMatrix);
 
-		center = Utils.midpoint(Utils.midpoint(n, s, voronoiMatrix), Utils.midpoint(e, w, voronoiMatrix), voronoiMatrix);
+		center = midpoint(midpoint(n, s, voronoiMatrix), midpoint(e, w, voronoiMatrix), voronoiMatrix);
 		//creating the 4 quads and adding them to the list to return
 
 		nwCorner = new Quad(nw, w, n, center);
