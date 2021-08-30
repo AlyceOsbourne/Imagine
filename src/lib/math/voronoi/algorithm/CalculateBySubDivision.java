@@ -15,7 +15,10 @@ import lib.math.voronoi.Util2;
 import lib.math.voronoi.Utils;
 import lib.math.voronoi.Voronoi;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 
 public class CalculateBySubDivision<Data extends Point> extends Voronoi<Data> {
@@ -39,7 +42,9 @@ public class CalculateBySubDivision<Data extends Point> extends Voronoi<Data> {
 	 */
 	@SuppressWarnings("UnstableApiUsage")
 	public CalculateBySubDivision(int width, int height, List<Data> sitesIn, boolean debug) {
+
 		Stopwatch s = null;
+
 		this.debug = debug;
 		//test line for performance testing
 		if (this.debug) s = Stopwatch.createStarted();
@@ -81,7 +86,7 @@ public class CalculateBySubDivision<Data extends Point> extends Voronoi<Data> {
 			long nanos = s.elapsed(TimeUnit.MICROSECONDS);
 			long totalTime = TimeUnit.NANOSECONDS.toMicros(nanos);
 			System.out.println("Finished calculating voronoi matrix");
-			Arrays.asList(Util2.arrayDebug2D(voronoiMatrix), "Completed in " + formatTime(totalTime), "Each point took " + nanos / totalPoints + " nanoseconds to calculate", "Each cycle took " + nanos / cycle + " nanoseconds to calculate", "Each site took " + nanos / sites.size() + " nanoseconds to calculate").forEach(System.out::println);
+			Arrays.asList(Util2.arrayDebug2D(getMatrix()), "Completed in " + formatTime(totalTime), "Each point took " + nanos / totalPoints + " nanoseconds to calculate", "Each cycle took " + nanos / cycle + " nanoseconds to calculate", "Each site took " + nanos / sites.size() + " nanoseconds to calculate").forEach(System.out::println);
 
 		}
 	}
@@ -238,32 +243,21 @@ public class CalculateBySubDivision<Data extends Point> extends Voronoi<Data> {
 
 	}
 
+	public Data[][] getMatrix() {
+		return (Data[][]) this.voronoiMatrix;
+	}
+
 	private Point getNearestSite(int x, int y) {
 
 		Point p = voronoiMatrix[x][y];
 		Point currentClosestSite = null;
-		//System.out.println("Searching for nearest site too (" + p.x + "," + p.y + ")");
-		//starting with a node that should be well outside the diagram, just so we have something to check against in the first cycle
+
 		for (Point site : sites) {
-			Optional<Point> found = Optional.empty();
-			for (Point point : sites) {
-				found = Optional.of(point);
-				break;
-			}
-			currentClosestSite = found.get();
-			break;
+			if (currentClosestSite == null || p.distance(site) < p.distance(currentClosestSite))
+				currentClosestSite = site;
 		}
 
-		p.data.nearestSeed = sites.stream().reduce(currentClosestSite, (current, point) -> {
-			if (p.distance(point) < p.distance(current)) return point;
-			else return current;
-		});
-
 		return p.data.nearestSeed;
-	}
-
-	public Point[][] getMatrix() {
-		return this.voronoiMatrix;
 	}
 
 	/**
