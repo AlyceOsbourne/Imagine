@@ -20,7 +20,7 @@ public class Launch {
 	static boolean debuggingMode = true;
 	static boolean debugVoronoi = true;
 
-	static Voronoi.Resolution testResolution = Voronoi.Resolution.TESTXL;
+	static Voronoi.Resolution testResolution = Voronoi.Resolution.TESTXS;
 
 	public static void main(String[] args) {
 
@@ -40,7 +40,7 @@ public class Launch {
 						Voronoi.Algorithm.CalculateBySubDivision,
 						testResolution,
 						null,
-						debugVoronoi)).getMatrix();
+						debugVoronoi));
 			}
 			if (debugCalculateByJumpFlood) {
 				var calculateByJumpFlood = new Voronoi<Data>().create(

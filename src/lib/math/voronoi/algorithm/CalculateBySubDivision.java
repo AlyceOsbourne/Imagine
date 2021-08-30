@@ -16,7 +16,7 @@ import lib.math.voronoi.Utils;
 import lib.math.voronoi.Voronoi;
 
 import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.Comparator;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
@@ -65,7 +65,7 @@ public class CalculateBySubDivision<Data extends Point> extends Voronoi<Data> {
 			}
 		}
 
-		sitesIn.parallelStream().forEach(data -> {
+		sitesIn.forEach(data -> {
 			Point p = voronoiMatrix[data.x][data.y] = data;
 			p.setSeed();
 			sites.add(p);
@@ -126,7 +126,10 @@ public class CalculateBySubDivision<Data extends Point> extends Voronoi<Data> {
 					System.out.print("=");
 				}
 			}
-			toProcess.stream().parallel().findFirst().ifPresent(this::checkAndSubdivide);
+			for (Quad quad : toProcess) {
+				checkAndSubdivide(quad);
+				break;
+			}
 		}
 		if (debug) System.out.print("|");
 		if (debug) System.out.println("Total Cycles:" + cycle);
@@ -209,19 +212,29 @@ public class CalculateBySubDivision<Data extends Point> extends Voronoi<Data> {
 			xFinish = quad.ne.x;
 			yStart = quad.ne.y;
 			yFinish = quad.se.y;
-			Arrays.stream(voronoiMatrix)
-					.skip(xStart)
-					.limit(xFinish)
-					.parallel()
-					.forEach(points ->
-							Arrays.stream(points)
-									.parallel()
-									.skip(yStart)
-									.limit(yFinish)
-									.toList()
-									.parallelStream()
-									.forEach(s ->
-											voronoiMatrix[s.x][s.y].data = quad.ne.data));
+			long limit = xFinish;
+			long toSkip = xStart;
+			for (Point[] points : voronoiMatrix) {
+				if (toSkip > 0) {
+					toSkip--;
+					continue;
+				}
+				if (limit-- == 0) break;
+				List<Point> list = new ArrayList<>();
+				long limit1 = yFinish;
+				long toSkip1 = yStart;
+				for (Point point : points) {
+					if (toSkip1 > 0) {
+						toSkip1--;
+						continue;
+					}
+					if (limit1-- == 0) break;
+					list.add(point);
+				}
+				for (Point s : list) {
+					voronoiMatrix[s.x][s.y].data = quad.ne.data;
+				}
+			}
 
 			return true;
 		}
@@ -232,19 +245,19 @@ public class CalculateBySubDivision<Data extends Point> extends Voronoi<Data> {
 	private Point getNearestSite(int x, int y) {
 
 		Point p = voronoiMatrix[x][y];
-		Point currentClosestSite = null;
-		//System.out.println("Searching for nearest site too (" + p.x + "," + p.y + ")");
-		//starting with a node that should be well outside the diagram, just so we have something to check against in the first cycle
-		if (sites.stream().findAny().isPresent()) currentClosestSite = sites.stream().findAny().get();
+		Comparator<Point> comparator = Comparator.comparingDouble(p::distance);
+		Point best = null;
+		boolean seen = false;
+		for (Point site : sites) {
+			if (!seen || comparator.compare(site, best) < 0) {
+				seen = true;
+				best = site;
+			}
+		}
+		Point currentClosestSite = seen ? best : null;
 
-		p.data.nearestSeed = sites.parallelStream().reduce(currentClosestSite, (current, point) -> {
-			if (p.distance(point) < p.distance(current)) return point;
-			else return current;
-		});
 
-		//System.out.println("Nearest site found at (" + currentClosestSite.x + "," + currentClosestSite.y + ")");
-
-		return p.data.nearestSeed;
+		return p.data.nearestSeed = currentClosestSite;
 	}
 
 	public Point[][] getMatrix() {
