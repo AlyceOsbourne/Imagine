@@ -13,6 +13,7 @@ import imagine.Main;
 import javafx.application.Application;
 import lib.math.voronoi.Point;
 import lib.math.voronoi.Voronoi;
+import lib.math.voronoi.algorithm.CalculateBySubDivision;
 
 public class Launch {
 
@@ -35,11 +36,11 @@ public class Launch {
 
 		if (debugVoronoi) {
 			if (debugCalculateByDivision) {
-				var caclculateByDivision = new Voronoi<Data>().create(
+				var caclculateByDivision = ((CalculateBySubDivision<Point>) new Voronoi<Data>().create(
 						Voronoi.Algorithm.CalculateBySubDivision,
 						testResolution,
 						null,
-						debugVoronoi);
+						debugVoronoi)).getMatrix();
 			}
 			if (debugCalculateByJumpFlood) {
 				var calculateByJumpFlood = new Voronoi<Data>().create(
