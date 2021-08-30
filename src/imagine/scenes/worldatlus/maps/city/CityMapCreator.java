@@ -14,7 +14,7 @@ import imagine.scenes.worldatlus.data.MapCreator;
 import lib.math.voronoi.Point;
 import lib.math.voronoi.Voronoi;
 
-public class CityMapCreator extends MapCreator<CityMapImage> {
+public class CityMapCreator extends MapCreator<CityMapImage, Point> {
 
 	protected CityMapCreator(Voronoi.Algorithm algorithm, int width, int height, Point... sites) {
 		super(algorithm, width, height, sites);

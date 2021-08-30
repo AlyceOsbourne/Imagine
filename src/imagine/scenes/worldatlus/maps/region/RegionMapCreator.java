@@ -14,7 +14,7 @@ import imagine.scenes.worldatlus.data.MapCreator;
 import lib.math.voronoi.Point;
 import lib.math.voronoi.Voronoi;
 
-public class RegionMapCreator extends MapCreator<RegionMapImage> {
+public class RegionMapCreator extends MapCreator<RegionMapImage, Point> {
 
 	protected RegionMapCreator(Voronoi.Algorithm algorithm, int width, int height, Point... sites) {
 		super(algorithm, width, height, sites);

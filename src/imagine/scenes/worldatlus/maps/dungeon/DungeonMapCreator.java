@@ -14,7 +14,7 @@ import imagine.scenes.worldatlus.data.MapCreator;
 import lib.math.voronoi.Point;
 import lib.math.voronoi.Voronoi;
 
-public class DungeonMapCreator extends MapCreator<DungeonMapImage> {
+public class DungeonMapCreator extends MapCreator<DungeonMapImage, Point> {
 
 	protected DungeonMapCreator(Voronoi.Algorithm algorithm, int width, int height, Point... sites) {
 		super(algorithm, width, height, sites);

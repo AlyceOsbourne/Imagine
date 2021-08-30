@@ -21,17 +21,18 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
-public abstract class MapCreator<CreatedMap extends MapImage> extends AnchorPane implements LoadsFXML, ImageTools {
+public abstract class MapCreator<CreatedMap extends MapImage, Data extends Point> extends AnchorPane implements LoadsFXML, ImageTools {
 	CreatedMap map;
 	int width, height;
 	Canvas[] layers;
-	Voronoi v;
+	Voronoi<Data> v;
 
-	protected MapCreator(Voronoi.Algorithm algorithm, int width, int height, Point... sites) {
+	@SuppressWarnings("unchecked")
+	protected MapCreator(Voronoi.Algorithm algorithm, int width, int height, Data... sites) {
 		this.width = width;
 		this.height = height;
-		List<Point> siteList = Arrays.stream(sites).toList();
-		v = new Voronoi().create(Voronoi.Algorithm.CalculateBySubDivision, width, height, siteList);
+		List<Data> siteList = Arrays.stream(sites).toList();
+		v = new Voronoi<Data>().create(Voronoi.Algorithm.CalculateBySubDivision, width, height, siteList);
 	}
 
 	void exportToSaveDataMap(Map<String, CreatedMap> saveDataMap) {

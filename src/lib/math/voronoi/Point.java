@@ -20,14 +20,21 @@ package lib.math.voronoi;
 
 public class Point {
 
+	public PointData data;
+
 	//simply an x and y location
 	public int x, y;
 	public boolean isSeed;
-	public Point nearestSeed;
 
 	public Point(int x, int y) {
 		this.x = x;
 		this.y = y;
+		data = new PointData() {
+		};
+	}
+
+	public <D extends PointData> void propogateData(D dataIn) {
+		this.data = dataIn;
 	}
 
 
@@ -80,13 +87,43 @@ public class Point {
 
 	public void setSeed() {
 		this.isSeed = true;
-		this.nearestSeed = this;
+		this.data.nearestSeed = this;
 	}
 
 	@Override
 	public String toString() {
-		if (nearestSeed != null)
-			return nearestSeed.printCoords();
+		if (this.data != null)
+			return this.data.toString();
 		else return "null ";
+	}
+
+	public static abstract class PointData {
+		public Point nearestSeed;
+
+		/**
+		 * Returns a string representation of the object. In general, the
+		 * {@code toString} method returns a string that
+		 * "textually represents" this object. The result should
+		 * be a concise but informative representation that is easy for a
+		 * person to read.
+		 * It is recommended that all subclasses override this method.
+		 * <p>
+		 * The {@code toString} method for class {@code Object}
+		 * returns a string consisting of the name of the class of which the
+		 * object is an instance, the at-sign character `{@code @}', and
+		 * the unsigned hexadecimal representation of the hash code of the
+		 * object. In other words, this method returns a string equal to the
+		 * value of:
+		 * <blockquote>
+		 * <pre>
+		 * getClass().getName() + '@' + Integer.toHexString(hashCode())
+		 * </pre></blockquote>
+		 *
+		 * @return a string representation of the object.
+		 */
+		@Override
+		public String toString() {
+			return this.nearestSeed.printCoords();
+		}
 	}
 }

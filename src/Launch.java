@@ -9,6 +9,7 @@
  */
 
 
+import imagine.scenes.worldatlus.maps.world.data.WorldMapGeneratorPoint;
 import lib.math.voronoi.Voronoi;
 
 public class Launch {
@@ -18,6 +19,10 @@ public class Launch {
 	}
 
 	private static void runTests() {
-		Voronoi v = new Voronoi().create(Voronoi.Algorithm.CalculateBySubDivision, 1000, 1000, null);
+		var v = new Voronoi<WorldMapGeneratorPoint>().create(
+				Voronoi.Algorithm.CalculateBySubDivision,
+				Voronoi.Resolution.LOW,
+				null);
+
 	}
 }
