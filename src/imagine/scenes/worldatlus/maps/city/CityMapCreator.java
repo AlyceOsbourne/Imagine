@@ -11,13 +11,12 @@
 package imagine.scenes.worldatlus.maps.city;
 
 import imagine.scenes.worldatlus.data.MapCreator;
-import lib.math.voronoi.Point;
-import lib.math.voronoi.Voronoi;
+import lib.math.voronoi.algorithm.Voronoi;
 
-public class CityMapCreator extends MapCreator<CityMapImage, Point> {
+public class CityMapCreator extends MapCreator<CityMapImage, Voronoi.Point> {
 
-	protected CityMapCreator(Voronoi.Algorithm algorithm, int width, int height, Point... sites) {
-		super(algorithm, width, height, sites);
+	protected CityMapCreator(int width, int height, Voronoi.Point... sites) {
+		super(width, height, sites);
 	}
 
 	@Override

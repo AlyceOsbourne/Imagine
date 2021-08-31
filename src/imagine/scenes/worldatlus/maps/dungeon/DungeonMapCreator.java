@@ -11,13 +11,12 @@
 package imagine.scenes.worldatlus.maps.dungeon;
 
 import imagine.scenes.worldatlus.data.MapCreator;
-import lib.math.voronoi.Point;
-import lib.math.voronoi.Voronoi;
+import lib.math.voronoi.algorithm.Voronoi;
 
-public class DungeonMapCreator extends MapCreator<DungeonMapImage, Point> {
+public class DungeonMapCreator extends MapCreator<DungeonMapImage, Voronoi.Point> {
 
-	protected DungeonMapCreator(Voronoi.Algorithm algorithm, int width, int height, Point... sites) {
-		super(algorithm, width, height, sites);
+	protected DungeonMapCreator(int width, int height, Voronoi.Point... sites) {
+		super(width, height, sites);
 	}
 
 	@Override

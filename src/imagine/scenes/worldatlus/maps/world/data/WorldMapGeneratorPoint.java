@@ -4,9 +4,9 @@
 
 package imagine.scenes.worldatlus.maps.world.data;
 
-import lib.math.voronoi.Point;
+import lib.math.voronoi.algorithm.Voronoi;
 
-public class WorldMapGeneratorPoint extends Point {
+public class WorldMapGeneratorPoint extends Voronoi.Point {
 
 	int
 			SEA_LEVEL = 40,

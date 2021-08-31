@@ -9,20 +9,24 @@ package imagine.scenes.worldatlus.data;
 
 
 import javafx.scene.image.WritableImage;
+import lib.math.voronoi.algorithm.Voronoi;
+
+import java.util.List;
 
 
 public abstract class MapImage {
 
+	boolean debugMode = false;
 	String mapName;
 
-	double width;
-	double height;
-	double scale;
+	int width;
+	int height;
+
 
 	boolean hasTitle;
 	boolean hasBorder;
 
-	Byte[][]Layers;
+	Byte[][] Layers;
 
 	WritableImage image;
 
@@ -49,4 +53,8 @@ public abstract class MapImage {
 	enum TitleFont {}
 
 	enum TitleStyle {}
+
+	<Data extends Voronoi.Point> Voronoi<Data> generateVoronoi(List<Voronoi.Point> sites) {
+		return new Voronoi<>(width, height, sites, debugMode);
+	}
 }
