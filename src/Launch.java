@@ -20,7 +20,7 @@ public class Launch {
 	static boolean debuggingMode = true;
 	static boolean debugVoronoi = true;
 
-	static Voronoi.Resolution testResolution = Voronoi.Resolution.TESTXL;
+	static Voronoi.Resolution testResolution = Voronoi.Resolution.HIGH;
 
 	public static void main(String[] args) {
 
@@ -50,6 +50,5 @@ public class Launch {
 						debugVoronoi);
 			}
 		}
-
 	}
 }

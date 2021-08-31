@@ -43,7 +43,7 @@ public class Voronoi<Data extends Point> {
 		if (p == null || p.isEmpty()) {
 			p = new ArrayList<>();
 			Random r = new Random();
-			int bound = 1000;
+			int bound = 500;
 			for (int i = 0; i < bound; i++) {
 				Data randomize = (Data) new Point(r.nextInt(width - 1), r.nextInt(height - 1));
 				p.add(randomize);
@@ -75,7 +75,7 @@ public class Voronoi<Data extends Point> {
 		HIGH(1920, 1200),
 		MEDIUM(1024, 768),
 		LOW(512, 384),
-		TESTXL(1000, 1000),
+		TESTXL(10000, 10000),
 		TESTXS(200, 200);
 
 

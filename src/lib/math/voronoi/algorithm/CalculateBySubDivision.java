@@ -29,7 +29,9 @@ public class CalculateBySubDivision<Data extends Point> extends Voronoi<Data> {
 	 * The inputted sites to process.
 	 */
 	List<Point> sites = new ArrayList<>();
-	List<Quad> toProcess = new ArrayList<>();
+	Queue<Quad> toProcess = new ArrayDeque<>();
+
+	int quadsCreated = 0, quadsProcessed = 0;
 	int cycle = 0;
 
 
@@ -48,11 +50,14 @@ public class CalculateBySubDivision<Data extends Point> extends Voronoi<Data> {
 		voronoiMatrix = new Point[width][height];
 
 		if (this.debug) {
-			System.out.println("Matrix width: " + width);
-			System.out.println("Matrix Height: " + height);
+			List<String> asList = Arrays.asList("Matrix width: " + width, "Matrix Height: " + height);
+			for (int i = 0, asListSize = asList.size(); i < asListSize; i++) {
+				String s1 = asList.get(i);
+				System.out.println(s1);
+			}
 		}
 
-		var totalPoints = width * height;
+		int totalPoints = width * height;
 		if (this.debug) System.out.println("Total points in matrix: " + totalPoints);
 
 		this.width = width;
@@ -64,12 +69,11 @@ public class CalculateBySubDivision<Data extends Point> extends Voronoi<Data> {
 			}
 		}
 
-		for (int i = 0, sitesInSize = sitesIn.size(); i < sitesInSize; i++) {
-			Data data = sitesIn.get(i);
+		for (Data data : sitesIn) {
 			Point p = voronoiMatrix[data.x][data.y] = data;
 			p.setSeed();
 			sites.add(p);
-			if (this.debug) System.out.println("Added site (" + data.x + "," + data.x + ")");
+			//if (this.debug) System.out.println("Added site (" + data.x + "," + data.x + ")");
 		}
 
 		//lines for testing
@@ -83,15 +87,22 @@ public class CalculateBySubDivision<Data extends Point> extends Voronoi<Data> {
 
 			long nanos = s.elapsed(TimeUnit.MICROSECONDS);
 			long totalTime = TimeUnit.NANOSECONDS.toMicros(nanos);
-
-			System.out.println("Finished calculating voronoi matrix");
-
-			for (String s1 : Arrays.asList(Util2.arrayDebug2D(voronoiMatrix), "Completed in " + formatTime(totalTime), "Each point took " + nanos / totalPoints + " nanoseconds to calculate", "Each cycle took " + nanos / cycle + " nanoseconds to calculate", "Each site took " + nanos / sites.size() + " nanoseconds to calculate")) {
+			for (String s1 : Arrays.asList("Finished calculating voronoi matrix", "Completed in " + formatTime(totalTime), "Each point took " + nanos / totalPoints + " nanoseconds to calculate", "Each cycle took " + nanos / cycle + " nanoseconds to calculate", "Each site took " + nanos / sites.size() + " nanoseconds to calculate")) {
 				System.out.println(s1);
 			}
+			try {
+				TimeUnit.SECONDS.sleep(3);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+			System.out.println(Util2.arrayDebug2D(voronoiMatrix));
+
+
+
 
 		}
 	}
+
 
 	/**
 	 * starts the algorithm, creates a starting Quad with the bounds of the image,
@@ -113,30 +124,56 @@ public class CalculateBySubDivision<Data extends Point> extends Voronoi<Data> {
 				)
 		);
 
+		quadsCreated++;
 
-		int loadingTicker = 0;
-		if (debug) System.out.print("|");
-		if (!toProcess.isEmpty()) {
-			do {
-				if (debug) {
-					cycle++;
-					loadingTicker++;
-					if (loadingTicker == 1000) {
-						loadingTicker = 0;
-						System.out.print("=");
-					}
-				}
-				for (int i = 0, toProcessSize = toProcess.size(); i < toProcessSize; i++) {
-					Quad quad = toProcess.get(i);
-					checkAndSubdivide(quad);
-					toProcess.remove(quad);
-					break;
-				}
-			} while (!toProcess.isEmpty());
+
+		//if (debug) System.out.print("|");
+		while (!toProcess.isEmpty()) {
+			if (debug) {
+				cycle++;
+				progressPercentage(quadsProcessed, quadsCreated);
+			}
+			checkAndSubdivide(Objects.requireNonNull(toProcess.poll()));
+
 		}
-		if (debug) System.out.print("|");
+		if (debug) System.out.println();
 		if (debug) System.out.println("Total Cycles:" + cycle);
 
+	}
+
+	public static String formatTime(long millis) {
+		long secs = millis / 1000;
+		return String.format("%02d:%02d:%02d", secs / 3600, (secs % 3600) / 60, secs % 60);
+	}
+
+	public static void progressPercentage(int done, int total) {
+		int size = 30;
+		String iconLeftBoundary = "[";
+		String iconDone = "=";
+		String iconRemain = ".";
+		String iconRightBoundary = "]";
+
+		if (done > total) {
+			throw new IllegalArgumentException();
+		}
+		int donePercents = (100 * done) / total;
+		int doneLength = size * donePercents / 100;
+
+		StringBuilder bar = new StringBuilder(iconLeftBoundary);
+		for (int i = 0; i < size; i++) {
+			if (i < doneLength) {
+				bar.append(iconDone);
+			} else {
+				bar.append(iconRemain);
+			}
+		}
+		bar.append(iconRightBoundary);
+
+		System.out.print("\r" + bar + " " + donePercents + "%");
+
+		if (done == total) {
+			System.out.print("\n");
+		}
 	}
 
 	/**
@@ -144,6 +181,7 @@ public class CalculateBySubDivision<Data extends Point> extends Voronoi<Data> {
 	 * subdivides the quad into 4 sections and adds them to the process queue
 	 **/
 	private void checkAndSubdivide(Quad quad) {
+		quadsProcessed++;
 		int qSize = (int) quad.size();
 		if (!checkQuad(quad)) {
 			if (qSize > 1) subDivideQuad(quad);
@@ -153,9 +191,35 @@ public class CalculateBySubDivision<Data extends Point> extends Voronoi<Data> {
 		}
 	}
 
-	public static String formatTime(long millis) {
-		long secs = millis / 1000;
-		return String.format("%02d:%02d:%02d", secs / 3600, (secs % 3600) / 60, secs % 60);
+	/**
+	 * checks quad corners for their nearest site, comparing against a list of sites to squeeze out some more speed.
+	 * Then passes along to areSitesEqual to perform equality check
+	 **/
+	private boolean checkQuad(Quad quad) {
+		//collect nearest site for each corner of quad
+		Point nearestSiteNE = getNearestSite(quad.ne.x, quad.ne.y);
+		Point nearestSiteNW = getNearestSite(quad.nw.x, quad.nw.y);
+		Point nearestSiteSE = getNearestSite(quad.se.x, quad.se.y);
+		Point nearestSiteSW = getNearestSite(quad.sw.x, quad.se.y);
+		if (areSitesEqual(nearestSiteNE,
+				nearestSiteNW,
+				nearestSiteSE,
+				nearestSiteSW)) {
+			int xStart = quad.nw.x;
+			int xFinish = quad.ne.x;
+			int yStart = quad.ne.y;
+			int yFinish = quad.se.y;
+			for (int i = xStart; i <= xFinish; i++) {
+				for (int j = yStart; j <= yFinish; j++) {
+					voronoiMatrix[i][j].data = quad.ne.data;
+					voronoiMatrix[i][j].nearestSeed = quad.ne.nearestSeed;
+				}
+			}
+
+			return true;
+		}
+		return false;
+
 	}
 
 	/**
@@ -184,69 +248,29 @@ public class CalculateBySubDivision<Data extends Point> extends Voronoi<Data> {
 
 		nwCorner = new Quad(nw, w, n, center);
 		subdivision.add(nwCorner);
+		quadsCreated++;
 		swCorner = new Quad(w, sw, center, s);
 		subdivision.add(swCorner);
+		quadsCreated++;
 		neCorner = new Quad(n, center, ne, e);
 		subdivision.add(neCorner);
+		quadsCreated++;
 		seCorner = new Quad(center, s, e, se);
 		subdivision.add(seCorner);
+		quadsCreated++;
 
 		//return constructed list
 		toProcess.addAll(subdivision);
 	}
 
-	/**
-	 * checks quad corners for their nearest site, comparing against a list of sites to squeeze out some more speed.
-	 * Then passes along to areSitesEqual to perform equality check
-	 **/
-	private boolean checkQuad(Quad quad) {
-		//collect nearest site for each corner of quad
-		Point nearestSiteNE = getNearestSite(quad.ne.x, quad.ne.y);
-		Point nearestSiteNW = getNearestSite(quad.nw.x, quad.nw.y);
-		Point nearestSiteSE = getNearestSite(quad.se.x, quad.se.y);
-		Point nearestSiteSW = getNearestSite(quad.sw.x, quad.se.y);
-		if (areSitesEqual(nearestSiteNE,
-				nearestSiteNW,
-				nearestSiteSE,
-				nearestSiteSW)) {
-			int xStart, xFinish, yStart, yFinish;
-			xStart = quad.nw.x;
-			xFinish = quad.ne.x;
-			yStart = quad.ne.y;
-			yFinish = quad.se.y;
-			long limit = xFinish;
-			long toSkip = xStart;
-			for (Point[] points : voronoiMatrix) {
-				if (toSkip > 0) {
-					toSkip--;
-					continue;
-				}
-				if (limit-- == 0) break;
-				List<Point> list = new ArrayList<>();
-				long limit1 = yFinish;
-				long toSkip1 = yStart;
-				for (Point point : points) {
-					if (toSkip1 > 0) {
-						toSkip1--;
-						continue;
-					}
-					if (limit1-- == 0) break;
-					list.add(point);
-				}
-				for (Point s : list) {
-					voronoiMatrix[s.x][s.y].data = quad.ne.data;
-				}
-			}
-
-			return true;
-		}
-		return false;
-
+	private void checkSingleCell(int x, int y) {
+		voronoiMatrix[x][y].nearestSeed = getNearestSite(x, y);
+		voronoiMatrix[x][y].data = voronoiMatrix[x][y].nearestSeed.data;
 	}
 
 	private Point getNearestSite(int x, int y) {
-
 		Point p = voronoiMatrix[x][y];
+		if (p.nearestSeed != null) return p.nearestSeed;
 		Comparator<Point> comparator = Comparator.comparingDouble(p::distance);
 		Point best = null;
 		boolean seen = false;
@@ -256,28 +280,22 @@ public class CalculateBySubDivision<Data extends Point> extends Voronoi<Data> {
 				best = site;
 			}
 		}
-		Point currentClosestSite = seen ? best : null;
-
-
-		return p.data.nearestSeed = currentClosestSite;
-	}
-
-	public Point[][] getMatrix() {
-		return this.voronoiMatrix;
+		var currentClosestSite = seen ? best : null;
+		return p.nearestSeed = currentClosestSite;
 	}
 
 	/**
 	 * compares a quads sites and make sure they are equal, if true then assign all points in said quad to the site
 	 **/
 	private boolean areSitesEqual(Point nearestSiteNE, Point nearestSiteNW, Point nearestSiteSE, Point nearestSiteSW) {
-		return (nearestSiteNE.areEqual(nearestSiteSE))
-				&& (nearestSiteSE.areEqual(nearestSiteSW))
-				&& (nearestSiteSW.areEqual(nearestSiteNW));
+		return nearestSiteNE.areEqual(nearestSiteSE)
+				&& nearestSiteSE.areEqual(nearestSiteSW)
+				&& nearestSiteSW.areEqual(nearestSiteNW);
 
 	}
 
-	private void checkSingleCell(int x, int y) {
-		voronoiMatrix[x][y].data.nearestSeed = getNearestSite(x, y);
+	public Data[][] getMatrix() {
+		return (Data[][]) this.voronoiMatrix;
 	}
 
 	public static class Quad {
