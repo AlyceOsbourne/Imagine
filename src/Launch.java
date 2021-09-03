@@ -27,10 +27,10 @@ public class Launch {
 		else Application.launch(Main.class, args);
 	}
 
-	private static <Data extends Voronoi.Point> void runTests() {
+	private static void runTests() {
 
 		if (debugVoronoi) {
-			var v = new Voronoi<Data>(testResolution, null, true);
+			var v = new Voronoi(testResolution, null, true);
 		}
 	}
 }

@@ -7,43 +7,42 @@
 
 package imagine.scenes.worldatlus.data;
 
+import javafx.fxml.FXML;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.layout.AnchorPane;
 import lib.fxml.LoadsFXML;
 import lib.image.ImageTools;
 import lib.math.voronoi.algorithm.Voronoi;
+import lib.math.voronoi.algorithm.Voronoi.Point;
 
-import javax.imageio.ImageIO;
-import java.io.File;
-import java.io.IOException;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
-public abstract class MapCreator<CreatedMap extends MapImage, Data extends Voronoi.Point> extends AnchorPane implements LoadsFXML, ImageTools {
+public abstract class MapCreator<CreatedMap extends MapImage> extends AnchorPane implements LoadsFXML, ImageTools {
 	CreatedMap map;
+	Voronoi v;
+
+	Point[][] matrix;
 	int width, height;
-	Canvas[] layers;
 
+	@FXML
+	AnchorPane MenuBar, CanvasPane;
 
-	@SuppressWarnings("unchecked")
-	protected MapCreator(int width, int height, Data... sites) {
+	Canvas canvas = new Canvas();
+
+	Map<Point, List<Point>> regions;
+
+	protected MapCreator(int width, int height, CreatedMap map) {
 		this.width = width;
 		this.height = height;
-		List<Data> siteList = Arrays.stream(sites).toList();
-
+		this.map = map;
+		v = map.v;
+		matrix = v.getMatrix();
+		regions = v.getRegions();
 	}
 
 	void exportToSaveDataMap(Map<String, CreatedMap> saveDataMap) {
 		saveDataMap.put(map.mapName, map);
-	}
-
-	void exportToPng(File file) {
-		try {
-			ImageIO.write(ImageTools.convertToBuffered(map.image), "png", file);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
 	}
 
 	public abstract void draw();
@@ -55,5 +54,7 @@ public abstract class MapCreator<CreatedMap extends MapImage, Data extends Voron
 	public abstract void save();
 
 	public abstract void load();
+
+
 	{loadFXML();} //todo make sure that running it here in the abstract class doesn't break the FXMLLoading
 }

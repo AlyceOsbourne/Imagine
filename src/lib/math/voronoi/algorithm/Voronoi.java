@@ -16,11 +16,12 @@ import java.util.concurrent.TimeUnit;
 
 import static lib.math.voronoi.algorithm.Voronoi.Utils.midpoint;
 
-public class Voronoi<Data extends Voronoi.Point> {
+public class Voronoi {
 
 	final boolean debug;
 	final int width;
 	final int height;
+
 	final Point[][] voronoiMatrix;
 
 	final List<Point> sites = new ArrayList<>();
@@ -28,7 +29,7 @@ public class Voronoi<Data extends Voronoi.Point> {
 
 	int quadsCreated = 0, quadsProcessed = 0;
 	int cycle = 0;
-
+	public final Map<Point, List<Point>> regions = new HashMap<>();
 
 	public Voronoi(Resolution resolution, List<Point> sitesIn, boolean debug) {
 		this(resolution.width, resolution.height, sitesIn, debug);
@@ -76,6 +77,7 @@ public class Voronoi<Data extends Voronoi.Point> {
 			Point p = voronoiMatrix[data.x][data.y] = data;
 			p.setSeed();
 			sites.add(p);
+			regions.put(p, new ArrayList<>());
 		}
 
 		//lines for testing
@@ -207,7 +209,6 @@ public class Voronoi<Data extends Voronoi.Point> {
 					voronoiMatrix[i][j].nearestSeed = quad.ne.nearestSeed;
 				}
 			}
-
 			return true;
 		}
 		return false;
@@ -255,6 +256,8 @@ public class Voronoi<Data extends Voronoi.Point> {
 	private void checkSingleCell(int x, int y) {
 		voronoiMatrix[x][y].nearestSeed = getNearestSite(x, y);
 		voronoiMatrix[x][y].data = voronoiMatrix[x][y].nearestSeed.data;
+		regions.get(voronoiMatrix[x][y].nearestSeed).add(voronoiMatrix[x][y]);
+
 	}
 
 	private Point getNearestSite(int x, int y) {
@@ -280,9 +283,18 @@ public class Voronoi<Data extends Voronoi.Point> {
 
 	}
 
-	public Data[][] getMatrix() {
-		return (Data[][]) this.voronoiMatrix;
+	public Point[][] getMatrix() {
+		return this.voronoiMatrix;
 	}
+
+	public List<Point> getSites() {
+		return this.sites;
+	}
+
+	public Map<Point, List<Point>> getRegions() {
+		return this.regions;
+	}
+
 
 	public enum Resolution {
 		TESTXL(10000, 8000),
@@ -345,7 +357,7 @@ public class Voronoi<Data extends Voronoi.Point> {
 			this.y = y;
 		}
 
-		public <D extends PointData> void propogateData(D dataIn) {
+		public <D extends PointData> void propagateData(D dataIn) {
 			this.data = dataIn;
 		}
 

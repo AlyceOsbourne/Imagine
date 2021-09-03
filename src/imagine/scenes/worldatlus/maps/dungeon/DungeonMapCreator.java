@@ -13,10 +13,13 @@ package imagine.scenes.worldatlus.maps.dungeon;
 import imagine.scenes.worldatlus.data.MapCreator;
 import lib.math.voronoi.algorithm.Voronoi;
 
-public class DungeonMapCreator extends MapCreator<DungeonMapImage, Voronoi.Point> {
+import java.util.List;
 
-	protected DungeonMapCreator(int width, int height, Voronoi.Point... sites) {
-		super(width, height, sites);
+public class DungeonMapCreator extends MapCreator<DungeonMapImage> {
+
+	protected DungeonMapCreator(int width, int height, List<Voronoi.Point> sites) {
+
+		super(width, height, new DungeonMapImage(sites));
 	}
 
 	@Override

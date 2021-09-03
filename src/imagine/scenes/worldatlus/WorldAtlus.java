@@ -18,6 +18,8 @@ import javafx.scene.layout.AnchorPane;
 import lib.fxml.LoadsFXML;
 
 public class WorldAtlus extends AnchorPane implements LoadsFXML {
+
+
 	@Override
 	public void loadControls() {
 

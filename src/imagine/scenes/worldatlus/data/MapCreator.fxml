@@ -3,20 +3,29 @@
 <!--
   ~ © Owned by Alyce Kat Osbourne, AKA Alycrafticus, All Rights Reserved.
   -->
-
+<!--
+  ~ © Owned by Alyce Kat Osbourne, AKA Alycrafticus, All Rights Reserved.
+  -->
+<!--
+  ~ © Owned by Alyce Kat Osbourne, AKA Alycrafticus, All Rights Reserved.
+  -->
 <!--
   ~ © Owned by Alyce Kat Osbourne, AKA Alycrafticus, All Rights Reserved.
   -->
 
-<!--
-  ~ © Owned by Alyce Kat Osbourne, AKA Alycrafticus, All Rights Reserved.
-  -->
 
-<!--
-  ~ © Owned by Alyce Kat Osbourne, AKA Alycrafticus, All Rights Reserved.
-  -->
-
-<?import javafx.scene.layout.AnchorPane?>
-<fx:root prefHeight="400.0" prefWidth="600.0" type="AnchorPane" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1">
-
+<?import javafx.scene.control.SplitPane?>
+<?import javafx.scene.layout.*?>
+<fx:root prefHeight="400.0" prefWidth="600.0" type="AnchorPane" xmlns="http://javafx.com/javafx/16"
+         xmlns:fx="http://javafx.com/fxml/1">
+    <children>
+        <SplitPane dividerPositions="0.75" layoutX="220.0" layoutY="100.0" orientation="VERTICAL" prefHeight="400.0"
+                   prefWidth="600.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0"
+                   AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+            <items>
+                <AnchorPane fx:id="CanvasPane" SplitPane.resizableWithParent="false"/>
+                <AnchorPane fx:id="MenuBar" SplitPane.resizableWithParent="false"/>
+            </items>
+        </SplitPane>
+    </children>
 </fx:root>
