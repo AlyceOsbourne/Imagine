@@ -10,33 +10,36 @@
 package lib.math.voronoi.algorithm;
 
 import com.google.common.base.Stopwatch;
+import org.jetbrains.annotations.Contract;
 
 import java.util.*;
 import java.util.concurrent.TimeUnit;
 
-import static lib.math.voronoi.algorithm.Voronoi.Utils.midpoint;
+import static lib.math.voronoi.algorithm.Voronoi.Utils.*;
 
 public class Voronoi {
 
 	final boolean debug;
-	final int width;
-	final int height;
-
+	final int width, height;
 	final Point[][] voronoiMatrix;
-
 	final List<Point> sites = new ArrayList<>();
 	final Queue<Quad> toProcess = new ArrayDeque<>();
-
-	int quadsCreated = 0, quadsProcessed = 0;
-	int cycle = 0;
+	int quadsCreated = 0, quadsProcessed = 0, cycle = 0;
 	public final Map<Point, List<Point>> regions = new HashMap<>();
 
-	public Voronoi(Resolution resolution, List<Point> sitesIn, boolean debug) {
+	public Voronoi(
+			Resolution resolution,
+			List<Point> sitesIn,
+			boolean debug) {
 		this(resolution.width, resolution.height, sitesIn, debug);
 	}
 
 	@SuppressWarnings("UnstableApiUsage")
-	public Voronoi(int width, int height, List<Point> sitesIn, boolean debug) {
+	public Voronoi(
+			int width,
+			int height,
+			List<Point> sitesIn,
+			boolean debug) {
 		Stopwatch s = null;
 		this.debug = debug;
 		//test line for performance testing
@@ -44,7 +47,7 @@ public class Voronoi {
 		if (sitesIn == null || sitesIn.isEmpty()) {
 			sitesIn = new ArrayList<>();
 			Random r = new Random();
-			int bound = width - height;
+			int bound = (int) ((width - height) * 0.25);
 			for (int i = 0; i < bound; i++) {
 				Point randomize = new Point(r.nextInt(width - 1), r.nextInt(height - 1));
 				sitesIn.add(randomize);
@@ -141,13 +144,9 @@ public class Voronoi {
 		if (debug) System.out.println();
 		if (debug) System.out.println("Total Cycles:" + cycle);
 
-	}
 
-	public static String formatTime(long millis) {
-		long secs = millis / 1000;
-		return String.format("%02d:%02d:%02d", secs / 3600, (secs % 3600) / 60, secs % 60);
-	}
 
+	}
 	private void checkAndSubdivide(Quad quad) {
 		++quadsProcessed;
 		int qSize = (int) quad.size();
@@ -158,37 +157,6 @@ public class Voronoi {
 			}
 		}
 	}
-
-	public static void progressPercentage(int done, int total) {
-		int size = 30;
-		String iconLeftBoundary = "[";
-		String iconDone = "=";
-		String iconRemain = ".";
-		String iconRightBoundary = "]";
-
-		if (done > total) {
-			throw new IllegalArgumentException();
-		}
-		int donePercents = (100 * done) / total;
-		int doneLength = size * donePercents / 100;
-
-		StringBuilder bar = new StringBuilder(iconLeftBoundary);
-		for (int i = 0; i < size; i++) {
-			if (i < doneLength) {
-				bar.append(iconDone);
-			} else {
-				bar.append(iconRemain);
-			}
-		}
-		bar.append(iconRightBoundary);
-
-		System.out.print("\r" + bar + " " + donePercents + "%");
-
-		if (done == total) {
-			System.out.print("\n");
-		}
-	}
-
 	private boolean checkQuad(Quad quad) {
 		//collect nearest site for each corner of quad
 		Point nearestSiteNE = getNearestSite(quad.ne.x, quad.ne.y);
@@ -205,13 +173,23 @@ public class Voronoi {
 			int yFinish = quad.se.y;
 			for (int i = xStart; i <= xFinish; i++) {
 				for (int j = yStart; j <= yFinish; j++) {
-					voronoiMatrix[i][j].data = quad.ne.data;
-					voronoiMatrix[i][j].nearestSeed = quad.ne.nearestSeed;
+					Point p = voronoiMatrix[i][j];
+					p.data = quad.ne.data;
+					p.nearestSeed = quad.ne.nearestSeed;
+					regions.get(p.nearestSeed).add(p);
 				}
 			}
 			return true;
 		}
 		return false;
+
+	}
+
+	private void checkSingleCell(int x, int y) {
+		Point p = voronoiMatrix[x][y];
+		p.nearestSeed = getNearestSite(x, y);
+		p.data = p.nearestSeed.data;
+		regions.get(p.nearestSeed).add(p);
 
 	}
 
@@ -252,14 +230,6 @@ public class Voronoi {
 		//return constructed list
 		toProcess.addAll(subdivision);
 	}
-
-	private void checkSingleCell(int x, int y) {
-		voronoiMatrix[x][y].nearestSeed = getNearestSite(x, y);
-		voronoiMatrix[x][y].data = voronoiMatrix[x][y].nearestSeed.data;
-		regions.get(voronoiMatrix[x][y].nearestSeed).add(voronoiMatrix[x][y]);
-
-	}
-
 	private Point getNearestSite(int x, int y) {
 		Point p = voronoiMatrix[x][y];
 		if (p.nearestSeed != null) return p.nearestSeed;
@@ -283,30 +253,35 @@ public class Voronoi {
 
 	}
 
-	public Point[][] getMatrix() {
+
+	@Contract(pure = true)
+	public final Point[][] getMatrix() {
 		return this.voronoiMatrix;
 	}
 
-	public List<Point> getSites() {
+	@Contract(pure = true)
+	public final List<Point> getSites() {
 		return this.sites;
 	}
 
-	public Map<Point, List<Point>> getRegions() {
+	@Contract(pure = true)
+	public final Map<Point, List<Point>> getRegions() {
 		return this.regions;
 	}
 
-
 	public enum Resolution {
-		TESTXL(10000, 8000),
 		HIGH(1920, 1200),
 		MEDIUM(1024, 768),
 		LOW(512, 384),
-		TESTXS(200, 140),
-		TESTXXS(30, 15);
+		TESTXXS(LOW.width / 4, LOW.height / 4),
+		TESTXS(LOW.width / 2, LOW.height / 2),
+		TESTXL(HIGH.width * 2, HIGH.height * 2),
+		TESTXXL(HIGH.width * 4, HIGH.height * 4),
+		TESTXXXL(HIGH.width * 8, HIGH.height * 8);
 
 
-		final int width;
-		final int height;
+		final public int width;
+		final public int height;
 
 		Resolution(int width, int height) {
 			this.width = width;
@@ -347,22 +322,13 @@ public class Voronoi {
 		public int y;
 		public boolean isSeed;
 
-		public <DataHolder extends PointData> Point(int x, int y, DataHolder d) {
-			new Point(x, y);
-			this.data = d;
-		}
-
 		public Point(int x, int y) {
 			this.x = x;
 			this.y = y;
 		}
 
-		public <D extends PointData> void propagateData(D dataIn) {
-			this.data = dataIn;
-		}
 
-
-		public <P extends Point> double distance(P point) {
+		public double distance(Point point) {
 			return distance(point.x, point.y);
 		}
 
@@ -410,6 +376,7 @@ public class Voronoi {
 			this.nearestSeed = this;
 		}
 
+
 		@Override
 		public String toString() {
 			if (this.data != null) return this.data.toString();
@@ -435,6 +402,41 @@ public class Voronoi {
 			return (a + b) / 2;
 		}
 
+		public static void progressPercentage(int done, int total) {
+			int size = 30;
+			String iconLeftBoundary = "[";
+			String iconDone = "=";
+			String iconRemain = ".";
+			String iconRightBoundary = "]";
+
+			if (done > total) {
+				throw new IllegalArgumentException();
+			}
+			int donePercents = (100 * done) / total;
+			int doneLength = size * donePercents / 100;
+
+			StringBuilder bar = new StringBuilder(iconLeftBoundary);
+			for (int i = 0; i < size; i++) {
+				if (i < doneLength) {
+					bar.append(iconDone);
+				} else {
+					bar.append(iconRemain);
+				}
+			}
+			bar.append(iconRightBoundary);
+
+			System.out.print("\r" + bar + " " + donePercents + "%");
+
+			if (done == total) {
+				System.out.print("\n");
+			}
+		}
+
+		public static String formatTime(long millis) {
+			long secs = millis / 1000;
+			return String.format("%02d:%02d:%02d", secs / 3600, (secs % 3600) / 60, secs % 60);
+		}
+
 		public static class Util2 {
 			public static <T> String arrayDebug2D(T[][] arr) {
 
@@ -458,25 +460,13 @@ public class Voronoi {
 				return arrayDebug2D(asStrings);
 			}
 
-			private static <T> int findLongestRow(T[][] arr) {
-				int retVal = 0;
-				//int height = arr.length ;
-				for (T[] ts : arr) {
-					int x = ts.length;
-					if (x > retVal) {
-						retVal = x;
-					}
-				}
-				return retVal;
-			}
-
 			private static String arrayDebug2D(String[][] arr) {
 
 				if (arr == null || arr.length == 0)
 					return "";
 
 				StringBuilder x = new StringBuilder();
-				int size = arr.length; //"height" of the array
+				int size = arr.length; //"depth" of the array
 
 				int longestSubstring = addSpace(arr);
 
@@ -533,6 +523,18 @@ public class Voronoi {
 				return x.toString();
 			}
 
+			private static <T> int findLongestRow(T[][] arr) {
+				int retVal = 0;
+				//int depth = arr.length ;
+				for (T[] ts : arr) {
+					int x = ts.length;
+					if (x > retVal) {
+						retVal = x;
+					}
+				}
+				return retVal;
+			}
+
 			//adds spaces to the array (void)
 			private static int addSpace(String[][] arr) {
 				int a = findLongestString(arr);
@@ -576,7 +578,7 @@ public class Voronoi {
 			}
 
 			private static int findLongestString(String[][] arr) {
-				//"height" of the array
+				//"depth" of the array
 				int longestSubstring = 0;
 
 				for (String[] strings : arr) {

@@ -11,26 +11,15 @@
 
 import imagine.Main;
 import javafx.application.Application;
-import lib.math.voronoi.algorithm.Voronoi;
+
+import java.io.IOException;
 
 public class Launch {
 
-	static boolean debuggingMode = true;
-	static boolean debugVoronoi = true;
+	public static void main(String[] args) throws IOException {
 
-	static Voronoi.Resolution testResolution = Voronoi.Resolution.HIGH;
-
-	public static void main(String[] args) {
-
-		if (debuggingMode) runTests();
-
-		else Application.launch(Main.class, args);
+		Application.launch(Main.class, args);
 	}
 
-	private static void runTests() {
 
-		if (debugVoronoi) {
-			var v = new Voronoi(testResolution, null, true);
-		}
-	}
 }

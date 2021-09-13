@@ -23,7 +23,7 @@ public interface JsonFileHandler<C> {
 			.setLenient()
 			.create();
 
-	default void save(File file, C o, Class<?> c) {
+	default void save(File file, C o, Class<C> c) {
 		try {
 			Files.writeString(Path.of(file.toURI()), gson.toJson(o, c));
 		} catch (IOException e) {

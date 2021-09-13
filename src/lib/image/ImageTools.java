@@ -17,27 +17,39 @@ import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.awt.image.DataBufferByte;
 import java.io.ByteArrayInputStream;
+import java.io.File;
 import java.io.IOException;
 import java.util.Base64;
 
 /**
  * Image conversion tools, can convert BufferedImage to WritableImage and vise versa
- * and can convert both to and from json abd convert an image to PNG
+ * and can convert both to and from json and convert an image to PNG
  **/
 
 public interface ImageTools {
 
-
-	static void exportToPng(WritableImage image) {
-		exportToPng(convertToBuffered(image));
+	static void exportToImageFile(WritableImage image) {
+		exportToImageFile(convertToBuffered(image));
 	}
 
-	static void exportToPng(BufferedImage image) {
+	static void exportToImageFile(BufferedImage image) {
 		FileChooser chooser = new FileChooser();
-		try {
-			ImageIO.write(image, "png", chooser.showSaveDialog(Main.stage));
-		} catch (IOException e) {
-			e.printStackTrace();
+
+		FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter(
+				"image files", "*.png", "*.bmp", "*.jpeg");
+
+		chooser.getExtensionFilters().add(extFilter);
+
+		File v = chooser.showSaveDialog(Main.stage);
+		if (v != null) {
+			String fileName = v.getName();
+			System.out.println("Saving " + fileName);
+			String fileExtension = fileName.substring(fileName.lastIndexOf(".") + 1, v.getName().length());
+			try {
+				ImageIO.write(image, fileExtension, v);
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
 		}
 	}
 
