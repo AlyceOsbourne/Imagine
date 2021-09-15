@@ -64,7 +64,7 @@ public abstract class Map {
 		List<RegionType> types = new ArrayList<>(regionTypes());
 		List<Region> regions = new ArrayList<>(types.size());
 		List<Voronoi.Point> regionSites = new ArrayList<>(types.size());
-		Random r = new Random(((long) v.getSites().get(1).x * v.getSites().get(v.getSites().size()).y) * types.size() * new Random().nextInt());
+		Random r = new Random(((long) v.getSites().get(1).x * v.getSites().get(v.getSites().size()).y) * types.size() + new Random().nextInt());
 		for (RegionType type : types) {
 			int n = r.nextInt(v.getSites().size());
 			if (regionSites.size() == 0) {
@@ -82,7 +82,12 @@ public abstract class Map {
 		Voronoi regionVoronoi = new Voronoi(width, height, regionSites, false);
 		java.util.Map<Voronoi.Point, List<Voronoi.Point>> cells = regionVoronoi.getCells();
 		for (Region region : regions) {
-
+			List<Voronoi.Point> regionCells = regionVoronoi.getCells().get(region.regionSite);
+			for (Voronoi.Point p : regionCells) {
+				if (v.getSites().contains(p)) {
+					region.populateRegion(v.getCells().get(p));
+				}
+			}
 		}
 
 
@@ -108,7 +113,7 @@ public abstract class Map {
 		RegionType type;
 
 		Voronoi.Point regionSite;
-		List<Voronoi.Point> cells;
+		List<Voronoi.Point> cells = new ArrayList<>();
 
 		Region(RegionType type, Voronoi.Point regionSite) {
 			this.type = type;
@@ -116,7 +121,7 @@ public abstract class Map {
 		}
 
 		void populateRegion(List<Voronoi.Point> cells) {
-			this.cells = cells;
+			this.cells.addAll(cells);
 		}
 	}
 
