@@ -25,7 +25,8 @@ public class Voronoi {
 	final List<Point> sites = new ArrayList<>();
 	final Queue<Quad> toProcess = new ArrayDeque<>();
 	int quadsCreated = 0, quadsProcessed = 0, cycle = 0;
-	public final Map<Point, List<Point>> regions = new HashMap<>();
+
+	public final Map<Point, List<Point>> cells = new HashMap<>();
 
 	public Voronoi(
 			Resolution resolution,
@@ -47,7 +48,7 @@ public class Voronoi {
 		if (sitesIn == null || sitesIn.isEmpty()) {
 			sitesIn = new ArrayList<>();
 			Random r = new Random();
-			int bound = (int) ((width - height) * 0.25);
+			int bound = (int) ((width * height) * 0.001);
 			for (int i = 0; i < bound; i++) {
 				Point randomize = new Point(r.nextInt(width - 1), r.nextInt(height - 1));
 				sitesIn.add(randomize);
@@ -80,7 +81,7 @@ public class Voronoi {
 			Point p = voronoiMatrix[data.x][data.y] = data;
 			p.setSeed();
 			sites.add(p);
-			regions.put(p, new ArrayList<>());
+			cells.put(p, new ArrayList<>());
 		}
 
 		//lines for testing
@@ -176,7 +177,7 @@ public class Voronoi {
 					Point p = voronoiMatrix[i][j];
 					p.data = quad.ne.data;
 					p.nearestSeed = quad.ne.nearestSeed;
-					regions.get(p.nearestSeed).add(p);
+					cells.get(p.nearestSeed).add(p);
 				}
 			}
 			return true;
@@ -189,7 +190,7 @@ public class Voronoi {
 		Point p = voronoiMatrix[x][y];
 		p.nearestSeed = getNearestSite(x, y);
 		p.data = p.nearestSeed.data;
-		regions.get(p.nearestSeed).add(p);
+		cells.get(p.nearestSeed).add(p);
 
 	}
 
@@ -265,8 +266,8 @@ public class Voronoi {
 	}
 
 	@Contract(pure = true)
-	public final Map<Point, List<Point>> getRegions() {
-		return this.regions;
+	public final Map<Point, List<Point>> getCells() {
+		return this.cells;
 	}
 
 	public enum Resolution {
@@ -280,8 +281,7 @@ public class Voronoi {
 		TESTXXXL(HIGH.width * 8, HIGH.height * 8);
 
 
-		final public int width;
-		final public int height;
+		final public int width, height;
 
 		Resolution(int width, int height) {
 			this.width = width;
@@ -318,8 +318,7 @@ public class Voronoi {
 		public PointData data;
 
 		//simply an x and y location
-		public int x;
-		public int y;
+		public int x, y;
 		public boolean isSeed;
 
 		public Point(int x, int y) {
@@ -394,26 +393,24 @@ public class Voronoi {
 	}
 
 	public static class Utils {
+
 		public static Point midpoint(Point a, Point b, Point[][] matrix) {
 			return matrix[average(a.x, b.x)][average(a.y, b.y)];
 		}
 
+		@Contract(pure = true)
 		private static int average(int a, int b) {
 			return (a + b) / 2;
 		}
 
 		public static void progressPercentage(int done, int total) {
-			int size = 30;
-			String iconLeftBoundary = "[";
-			String iconDone = "=";
-			String iconRemain = ".";
-			String iconRightBoundary = "]";
+			int size = 100;
+			String iconLeftBoundary = "[", iconDone = "=", iconRemain = ".", iconRightBoundary = "]";
 
 			if (done > total) {
 				throw new IllegalArgumentException();
 			}
-			int donePercents = (100 * done) / total;
-			int doneLength = size * donePercents / 100;
+			int donePercents = (100 * done) / total, doneLength = size * donePercents / 100;
 
 			StringBuilder bar = new StringBuilder(iconLeftBoundary);
 			for (int i = 0; i < size; i++) {
@@ -432,6 +429,7 @@ public class Voronoi {
 			}
 		}
 
+		@Contract(pure = true)
 		public static String formatTime(long millis) {
 			long secs = millis / 1000;
 			return String.format("%02d:%02d:%02d", secs / 3600, (secs % 3600) / 60, secs % 60);

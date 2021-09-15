@@ -28,13 +28,15 @@ public class Main extends Application {
         window = new Window();
         Scene scene = new Scene(window);
         primaryStage.setScene(scene);
-        show();
         runDebug();
+        show();
+
     }
 
     private void runDebug() {
-        Resolution r = Resolution.TESTXXXL;
-        Map m = new Map(r.width, r.height, null).populateWithColor();
+        Resolution r = Resolution.HIGH;
+        Map m = new Map(r.width, r.height, null) {
+        }.drawRegions().drawPoints();
         m.saveImage();
     }
 
