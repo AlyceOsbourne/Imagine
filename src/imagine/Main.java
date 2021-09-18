@@ -7,13 +7,10 @@
 package imagine;
 
 import imagine.scenes.core.Window;
-import imagine.scenes.worldatlus.Map;
 import javafx.application.Application;
 import javafx.fxml.FXML;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
-
-import static lib.math.voronoi.algorithm.Voronoi.Resolution;
 
 public class Main extends Application {
     public static Window window;
@@ -28,16 +25,8 @@ public class Main extends Application {
         window = new Window();
         Scene scene = new Scene(window);
         primaryStage.setScene(scene);
-        runDebug();
         show();
 
-    }
-
-    private void runDebug() {
-        Resolution r = Resolution.HIGH;
-        Map m = new Map(r.width, r.height, null) {
-        }.drawRegions().drawPoints();
-        m.saveImage();
     }
 
     void show() {

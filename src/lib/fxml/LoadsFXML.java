@@ -16,6 +16,7 @@ import java.util.Objects;
     simply allows you to get a fully instantiated FXMLLoader and fully loads the function assignments to the FXMLs controls
     can either return the FXMLLoader or you can just call loadFXML() to fire and forget.
  */
+@FunctionalInterface
 public interface LoadsFXML {
 
 	/**
@@ -32,11 +33,14 @@ public interface LoadsFXML {
 	default FXMLLoader loadFXML(){
 		return loadFXML(null);
 	}
+
 	/**
-	 * this is the secondary loader method, allows you to point towards a specific FXML file,
-	 * can be returned or just called as it handles the loading of the class, assigning the root and then the actual FXMLLoader.load() method.
-	*/
+	 * this is the overloaded loader method, allows you to point towards a specific FXML file,
+	 * can be returned or just called as it handles the loading of the class, assigning the root and then the actual
+	 * FXMLLoader.load() method.
+	 */
 	@SuppressWarnings("SameReturnValue")
+	//suppressing warnings here as this is intended behaviour
 	default FXMLLoader loadFXML(String fxmlLocation){
 		setControllerAndRoot();
 		setLocation(fxmlLocation);
@@ -69,12 +73,18 @@ public interface LoadsFXML {
 	}
 
 	/**
-	 * this is the method that sets the location of the FXML file. if it receives a null value it will set the location to the classes' location,
+	 * this is the method that sets the location of the FXML file. if it receives a null value it will set the location
+	 * to the classes' location,
 	 * else it returns the file located at the location provided
 	 */
-	default void setLocation(@Nullable String location){
+	default void setLocation(@Nullable String location) {
 		loader.setLocation(this.getClass().getResource(Objects.requireNonNullElseGet(location, () -> this.getClass().getSimpleName() + ".fxml")));
 		System.out.println("FXML loaded from: " + loader.getLocation());
 	}
+
+	//this is the only abstract method of this class, this allows you to load the controls of the implementing classes controls
+
+
 	void loadControls();
+
 }

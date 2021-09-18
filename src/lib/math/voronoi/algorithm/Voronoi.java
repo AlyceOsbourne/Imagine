@@ -4,7 +4,7 @@
  */
 
 /*
- Based on and owned by : https://www.youtube.com/watch?v=8mjUUNi1AaA&ab_channel=MichiganSpaceGrantConsortium
+ Based upon: https://www.youtube.com/watch?v=8mjUUNi1AaA&ab_channel=MichiganSpaceGrantConsortium
  */
 
 package lib.math.voronoi.algorithm;
@@ -21,6 +21,7 @@ public class Voronoi {
 
 	final boolean debug;
 	final int width, height;
+	double scale = 0.002;
 	final Point[][] voronoiMatrix;
 	final List<Point> sites = new ArrayList<>();
 	final Queue<Quad> toProcess = new ArrayDeque<>();
@@ -48,7 +49,7 @@ public class Voronoi {
 		if (sitesIn == null || sitesIn.isEmpty()) {
 			sitesIn = new ArrayList<>();
 			Random r = new Random();
-			int bound = (int) ((width * height) * 0.001);
+			int bound = (int) ((width * height) * scale);
 			for (int i = 0; i < bound; i++) {
 				Point randomize = new Point(r.nextInt(width - 1), r.nextInt(height - 1));
 				sitesIn.add(randomize);
@@ -364,6 +365,19 @@ public class Voronoi {
 			}
 
 			return Math.toDegrees(Math.acos(delta));
+		}
+
+		@Override
+		public int hashCode() {
+			int result = x;
+			result = 31 * result + y;
+			return result;
+		}
+
+		@Override
+		public boolean equals(Object o) {
+			return this == o || o instanceof Point point && x == point.x && y == point.y;
+
 		}
 
 		public boolean areEqual(Point p) {
