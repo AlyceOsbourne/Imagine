@@ -7,101 +7,77 @@ package imagine.scenes.worldatlus.abst;
 import javafx.scene.image.PixelWriter;
 import javafx.scene.image.WritableImage;
 import javafx.scene.paint.Color;
+import lib.image.ImageTools;
 import lib.math.voronoi.algorithm.Voronoi;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-public class BaseMapAbst {
+import static lib.math.voronoi.algorithm.Voronoi.Point;
+
+public abstract class BaseMapAbst {
+
+
+	//this here is the abstract definition of what my Map will be (think a J,R Tolkien map :P )
+
+	// in this class we know what som methods will do and HOW we will ge that result
 
 	final int width, height;
-	boolean debugMode = true;
+	public final WritableImage image;
+	final boolean debugMode = true;
+	final double continentMapScale;
+	final double regionMapScale;
+	final double biomeMapScale;
+	final double featureMapScale;
+	final int numberOfContinents = 3;
+	final PixelWriter writer;
+	final Random rand = new Random();
 	Voronoi noiseMap, continentMap, regionMap, biomeMap, featureMap;
-	WritableImage image;
-	double continentMapScale, regionMapScale, biomeMapScale, featureMapScale;
-
-	int numberOfContinents = 3;
-
-	List<Voronoi.Point> sites;
-
-	PixelWriter writer;
-	Random rand = new Random();
+	List<Point> sites;
 	List<Area> continentAreas;
 	List<Area> regionAreas;
 
-	public BaseMapAbst(int width, int height, List<Voronoi.Point> sites) {
+	public BaseMapAbst(int width, int height, List<Point> sites) {
 		this.width = width;
 		this.height = height;
 		this.sites = sites;
-		continentMapScale = (0.002);
+		continentMapScale = 0.002;
 		regionMapScale = continentMapScale * 10;
 		biomeMapScale = regionMapScale * 10;
 		featureMapScale = regionMapScale * 10;
 		image = new WritableImage(width, height);
 		writer = image.getPixelWriter();
+	}
+
+	public BaseMapAbst startGeneration() {
+		generateNoiseMap();
+		drawNoiseMap();
+		//generateContinentMap();
+		//drawContinentMap();
+		//generateRegionMap();
+		//drawRegionMap();
+		//generateFeatureMap();
+		//drawFeatureMap();
+		//applyToneMap();
+		//decorate();
+		return this;
+	}
+
+	public void generateNoiseMap() {
+		noiseMap = new Voronoi(width, height, sites, 0.0002, debugMode);
 
 	}
 
-	private void startGeneration() {
-		generateNoiseMap(sites);
-		generateContinentMap();
-		drawContinents();
-		generateRegionMap();
+	public void drawNoiseMap() {
+		noiseMap.getSites().forEach(p -> {
+			Color c = Color.color(rand.nextDouble(), rand.nextDouble(), rand.nextDouble());
+			noiseMap.getCells().get(p).forEach(cell -> writer.setColor(cell.x, cell.y, c));
+		});
 	}
 
-	//creates a voronoi diagram that acts as our noise map, this will allow for random distribution, I may create a method to distort the matrix for more realistic terrain
-	private void generateNoiseMap(@Nullable List<Voronoi.Point> sites) {
-
-		noiseMap = new Voronoi(width, height, sites, debugMode);
-		Voronoi.Point[][] matrix = noiseMap.getMatrix();
-		for (Voronoi.Point p : noiseMap.getSites()) {
-			for (Voronoi.Point cell : noiseMap.getCells().get(p)) {
-				Voronoi.Point left, right, up, down;
-				int x, y;
-				x = cell.x;
-				y = cell.y;
-				if (++x <= width - 1)
-					up = matrix[--x][y].nearestSeed;
-				else up = p.nearestSeed;
-				if (--x >= 0)
-					down = matrix[--x][y].nearestSeed;
-				else down = p.nearestSeed;
-				if (y++ <= width - 1)
-					right = matrix[x][++y].nearestSeed;
-				else right = p.nearestSeed;
-				if (--y >= 0)
-					left = matrix[x][--y].nearestSeed;
-				else left = p.nearestSeed;
-
-				if ((up == down) && (left == right)) {
-					int r = rand.nextInt(3);
-					switch (r) {
-						case 0:
-							cell.nearestSeed = up;
-
-						case 1:
-							cell.nearestSeed = down;
-
-						case 2:
-							cell.nearestSeed = left;
-
-						case 3:
-							cell.nearestSeed = right;
-					}
-				} else if (up == down) cell.nearestSeed = up;
-
-				else if (left == right) cell.nearestSeed = left;
-
-				noiseMap.getCells().get(p).remove(cell);
-				noiseMap.getCells().get(cell.nearestSeed).add(cell);
-			}
-		}
-	}
-
-	void generateContinentMap() {
-		List<Voronoi.Point> continentSites = new ArrayList<>();
+	public void generateContinentMap() {
+		List<Point> continentSites = new ArrayList<>();
 		continentAreas = new ArrayList<>();
 		int n = rand.nextInt((int) (noiseMap.getSites().size() * continentMapScale));
 		for (int i = 0; i < n; i++) {
@@ -112,10 +88,10 @@ public class BaseMapAbst {
 			while (continentSites.contains(noiseMap.getSites().get(siteIndex)));
 			continentSites.add(noiseMap.getSites().get(siteIndex));
 		}
-		continentMap = new Voronoi(width, height, continentSites, debugMode);
-		for (Voronoi.Point site : continentMap.getSites()) {
+		continentMap = new Voronoi(width, height, continentSites, 0.02, debugMode);
+		for (Point site : continentMap.getSites()) {
 			Area area = new Area(site);
-			for (Voronoi.Point point : continentMap.getCells().get(site)) {
+			for (Point point : continentMap.getCells().get(site)) {
 				if (noiseMap.getSites().contains(point)) {
 					area.addCells(noiseMap.getCells().get(point));
 				}
@@ -132,32 +108,32 @@ public class BaseMapAbst {
 		}
 	}
 
-	void drawContinents() {
+	public void drawContinentMap() {
 		for (Area r : continentAreas) {
-			for (Voronoi.Point p : r.cells) {
+			for (Point p : r.cells) {
 				if (r.isLand) writer.setColor(p.x, p.y, Color.BROWN);
 				else writer.setColor(p.x, p.y, Color.SEAGREEN);
 			}
 		}
 	}
 
-	void generateRegionMap() {
-		List<Voronoi.Point> regionSites = new ArrayList<>();
+	public void generateRegionMap() {
+		List<Point> regionSites = new ArrayList<>();
 		regionAreas = new ArrayList<>();
 		int n = rand.nextInt((int) (continentMap.getSites().size() * regionMapScale));
 		for (Area area : continentAreas) {
 			if (area.isLand) {
-				for (Voronoi.Point cell : area.cells) {
+				for (Point cell : area.cells) {
 					if (noiseMap.getSites().contains(cell))
 						regionSites.add(cell);
 				}
 			}
 		}
-		regionMap = new Voronoi(width, height, regionSites, debugMode);
+		regionMap = new Voronoi(width, height, regionSites, 0.002, debugMode);
 
-		for (Voronoi.Point site : regionMap.getSites()) {
+		for (Point site : regionMap.getSites()) {
 			Area area = new Area(site);
-			for (Voronoi.Point cell : regionMap.getCells().get(site)) {
+			for (Point cell : regionMap.getCells().get(site)) {
 				if (noiseMap.getSites().contains(cell)) {
 					area.addCells(noiseMap.getCells().get(cell));
 				}
@@ -166,39 +142,49 @@ public class BaseMapAbst {
 		}
 	}
 
-	void DrawRegionMap() {
+	public void drawRegionMap() {
 	}
 
-	void generateBiomeMap() {
+	public void generateFeatureMap() {
+
 	}
 
-	void drawBiomeMap() {
+	public void drawFeatureMap() {
+
 	}
 
-	void generateFeatureMap() {
+	public void applyToneMap() {
+
 	}
 
-	void drawFeatureMap() {
+	public void decorate() {
+
 	}
 
-	void applyToneMap() {
+	public void generateBiomeMap() {
+
 	}
 
-	void decorate() {
+	public void drawBiomeMap() {
+
+	}
+
+	public void saveImage() {
+		ImageTools.exportToImageFile(image);
 	}
 
 	class Area {
 
-		Voronoi.Point site;
-		List<Voronoi.Point> cells = new ArrayList<>();
+		final Point site;
+		final List<Point> cells = new ArrayList<>();
 
 		boolean isLand = false, isCold = false, isHot = false, isTemperate = false;
 
-		Area(Voronoi.Point site) {
+		Area(Point site) {
 			this.site = site;
 		}
 
-		void addCells(List<Voronoi.Point> cells) {
+		void addCells(List<Point> cells) {
 			this.cells.addAll(cells);
 		}
 

@@ -21,19 +21,19 @@ public class Voronoi {
 
 	final boolean debug;
 	final int width, height;
-	double scale = 0.002;
+	public Map<Point, List<Point>> cells = new HashMap<>();
 	final Point[][] voronoiMatrix;
 	final List<Point> sites = new ArrayList<>();
 	final Queue<Quad> toProcess = new ArrayDeque<>();
 	int quadsCreated = 0, quadsProcessed = 0, cycle = 0;
-
-	public final Map<Point, List<Point>> cells = new HashMap<>();
+	double scale = 0.0005;
 
 	public Voronoi(
 			Resolution resolution,
 			List<Point> sitesIn,
+			double scale,
 			boolean debug) {
-		this(resolution.width, resolution.height, sitesIn, debug);
+		this(resolution.width, resolution.height, sitesIn, scale, debug);
 	}
 
 	@SuppressWarnings("UnstableApiUsage")
@@ -41,6 +41,7 @@ public class Voronoi {
 			int width,
 			int height,
 			List<Point> sitesIn,
+			double scale,
 			boolean debug) {
 		Stopwatch s = null;
 		this.debug = debug;
@@ -271,6 +272,10 @@ public class Voronoi {
 		return this.cells;
 	}
 
+	public void setCells(Map<Point, List<Point>> cells) {
+		this.cells = cells;
+	}
+
 	public enum Resolution {
 		HIGH(1920, 1200),
 		MEDIUM(1024, 768),
@@ -290,7 +295,7 @@ public class Voronoi {
 		}
 	}
 
-	public static class Quad {
+	public static final class Quad {
 		public final Point ne;
 		public final Point nw;
 		public final Point se;
@@ -314,7 +319,7 @@ public class Voronoi {
 		}
 	}
 
-	public static class Point {
+	public static final class Point {
 		public Point nearestSeed;
 		public PointData data;
 
@@ -406,7 +411,7 @@ public class Voronoi {
 		}
 	}
 
-	public static class Utils {
+	public static final class Utils {
 
 		public static Point midpoint(Point a, Point b, Point[][] matrix) {
 			return matrix[average(a.x, b.x)][average(a.y, b.y)];
