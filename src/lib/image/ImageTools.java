@@ -8,10 +8,10 @@
 
 package lib.image;
 
-import imagine.Main;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.scene.image.WritableImage;
 import javafx.stage.FileChooser;
+import javafx.stage.Stage;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
@@ -28,11 +28,11 @@ import java.util.Base64;
 
 public interface ImageTools {
 
-	static void exportToImageFile(WritableImage image) {
-		exportToImageFile(convertToBuffered(image));
+	static void exportToImageFile(WritableImage image, Stage stage) {
+		exportToImageFile(convertToBuffered(image), stage);
 	}
 
-	static void exportToImageFile(BufferedImage image) {
+	static void exportToImageFile(BufferedImage image, Stage stage) {
 		FileChooser chooser = new FileChooser();
 
 		FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter(
@@ -40,7 +40,7 @@ public interface ImageTools {
 
 		chooser.getExtensionFilters().add(extFilter);
 
-		File v = chooser.showSaveDialog(Main.stage);
+		File v = chooser.showSaveDialog(stage);
 		if (v != null) {
 			String fileName = v.getName();
 			System.out.println("Saving " + fileName);

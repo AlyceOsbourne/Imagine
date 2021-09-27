@@ -3,7 +3,7 @@
  * Do what the F**k you want
  */
 
-package lib.fxml;
+package lib.javafx.fxml;
 
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -12,10 +12,13 @@ import org.jetbrains.annotations.Nullable;
 import java.util.Objects;
 
 /**
-	consider this class to be the reverse implementation of assigning a controller in an FXML file.
-    simply allows you to get a fully instantiated FXMLLoader and fully loads the function assignments to the FXMLs controls
-    can either return the FXMLLoader or you can just call loadFXML() to fire and forget.
- */
+ * consider this class to be the reverse implementation of assigning a controller in an FXML file.
+ * simply allows you to get a fully instantiated FXMLLoader and fully loads the function assignments to the FXMLs
+ * controls
+ * can either return the FXMLLoader or you can just call loadFXML() to fire and forget. FXML File must be FX:root
+ * otherwise
+ * class does nothing.
+ **/
 @FunctionalInterface
 public interface LoadsFXML {
 

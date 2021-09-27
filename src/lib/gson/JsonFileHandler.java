@@ -8,6 +8,7 @@
 
 package lib.gson;
 
+
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
@@ -22,6 +23,7 @@ public interface JsonFileHandler<C> {
 			.enableComplexMapKeySerialization()
 			.setLenient()
 			.create();
+
 
 	default void save(File file, C o, Class<C> c) {
 		try {
