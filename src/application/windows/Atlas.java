@@ -1,10 +1,8 @@
-/*
- * © Owned by Alyce Kat Osbourne, AKA Alycrafticus, All Rights Reserved.
- */
-
 package application.windows;
 
-import javafx.geometry.Insets;
+import com.raylabz.opensimplex.OpenSimplexNoise;
+import com.raylabz.opensimplex.Range;
+import com.raylabz.opensimplex.RangedValue;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.*;
@@ -16,349 +14,414 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
-import javafx.scene.text.Font;
 import lib.javafx.fxml.LazyWindow;
-import lib.math.noise.Noise;
 import lib.math.voronoi.algorithm.Voronoi;
+import lib.math.voronoi.algorithm.data.Utils;
 import lib.math.voronoi.algorithm.data.nodes.Point;
 
 import java.util.*;
+import java.util.concurrent.Executor;
+import java.util.concurrent.ScheduledThreadPoolExecutor;
+
+import static javafx.application.Platform.runLater;
+
+/*
+ * todo fix collector for spinners to it is refreshed on each generate, maybe see if there is a way to bind it?
+ *  although, we only really need it for the generation runs, also investigate broken image generation when ran in off thread
+ * */
 
 
-enum MapSize {
-	Huge(1.0),
-	Large(0.8),
-	Normal(0.6),
-	Small(0.4);
-
-	int width = 1920, height = 1080;
-
-	MapSize(double scale) {
-		this.width = (int) (this.width * scale);
-		this.height = (int) (this.height * scale);
-	}
-}
-
-public class Atlas extends LazyWindow {
-
-	static ImageView viewer = new ImageView();
-	static Spinner<Integer>
-			mapSizeSpinner = new Spinner<>(1, MapSize.values().length, 1),
-			numOfPlatesSpinner = new Spinner<>(10, 30, 12),
-			numOfContinentsSpinner = new Spinner<>(1, 12, 5),
-			numOfCountriesSpinner = new Spinner<>(0, 30, 15),
-			numOfBiomesSpinner = new Spinner<>(1, 10, 5);
-	static Spinner<Double> noiseScale = new Spinner<>(0.5, 3.0, 1.0, 0.05);
-	static Label
-			mapSizeLabel = new Label("Map Size"),
-			numOfPlatesLabel = new Label("Number of Tectonic Plates"),
-			numOfContinentsLabel = new Label("Number of Continents"),
-			numOfCountriesLabel = new Label("Number of Countries per Continent"),
-			numOfBiomesLabel = new Label("Number of Biomes per Continent"),
-			noiseScaleLabel = new Label("Noise Map Scale");
-	static double progress = 0.0D;
-	static ProgressBar indicator = new ProgressBar(progress);
-	Thread
-			generatorThread,
-			drawNoiseThread,
-			drawTectonicsThread;
-	boolean debug = true;
-	MapSize size = MapSize.values()[MapSize.values().length - mapSizeSpinner.getValue()];
-	Map<String, Voronoi> layers;
-	Noise randomHTEmap;
-	WritableImage image;
-	PixelWriter writer;
-	Globe globe;
-	Random rand = new Random();
-	int
-			numberOfTectonicPlates = numOfPlatesSpinner.getValue(),
-			numberOfContinents = numOfContinentsSpinner.getValue(),
-			numberOfCountriesPerContinent = numOfCountriesSpinner.getValue(),
-			numberOfBiomesPerContinent = numOfBiomesSpinner.getValue();
-
-	@Override
-	protected Node content() {
-		{
-			int width, height, divisor;
-			divisor = 3;
-			width = 1920 / divisor;
-			height = 1080 / divisor;
-			image = new WritableImage(width, height);
-			PixelWriter writer = image.getPixelWriter();
-			for (int x = 0; x < width; x++)
-				for (int y = 0; y < height; y++)
-					writer.setColor(x, y, Color.BLACK);
+class Atlas extends LazyWindow {
+	static final Executor execute = new ScheduledThreadPoolExecutor(10);
+	static final Map<String, Voronoi> layers = new LinkedHashMap<>();
+	static final GridPane spinners = new GridPane();
+	static final Button buttonGenerate = new Button("Generate");
+	static final Button buttonDrawNoise = new Button("Noise");
+	static final Button buttonDrawHeightMap = new Button("Height");
+	static final Button buttonDrawMoistureMap = new Button("Moisture");
+	static final Button buttonDrawHeatMap = new Button("Temperature");
+	static final Button buttonDrawTectonics = new Button("Tectonics");
+	static final Button buttonDrawContinents = new Button("Continents");
+	static final Button buttonDrawRegions = new Button("Regions");
+	static final Button buttonDrawBiomes = new Button("Biomes");
+	static final Button buttonDrawCountries = new Button("Countries");
+	static final FlowPane buttons = new FlowPane();
+	static final VBox pane = new VBox(spinners, buttons);
+	static final TitledPane controls = new TitledPane("Controls", pane);
+	final static ImageView viewer = new ImageView();
+	static final ProgressBar progressIndicator = new ProgressBar();
+	static final StackPane stack = new StackPane(viewer, controls);
+	static final Utils.Resolution[] sizes = Utils.Resolution.values();
+	static final Label
+			labelMapSize = new Label("Map Size"),
+			labelVoronoiDensity = new Label("Noise Density"),
+			labelNumOfTectonics = new Label("Tectonic Plates"),
+			labelNumOfContinents = new Label("Continents"),
+			labelNumOfRegions = new Label("Biome Regions"),
+			labelNumOfBiomes = new Label("Biomes per Region"),
+			labelNumOfCountries = new Label("Countries"),
+			labelSealLevel = new Label("Sea Level"),
+			labelTemperatureScale = new Label("Temperature"),
+			labelMoistureScale = new Label("Moisture"),
+			labelElevationScale = new Label("Land Elevation");
+	final static Spinner<Double> spinnerVoronoiDensity = new Spinner<>(0.2, 5, 1, 0.1),
+			spinnerElevationScale = new Spinner<>(0.1, 1.5, 1, 0.1),
+			spinnerMoistureScale = new Spinner<>(0.1, 1.5, 1, 0.1),
+			spinnerTemperatureScale = new Spinner<>(0.1, 1.5, 1, 0.1),
+			spinnerSeaLevel = new Spinner<>(0, 1, 0.7, 0.1);
+	final static Spinner<Integer>
+			spinnerMapSize = new Spinner<>(1, sizes.length, 1),
+			spinnerNumberOfTectonics = new Spinner<>(10, 200, 50),
+			spinnerNumberOfContinents = new Spinner<>(1, 50, 10),
+			spinnerNumberOfRegions = new Spinner<>(5, 30, 10),
+			spinnerNumberOfBiomes = new Spinner<>(3, 10, 10),
+			spinnerNumberOfCountries = new Spinner<>(1, 40, 10);
+	private static final boolean debug = true;
+	static Globe globe;
+	static OpenSimplexNoise noise;
+	static double voronoiDensity;
+	static int sizeIndex = sizes.length - spinnerMapSize.getValue();
+	static Utils.Resolution res = sizes[sizeIndex];
+	static volatile WritableImage image;
+	static volatile PixelWriter writer;
+	volatile static int numTectonics;
+	volatile static int numContinents;
+	volatile static int numRegions;
+	volatile static int numBiomes;
+	volatile static int numCountries;
+	private volatile static int
+			numberOfSteps,
+			completedSteps;
+	/*
+	 * this in theory should be a safe thread?
+	 */
+	static final Runnable runnableProgressBar = () -> {
+		double percentDone;
+		boolean updateBar = true;
+		progressIndicator.setVisible(true);
+		do {
+			if (completedSteps == 0 || numberOfSteps == 0) percentDone = 0.0;
+			else percentDone = ((1.0D * completedSteps) / (numberOfSteps));
+			progressIndicator.setProgress(percentDone);
+			if (percentDone == 1.0 || Thread.interrupted()) updateBar = false;
+		} while (updateBar);
+		progressIndicator.setVisible(false);
+	};
+	private static volatile boolean runningGenerator = false;
+	static final Runnable runnableControlPanel = () -> {
+		boolean running, hidden = false;
+		do {
+			if (runningGenerator && !hidden) {
+				hidden = runningGenerator;
+				buttons.setVisible(!runningGenerator);
+				spinners.setVisible(!runningGenerator);
+				controls.setExpanded(!runningGenerator);
+			}
+			if (!runningGenerator && hidden) {
+				hidden = runningGenerator;
+				buttons.setVisible(!runningGenerator);
+				spinners.setVisible(!runningGenerator);
+				controls.setExpanded(true);
+			}
+			running = !Thread.interrupted();
 		}
-		var p = new StackPane(viewer, controls());
-		{
-			p.setPrefSize(getWidth(), getHeight());
-			p.setAlignment(Pos.TOP_CENTER);
+		while (running);
+		controls.setVisible(true);
+	};
+	private static volatile double elevationScale, temperatureScale, moistureScale, seaLevel;
+	static final Runnable runnableImageDraw = () -> {
+
+		noise = new OpenSimplexNoise();
+
+		numberOfSteps = layers.size();
+		completedSteps = 0;
+		//execute.execute(runnableProgressBar);
+		//new Thread(runnableProgressBar);
+		//Platform.runLater(runnableProgressBar);
+		synchronized (Atlas.class) {
+			sizeIndex = sizes.length - spinnerMapSize.getValue();
+			res = sizes[sizeIndex];
+			voronoiDensity = spinnerVoronoiDensity.getValue();
+			numTectonics = spinnerNumberOfTectonics.getValue();
+			numContinents = spinnerNumberOfContinents.getValue();
+			numRegions = spinnerNumberOfRegions.getValue();
+			numBiomes = spinnerNumberOfBiomes.getValue();
+			numCountries = spinnerNumberOfCountries.getValue();
+			seaLevel = spinnerSeaLevel.getValue();
+			moistureScale = spinnerMoistureScale.getValue();
+			temperatureScale = spinnerTemperatureScale.getValue();
+			elevationScale = spinnerElevationScale.getValue();
+			image = new WritableImage(res.width, res.height);
+			writer = image.getPixelWriter();
 			viewer.setImage(image);
-			viewer.fitHeightProperty().bind(p.heightProperty());
-			viewer.fitWidthProperty().bind(p.widthProperty());
-			viewer.setPreserveRatio(true);
+			runningGenerator = true;
+			globe = new Globe();
 		}
-		return p;
+
+
+		generateNoise();
+		runLater(Atlas::drawNoise);
+		completedSteps = 1;
+
+		generateTectonics();
+		runLater(Atlas::drawTectonics);
+
+		completedSteps = 2;
+
+		generateContinents();
+		runLater(Atlas::drawContinents);
+
+		completedSteps = 3;
+
+		generateRegions();
+		runLater(Atlas::drawRegions);
+
+		completedSteps = 4;
+
+		generateBiomes();
+		runLater(Atlas::drawBiomes);
+
+		completedSteps = 5;
+
+		generateCountries();
+		runLater(Atlas::drawCountries);
+
+		completedSteps = 6;
+
+		runningGenerator = false;
+	};
+
+	static {
+		//b.setAlignment(Pos.BOTTOM_CENTER);
+		//b.setFillHeight(true);
+		//progressIndicator.setMaxSize(800, 100);
+		//progressIndicator.setVisible(false);
 	}
 
-	@Override
-	protected Node bottomBar() {
-		indicator.setVisible(false);
-		return indicator;
+	/*
+	 * preload layers Map with keys, no voronoi is created at this stage
+	 */
+	static {
+		String[] layerNames = {
+				"Noise",
+				"Tectonics",
+				"Continents",
+				"Regions",
+				"Biomes",
+				"Countries"
+		};
+		Arrays.stream(layerNames).forEachOrdered(layer -> layers.put(layer, null));
 	}
 
-	protected Node controls() {
-		Button
-				generate = new Button("Generate world!"),
-				drawNoise = new Button("Draw noise layer."),
-				drawTectonics = new Button("Draw tectonics."),
-				drawContinents = new Button("Draw continents"),
-				drawBiomes = new Button("Draw biomes."),
-				drawCountries = new Button("Draw countries.");
-
-		FlowPane buttonPane = new FlowPane(generate, drawNoise, drawTectonics, drawContinents, drawBiomes, drawCountries);
-
-		generate.setOnAction(event -> {
-			if (generatorThread != null && generatorThread.isAlive()) {
-				generatorThread.interrupt();
-				generatorThread.stop();
-			}
-			generatorThread = startGenerator();
-			generatorThread.start();
-		});
-		drawNoise.setOnAction(event -> {
-			if (generatorThread == null || !generatorThread.isAlive())
-				if (drawNoiseThread != null && drawNoiseThread.isAlive()) {
-					drawNoiseThread.interrupt();
-					drawNoiseThread.stop();
-				}
-			drawNoiseThread = drawNoise();
-			drawNoiseThread.start();
-		});
-
-		drawTectonics.setOnAction(event -> {
-			if (generatorThread == null || !generatorThread.isAlive() || drawNoiseThread == null || !drawNoiseThread.isAlive())
-				if (drawTectonicsThread != null && drawTectonicsThread.isAlive()) {
-					drawTectonicsThread.interrupt();
-					drawTectonicsThread.stop();
-				}
-			drawTectonicsThread = drawTectonics();
-			drawTectonicsThread.start();
-		});
-		drawContinents.setOnAction(event -> {
-			if (generatorThread == null || !generatorThread.isAlive())
-				drawContinents();
-		});
-		drawBiomes.setOnAction(event -> {
-			if (generatorThread == null || !generatorThread.isAlive())
-				drawBiomes();
-		});
-		drawCountries.setOnAction(event -> {
-			if (generatorThread == null || !generatorThread.isAlive())
-				drawCountries();
-		});
-
-		var buttons = buttonPane.getChildren();
-		buttons.forEach(node -> {
-			if (node instanceof Button button) {
-				button.setPrefSize(180, 30);
-				button.setFont(Font.font(15));
-			}
-		});
-		GridPane pane = new GridPane();
-		VBox box = new VBox(pane, buttonPane);
-		box.setPadding(new Insets(5));
-		box.setAlignment(Pos.CENTER);
-		box.setSpacing(20);
-		pane.addColumn(0, mapSizeLabel, noiseScaleLabel, numOfPlatesLabel, numOfContinentsLabel, numOfCountriesLabel, numOfBiomesLabel);
-		pane.addColumn(1, mapSizeSpinner, noiseScale, numOfPlatesSpinner, numOfContinentsSpinner, numOfCountriesSpinner, numOfBiomesSpinner);
-		pane.setHgap(5);
-		pane.setVgap(5);
-		pane.setAlignment(Pos.TOP_CENTER);
-		buttonPane.setAlignment(Pos.BOTTOM_CENTER);
-		buttonPane.setVgap(5);
-		buttonPane.setHgap(5);
-		TitledPane controls = new TitledPane("Controls", box);
-		controls.setExpanded(false);
-		controls.autosize();
-
-		return controls;
+	/*
+	 * spinner assignment
+	 */
+	static {
+		spinners.setAlignment(Pos.TOP_CENTER);
+		spinners.setVgap(10);
+		spinners.setHgap(10);
+		spinners.addRow(0, labelMapSize, labelVoronoiDensity, labelSealLevel, labelElevationScale, labelMoistureScale, labelTemperatureScale);
+		spinners.addRow(1, spinnerMapSize, spinnerVoronoiDensity, spinnerSeaLevel, spinnerElevationScale, spinnerMoistureScale, spinnerTemperatureScale);
+		spinners.addRow(3, labelNumOfTectonics, labelNumOfContinents, labelNumOfRegions, labelNumOfBiomes, labelNumOfCountries);
+		spinners.addRow(4, spinnerNumberOfTectonics, spinnerNumberOfContinents, spinnerNumberOfRegions, spinnerNumberOfBiomes, spinnerNumberOfCountries);
 	}
 
-	Thread startGenerator() {
-		layers = new LinkedHashMap<>();
-		image = new WritableImage(size.width, size.height);
+	/*
+	 * button assignments
+	 */
+	static {
+
+		buttons.setHgap(10);
+		buttons.setVgap(10);
+		buttons.setAlignment(Pos.BOTTOM_CENTER);
+		buttons.getChildren().addAll(
+				buttonGenerate,
+				buttonDrawNoise,
+				buttonDrawHeightMap,
+				buttonDrawMoistureMap,
+				buttonDrawHeatMap,
+				buttonDrawTectonics,
+				buttonDrawContinents,
+				buttonDrawRegions,
+				buttonDrawBiomes,
+				buttonDrawCountries);
+
+		buttonGenerate.setOnAction(event -> {
+			controls.setExpanded(false);
+			//new Thread(runnableImageDraw).start();
+			execute.execute(runnableImageDraw);
+		});
+		buttonDrawNoise.setOnAction(event -> drawNoise());
+		buttonDrawHeightMap.setOnAction(event -> drawHeightMap());
+		buttonDrawTectonics.setOnAction(event -> drawTectonics());
+	}
+
+
+	/*
+	 * setting up control panel
+	 */
+	static {
+		pane.autosize();
+		pane.setSpacing(20);
+		controls.setExpanded(true);
+	}
+
+
+	/*
+	 * setting up threads
+	 */
+	static {
+		image = new WritableImage(res.width, res.height);
 		writer = image.getPixelWriter();
 		viewer.setImage(image);
-		return createGeneratorThread();
-
+		new Thread(runnableControlPanel).start();
+		new Thread(runnableImageDraw).start();
 	}
 
-	Thread createGeneratorThread() {
-		return new Thread(() -> {
-			progress = 0;
-			indicator.setVisible(true);
-			int steps = 11;
-			for (int currentStep = 0; currentStep <= steps; currentStep++) {
-				indicator.setProgress(progress);
-				{
-					switch (currentStep) {
-						case 0 -> globe = new Globe();
-						case 1 -> generateNoise();
-						case 2 -> {
-							if (drawNoiseThread != null && drawNoiseThread.isAlive()) {
-								drawNoiseThread.interrupt();
-								drawNoiseThread.stop();
-							}
-							drawNoiseThread = drawNoise();
-							drawNoiseThread.start();
-						}
-						case 3 -> generateTectonics();
-						case 4 -> {
-							if (drawTectonicsThread != null && drawTectonicsThread.isAlive()) {
-								drawTectonicsThread.interrupt();
-								drawTectonicsThread.stop();
-							}
-							drawTectonicsThread = drawTectonics();
-							drawTectonicsThread.start();
-
-						}
-						case 5 -> generateContinents();
-						case 6 -> drawContinents();
-						case 7 -> generateBiomes();
-						case 8 -> drawBiomes();
-						case 9 -> generateCountries();
-						case 10 -> drawCountries();
-					}
-				}
-				progress = progress + 0.1;
-			}
-			indicator.setVisible(false);
-		});
-	}
-
-	private void drawHeightMap() {
-	}
-
-	private void drawHeatMap() {
-	}
-
-	private void drawMoistureMap() {
-	}
-
-	private void drawPopulaceMap() {
-	}
-
-	private Thread drawNoise() {
-		if (layers == null || !layers.containsKey("Noise")) generateNoise();
+	/*
+	 * setting viewer size constraints
+	 */ {
+		stack.setAlignment(Pos.TOP_CENTER);
+		double divisor = 1.05;
+		stack.maxWidthProperty().bind(widthProperty());
+		stack.minWidthProperty().bind(widthProperty());
+		stack.maxHeightProperty().bind(heightProperty());
+		stack.minHeightProperty().bind(heightProperty());
+		viewer.fitWidthProperty().bind(stack.widthProperty().divide(divisor));
+		viewer.fitHeightProperty().bind(stack.heightProperty().divide(divisor));
+		viewer.setPreserveRatio(true);
 		viewer.setImage(image);
-		writer = image.getPixelWriter();
-		return new Thread(() -> {
-			Voronoi layer = layers.get("Noise");
-			layer.getSites().forEach(point -> {
-				Color c = Color.color(rand.nextDouble(), rand.nextDouble(), rand.nextDouble());
-				layer.getCells().get(point).forEach(point1 -> writer.setColor(point1.x, point1.y, c));
-			});
+	}
+
+
+	private static void drawCountries() {
+	}
+
+	private static void generateCountries() {
+	}
+
+	private static void drawBiomes() {
+	}
+
+	private static void generateBiomes() {
+	}
+
+	private static void drawRegions() {
+	}
+
+	private static void generateRegions() {
+	}
+
+	private static void drawContinents() {
+	}
+
+	private static void generateContinents() {
+	}
+
+	private static void generateNoise() {
+		layers.replace("Noise", new Voronoi(res, null, voronoiDensity, debug));
+	}
+
+	private synchronized static void drawNoise() {
+		var layer = layers.get("Noise");
+		Random r = new Random();
+		layer.getSites().forEach(point -> {
+			Color c = Color.color(r.nextDouble(), r.nextDouble(), r.nextDouble());
+			layer.getCells().get(point).forEach(point1 -> writer.setColor(point1.x, point1.y, c));
 		});
 	}
 
-	private Thread drawTectonics() {
-		if (globe.plates.isEmpty()) generateTectonics();
-		return new Thread(() -> globe.plates.forEach((site, tectonicPlate) -> {
-			Color c = new Color(rand.nextDouble(), rand.nextDouble(), rand.nextDouble(), 1.0);
-			tectonicPlate.cells.forEach(point -> writer.setColor(point.x, point.y, c));
-		}));
-	}
+	private static void generateTectonics() {
+		var noiseLayer = layers.get("Noise");
+		var n = noise.getNoise2DArray(0, 0, res.width, res.height);
+		globe.heightMap = n;
+		Random r = new Random();
+		List<Point> sites = new ArrayList<>(),
+				noiseSites = noiseLayer.getSites();
+		Map<Point, List<Point>> noiseCells = noiseLayer.getCells(), tectonicCells;
 
-	private void drawContinents() {
-	}
-
-	private void drawBiomes() {
-	}
-
-	private void drawCountries() {
-	}
-
-	private void generateNoise() {
-		layers.remove("Noise");
-		layers.put("Noise", new Voronoi(size.width, size.height, null, noiseScale.getValue(), debug));
-	}
-
-	private void generateTectonics() {
-		if (!layers.containsKey("Noise")) generateNoise();
-		if (globe == null) globe = new Globe();
-		List<Point> noiseSites = layers.get("Noise").getSites(), sites = new ArrayList<>();
-		Map<Point, List<Point>> noiseCells = layers.get("Noise").getCells();
-		for (int i = 0; i <= numberOfTectonicPlates; i++) {
+		for (int i = 0; i <= numTectonics; i++) {
 			int index;
 			do {
-				index = rand.nextInt(noiseSites.size() - 1);
+				index = r.nextInt(noiseSites.size());
 			}
 			while (sites.contains(noiseSites.get(index)));
 			sites.add(noiseSites.get(index));
 		}
-		Voronoi v = new Voronoi(size.width, size.height, sites, 1.0, debug);
-		sites.forEach(site -> {
-			Globe.TectonicPlate plate = new Globe.TectonicPlate(site);
-			v.getCells().get(site).forEach(point -> {
-				if (noiseSites.contains(point))
-					plate.cells.addAll(noiseCells.get(point));
+		layers.replace("Tectonics", new Voronoi(res, sites, 1, debug));
+		var layer = layers.get("Tectonics");
+		tectonicCells = layer.getCells();
+		sites.forEach(tSite -> {
+			Globe.TectonicPlate plate = new Globe.TectonicPlate(tSite);
+			tectonicCells.get(tSite).forEach(tCell -> {
+				if (noiseSites.contains(tCell)) {
+					noiseCells.get(tCell).forEach(nCell -> {
+						plate.cells.add(nCell);
+						plate.setPlateHeight(n[nCell.x][nCell.y].getValue(new Range(0, 1)) * elevationScale);
+					});
+				}
 			});
-			globe.plates.put(site, plate);
+			globe.plates.put(tSite, plate);
 		});
-
-		layers.put("Tectonic", v);
 	}
 
-	void generateContinents() {
+	private synchronized static void drawTectonics() {
+		var layer = globe.plates;
+		Random r = new Random();
+		layer.forEach(
+				(point, tectonicPlate) -> {
+					Color c = Color.color(r.nextDouble(), r.nextDouble(), r.nextDouble());
+					tectonicPlate.cells.forEach(
+							point1 -> writer.setColor(
+									point1.x,
+									point1.y,
+									c)
+					);
+				});
 	}
 
-	void generateBiomes() {
+	private synchronized static void drawHeightMap() {
+		var layer = globe.plates;
+		layer.forEach(
+				(point, tectonicPlate) ->
+						tectonicPlate.cells.forEach(
+								point1 -> writer.setColor(
+										point1.x,
+										point1.y,
+										Color.color(0, tectonicPlate.plateHeight, 0))));
 	}
 
-	void generateCountries() {
+	@Override
+	protected Node content() {
+		return stack;
 	}
 
+	static class Globe {
+		final Map<Point, TectonicPlate> plates = new HashMap<>();
+		public RangedValue[][] heightMap, temperatureMap, moistureMap, heatMap, populationMap;
+
+		static class Area {
+			final Point site;
+			final List<Point> cells = new ArrayList<>();
+
+			Area(Point site) {
+				this.site = site;
+			}
+		}
+
+		static class TectonicPlate extends Area {
+			double plateHeight;
+
+			TectonicPlate(Point site) {
+				super(site);
+			}
+
+			public void setPlateHeight(double height) {
+				if (height > 1) plateHeight = 1;
+				else if (height < 0) plateHeight = 0;
+				else plateHeight = height;
+
+			}
+		}
+	}
 }
-
-class Globe {
-	Map<Point, TectonicPlate> plates = new HashMap<>();
-	Map<Point, Continent> continents = new HashMap<>();
-	Map<Point, Country> countries = new HashMap<>();
-	Map<Point, Biome> biomes = new HashMap<>();
-
-	static class Area {
-		Point site;
-		List<Point> cells = new ArrayList<>();
-
-		Area(Point site) {
-			this.site = site;
-		}
-	}
-
-	static class TectonicPlate extends Area {
-
-		TectonicPlate(Point site) {
-			super(site);
-		}
-	}
-
-	static class Continent extends Area {
-		Continent(Point site) {
-			super(site);
-		}
-	}
-
-	static class Country extends Area {
-		Country(Point site) {
-			super(site);
-		}
-	}
-
-	static class Biome extends Area {
-		Biome(Point site) {
-			super(site);
-		}
-	}
-}
-

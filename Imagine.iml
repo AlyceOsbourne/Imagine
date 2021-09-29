@@ -37,5 +37,6 @@
         <SOURCES />
       </library>
     </orderEntry>
+    <orderEntry type="library" name="com.raylabz:opensimplex:1.0.3" level="application" />
   </component>
 </module>

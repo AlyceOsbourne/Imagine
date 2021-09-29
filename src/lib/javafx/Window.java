@@ -31,7 +31,7 @@ import java.util.stream.Stream;
 public abstract class Window extends BorderPane {
 
 	@FXML
-	final MenuBar menubar;
+	public final MenuBar menubar;
 	@FXML
 	final Menu file, edit, tools, help, about;
 
