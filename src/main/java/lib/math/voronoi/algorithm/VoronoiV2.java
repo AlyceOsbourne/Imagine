@@ -81,12 +81,12 @@ public class VoronoiV2 {
 
 	boolean checkQuad(Quad quad) {
 		//line to prevent fighting when two sites are of equal distance
-		if (quad.size() <= 1.4999999) {
-			quad.points.parallelStream().forEach(this::findNearestSite);
+		if (quad.size() <= 1) {
+			quad.points.forEach(this::findNearestSite);
 			return true;
 		}
 		//this line should only return true if all sites are equal, cleaner than doing individual comparisons
-		return quad.points.parallelStream().map(this::findNearestSite).unordered().distinct().count() == 1;
+		return quad.points.stream().map(this::findNearestSite).unordered().distinct().count() == 1;
 	}
 
 	void subdivideQuad(Quad quad) {
@@ -135,7 +135,7 @@ public class VoronoiV2 {
 	//this is the most costly operation, this would benefit most when it comes to multithreading
 	Point findNearestSite(Point point) {
 		AtomicReference<Point> current = new AtomicReference<>();
-		sites.parallelStream().filter(site ->
+		sites.stream().filter(site ->
 				current.get() == null || site.distance(point) < current.get().distance(point)).
 				forEach(current::set);
 		point.nearestSeed = current.get();
