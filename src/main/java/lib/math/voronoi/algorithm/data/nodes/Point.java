@@ -22,8 +22,8 @@ public class Point {
 	public PointData data;
 
 	//simply an x and y location
-	public int x;
-	public int y;
+	public final int x;
+	public final int y;
 	public boolean isSeed;
 
 	public Point(int x, int y) {
@@ -43,7 +43,7 @@ public class Point {
 	private double distance(int x1, int y1) {
 		int a = getX() - x1;
 		int b = getY() - y1;
-		return Math.hypot(a, b); // is there a faster operation here?
+		return ((a * a) + (b * b));
 	}
 
 	int getX() {

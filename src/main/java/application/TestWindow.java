@@ -20,12 +20,12 @@ import java.util.concurrent.ConcurrentHashMap;
 
 public class TestWindow extends LazyWindow {
 	static int
-			width = 1024,
-			height = 760;
+			width = 1980,
+			height = 1080;
 	static VoronoiV2 v;
 
 	static {
-		v = new VoronoiV2(width, height, null, 1);
+		v = new VoronoiV2(width, height, null, 2);
 	}
 
 	@Override

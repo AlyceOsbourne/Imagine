@@ -4,21 +4,24 @@
 
 package lib.math.voronoi.algorithm;
 
+import com.google.common.base.Stopwatch;
 import lib.math.voronoi.algorithm.data.nodes.Point;
 import lib.math.voronoi.algorithm.data.nodes.Quad;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentLinkedDeque;
-import java.util.concurrent.atomic.AtomicReference;
+import java.util.concurrent.TimeUnit;
 
 import static lib.utilities.Utils.DistanceUtils.midpoint;
+import static lib.utilities.Utils.LoadingUtils.formatTime;
 
 public class VoronoiV2 {
 	private final Vector<Point> sites;
-	int width, height;
-	Point[][] matrix;
-	Queue<Quad> processQueue = new ConcurrentLinkedDeque<>();
+	final int width;
+	final int height;
+	final Point[][] matrix;
+	final Queue<Quad> processQueue = new ConcurrentLinkedDeque<>();
 
 	public VoronoiV2(int width, int height, @Nullable List<Point> sites, double scale) {
 		this.width = width;
@@ -36,8 +39,9 @@ public class VoronoiV2 {
 		{
 			if (sites == null || sites.isEmpty()) {
 				Random r = new Random();
-				double divisor = 0.0333D;
-				int bound = (int) (((width * divisor) * (height * divisor)) * scale);
+				double divisor = 0.0005D;
+				int bound = (int) (((width * height) * divisor) * scale);
+				System.out.println(bound);
 				for (int i = 0; i <= bound; i++) {
 					Point randomize = matrix[r.nextInt(width - 1)][r.nextInt(height - 1)].isSeed();
 					this.sites.add(randomize);
@@ -64,7 +68,9 @@ public class VoronoiV2 {
 
 	}
 
+	@SuppressWarnings("UnstableApiUsage")
 	private void process() {
+		Stopwatch timer = Stopwatch.createStarted();
 		while (!processQueue.isEmpty()) {
 			Quad quad = processQueue.poll();
 			if (!checkQuad(quad)) subdivideQuad(quad);
@@ -77,6 +83,7 @@ public class VoronoiV2 {
 				assignSeed(cornerNW, cornerSE, seed);
 			}
 		}
+		System.out.println(formatTime(timer.stop().elapsed(TimeUnit.MILLISECONDS)));
 	}
 
 	boolean checkQuad(Quad quad) {
@@ -86,7 +93,7 @@ public class VoronoiV2 {
 			return true;
 		}
 		//this line should only return true if all sites are equal, cleaner than doing individual comparisons
-		return quad.points.stream().map(this::findNearestSite).unordered().distinct().count() == 1;
+		return quad.points.stream().map(this::findNearestSite).distinct().count() == 1;
 	}
 
 	void subdivideQuad(Quad quad) {
@@ -99,6 +106,7 @@ public class VoronoiV2 {
 			ne = quad.ne;
 			sw = quad.sw;
 			se = quad.se;
+
 			n = midpoint(ne, nw, matrix);
 			w = midpoint(nw, sw, matrix);
 			s = midpoint(se, sw, matrix);
@@ -134,12 +142,11 @@ public class VoronoiV2 {
 
 	//this is the most costly operation, this would benefit most when it comes to multithreading
 	Point findNearestSite(Point point) {
-		AtomicReference<Point> current = new AtomicReference<>();
-		sites.stream().filter(site ->
-				current.get() == null || site.distance(point) < current.get().distance(point)).
-				forEach(current::set);
-		point.nearestSeed = current.get();
-		return current.get();
+		point.nearestSeed = sites.stream()
+				.min(Comparator.comparingDouble(value -> value.distance(point)))
+				.orElseThrow(RuntimeException::new);
+		return point.nearestSeed;
+
 	}
 
 	public List<Point> getSites() {
