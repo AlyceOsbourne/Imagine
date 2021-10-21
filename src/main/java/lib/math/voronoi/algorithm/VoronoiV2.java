@@ -61,8 +61,6 @@ public class VoronoiV2 {
 			}
 		}
 
-		//create initial quad
-		processQueue.add(new Quad(matrix[0][0], matrix[0][height - 1], matrix[width - 1][0], matrix[width - 1][height - 1]));
 
 		process();
 
@@ -71,10 +69,12 @@ public class VoronoiV2 {
 	@SuppressWarnings("UnstableApiUsage")
 	private void process() {
 		Stopwatch timer = Stopwatch.createStarted();
-		while (!processQueue.isEmpty()) {
-			Quad quad = processQueue.poll();
-			if (!checkQuad(quad)) subdivideQuad(quad);
-			else {
+		//create initial quad
+		processQueue.add(new Quad(matrix[0][0], matrix[0][height - 1], matrix[width - 1][0], matrix[width - 1][height - 1]));
+		processQueue.parallelStream().forEach(quad -> {
+			if (!checkQuad(quad)) {
+				processQueue.addAll(subdivideQuad(quad));
+			} else {
 				Point
 						cornerNW = quad.nw,
 						cornerSE = quad.se,
@@ -82,13 +82,13 @@ public class VoronoiV2 {
 
 				assignSeed(cornerNW, cornerSE, seed);
 			}
-		}
+		});
 		System.out.println(formatTime(timer.stop().elapsed(TimeUnit.MILLISECONDS)));
 	}
 
 	boolean checkQuad(Quad quad) {
 		//line to prevent fighting when two sites are of equal distance
-		if (quad.size() < 1.5) {
+		if (quad.size() <= 1) {
 			quad.points.forEach(this::findNearestSite);
 			return true;
 		}
@@ -96,10 +96,10 @@ public class VoronoiV2 {
 		return quad.points.stream().map(this::findNearestSite).distinct().count() == 1;
 	}
 
-	void subdivideQuad(Quad quad) {
+	List<Quad> subdivideQuad(Quad quad) {
 		Point n, ne, nw, e, s, se, sw, w, c;
 		Quad tr, tl, br, bl;
-
+		List<Quad> subdivision = new ArrayList<>();
 		//find points
 		{
 			nw = quad.nw;
@@ -124,11 +124,13 @@ public class VoronoiV2 {
 
 		//add to queue
 		{
-			processQueue.add(tl);
-			processQueue.add(tr);
-			processQueue.add(bl);
-			processQueue.add(br);
+			subdivision.add(tl);
+			subdivision.add(tr);
+			subdivision.add(bl);
+			subdivision.add(br);
 		}
+
+		return subdivision;
 	}
 
 	void assignSeed(Point nw, Point se, Point seed) {
