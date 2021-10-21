@@ -88,7 +88,7 @@ public class VoronoiV2 {
 
 	boolean checkQuad(Quad quad) {
 		//line to prevent fighting when two sites are of equal distance
-		if (quad.size() <= 1) {
+		if (quad.size() < 1.5) {
 			quad.points.forEach(this::findNearestSite);
 			return true;
 		}

@@ -25,7 +25,7 @@ public class TestWindow extends LazyWindow {
 	static VoronoiV2 v;
 
 	static {
-		v = new VoronoiV2(width, height, null, 2);
+		v = new VoronoiV2(width, height, null, 1);
 	}
 
 	@Override
