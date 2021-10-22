@@ -20,13 +20,14 @@ import java.util.Random;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class TestWindow extends LazyWindow {
-	static int
-			width = 1980,
-			height = 1080;
 	static VoronoiV2 v;
 
+	static int
+			w = 1920,
+			h = 1080;
+
 	static {
-		v = new VoronoiV2Builder().setWidth(width).setHeight(height).setSites(null).setScale(1).createVoronoiV2();
+		v = new VoronoiV2Builder().setWidth(w).setHeight(h).setScale(1).createVoronoiV2();
 	}
 
 	@Override
@@ -38,7 +39,7 @@ public class TestWindow extends LazyWindow {
 			Color c = Color.color(r.nextDouble(), r.nextDouble(), r.nextDouble());
 			palette.put(site, c);
 		}
-		WritableImage image = new WritableImage(width, height);
+		WritableImage image = new WritableImage(w, h);
 		PixelWriter buffer = image.getPixelWriter();
 		Point[][] matrix = v.getMatrix();
 		for (Point[] row : matrix)

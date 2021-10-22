@@ -36,7 +36,7 @@ public class VoronoiV2 {
 		{
 			if (sites == null || sites.isEmpty()) {
 				Random r = new Random();
-				double divisor = 0.0005D;
+				double divisor = 4.826E-04;
 				int bound = (int) (((width * height) * divisor) * scale);
 				System.out.println(bound);
 				for (int i = 0; i <= bound; i++) {
@@ -47,9 +47,9 @@ public class VoronoiV2 {
 				//check sites are valid, discard invalid sites
 				for (Point site : sites) {
 					if (
-							(site.x >= 0 && site.x < width)
+							((site.x >= 0) && (site.x < width))
 									&&
-									(site.y >= 0 && site.y < height)
+									((site.y >= 0) && (site.y < height))
 					) {
 						matrix[site.x][site.y] = site.isSeed();
 						this.sites.add(site);
@@ -76,12 +76,17 @@ public class VoronoiV2 {
 	//checks to see if 4 points of quad are equal
 	private boolean checkQuad(@NotNull Quad quad) {
 		//line to prevent fighting when two sites are of equidistant
-		if (quad.size() <= 1.2) {
-			quad.points.forEach(this::findNearestSite);
+		if (quad.size() <= 1) {
+			quad.points
+					.forEach(this::findNearestSite);
 			return true;
 		}
 		//this line should only return true if all sites are equal, cleaner than doing individual comparisons
-		return quad.points.stream().map(this::findNearestSite).distinct().count() == 1;
+		return quad.points
+				.stream()
+				.map(this::findNearestSite)
+				.distinct()
+				.count() == 1;
 	}
 
 	//takes quad, splits into 4, returns
@@ -124,7 +129,7 @@ public class VoronoiV2 {
 
 
 	//sets seed for all points within range
-	private void assignSeed(@NotNull Point nw, @NotNull Point se, Point seed) {
+	private void assignSeed(@NotNull Point nw, @NotNull Point se, @NotNull Point seed) {
 		for (int x = nw.x; x <= se.x; x++) {
 			for (int y = nw.y; y <= se.y; y++) {
 				matrix[x][y].nearestSeed = seed;

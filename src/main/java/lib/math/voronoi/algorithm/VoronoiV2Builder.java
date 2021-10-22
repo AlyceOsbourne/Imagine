@@ -10,10 +10,10 @@ import org.jetbrains.annotations.Nullable;
 import java.util.List;
 
 public class VoronoiV2Builder {
-	private int width;
-	private int height;
-	private @Nullable List<Point> sites;
-	private double scale;
+	private int width = 1920;
+	private int height = 1080;
+	private @Nullable List<Point> sites = null;
+	private double scale = 1;
 
 	public VoronoiV2Builder setWidth(int width) {
 		this.width = width;
