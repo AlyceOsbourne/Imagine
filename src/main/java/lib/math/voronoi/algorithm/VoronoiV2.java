@@ -24,6 +24,7 @@ public class VoronoiV2 {
 		this.width = width;
 		this.height = height;
 		this.sites = new Vector<>();
+
 		//construct matrix
 		{
 			matrix = new Point[width][height];
@@ -32,11 +33,12 @@ public class VoronoiV2 {
 					matrix[x][y] = new Point(x, y);
 				}
 		}
+
 		//create random dataset if site list is null else check sites for validity and add to site vector
 		{
 			if (sites == null || sites.isEmpty()) {
 				Random r = new Random();
-				double divisor = 4.826E-04;
+				double divisor = 4.8231E-04; //at default res will produce sites that are a divisor of 1000
 				int bound = (int) (((width * height) * divisor) * scale);
 				System.out.println(bound);
 				for (int i = 0; i <= bound; i++) {
@@ -44,6 +46,7 @@ public class VoronoiV2 {
 					this.sites.add(randomize);
 				}
 			} else {
+
 				//check sites are valid, discard invalid sites
 				for (Point site : sites) {
 					if (
@@ -61,26 +64,44 @@ public class VoronoiV2 {
 	}
 
 	private void process() {
-		final Queue<Quad> processQueue = new ConcurrentLinkedDeque<>();
-		//create initial quad
-		processQueue.add(new Quad(matrix[0][0], matrix[0][height - 1], matrix[width - 1][0], matrix[width - 1][height - 1]));
 
-		//process all sites within queue
-		processQueue.parallelStream().forEach(quad -> {
-			if (!checkQuad(quad)) processQueue.addAll(subdivideQuad(quad));
-			else assignSeed(quad.nw, quad.se, quad.ne.nearestSeed);
-		});
+		final Queue<Quad> processQueue = new ConcurrentLinkedDeque<>();
+
+		//create initial quad
+		processQueue.add(
+				new Quad(
+						matrix[0][0],
+						matrix[0][height - 1],
+						matrix[width - 1][0],
+						matrix[width - 1][height - 1]
+				)
+		);
+
+		//process all quads within queue
+		processQueue
+				.parallelStream()
+				.forEach(quad -> {
+					if (!checkQuad(quad))
+						processQueue
+								.addAll(subdivideQuad(quad));
+					else assignSeed(
+							quad.nw,
+							quad.se,
+							quad.ne.nearestSeed);
+				});
 	}
 
 
 	//checks to see if 4 points of quad are equal
 	private boolean checkQuad(@NotNull Quad quad) {
+
 		//line to prevent fighting when two sites are of equidistant
 		if (quad.size() <= 1) {
 			quad.points
 					.forEach(this::findNearestSite);
 			return true;
 		}
+
 		//this line should only return true if all sites are equal, cleaner than doing individual comparisons
 		return quad.points
 				.stream()

@@ -27,7 +27,7 @@ public class TestWindow extends LazyWindow {
 			h = 1080;
 
 	static {
-		v = new VoronoiV2Builder().setWidth(w).setHeight(h).setScale(1).createVoronoiV2();
+		v = new VoronoiV2Builder().setWidth(w).setHeight(h).setScale(0.01).createVoronoiV2();
 	}
 
 	@Override
