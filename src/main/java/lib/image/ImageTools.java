@@ -52,7 +52,7 @@ public interface ImageTools {
 		if (v != null) {
 			String fileName = v.getName();
 			System.out.println("Saving " + fileName);
-			String fileExtension = fileName.substring(fileName.lastIndexOf(".") + 1, v.getName().length());
+			String fileExtension = fileName.substring(fileName.lastIndexOf('.') + 1, v.getName().length());
 			try {
 				ImageIO.write(image, fileExtension, v);
 			} catch (IOException e) {

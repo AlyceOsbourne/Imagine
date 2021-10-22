@@ -11,6 +11,7 @@ import javafx.scene.image.WritableImage;
 import javafx.scene.paint.Color;
 import lib.javafx.windows.LazyWindow;
 import lib.math.voronoi.algorithm.VoronoiV2;
+import lib.math.voronoi.algorithm.VoronoiV2Builder;
 import lib.math.voronoi.algorithm.data.nodes.Point;
 
 import java.util.List;
@@ -25,7 +26,7 @@ public class TestWindow extends LazyWindow {
 	static VoronoiV2 v;
 
 	static {
-		v = new VoronoiV2(width, height, null, 1);
+		v = new VoronoiV2Builder().setWidth(width).setHeight(height).setSites(null).setScale(1).createVoronoiV2();
 	}
 
 	@Override
