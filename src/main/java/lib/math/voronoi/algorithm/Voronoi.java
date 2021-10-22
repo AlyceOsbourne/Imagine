@@ -23,6 +23,7 @@ import static lib.utilities.Utils.LoadingUtils.formatTime;
 import static lib.utilities.Utils.LoadingUtils.progressPercentage;
 import static lib.utilities.Utils.Resolution;
 
+@Deprecated
 public class Voronoi {
 
 	final boolean debug;
@@ -157,8 +158,8 @@ public class Voronoi {
 		if (debug) System.out.println("Total Cycles:" + cycle);
 
 
-
 	}
+
 	private void checkAndSubdivide(Quad quad) {
 		++quadsProcessed;
 		int qSize = (int) quad.size();
@@ -169,6 +170,7 @@ public class Voronoi {
 			}
 		}
 	}
+
 	private boolean checkQuad(Quad quad) {
 		//collect nearest site for each corner of quad
 		Point nearestSiteNE = getNearestSite(quad.ne.x, quad.ne.y);
@@ -186,7 +188,6 @@ public class Voronoi {
 			for (int i = xStart; i <= xFinish; i++) {
 				for (int j = yStart; j <= yFinish; j++) {
 					Point p = voronoiMatrix[i][j];
-					p.data = quad.ne.data;
 					p.nearestSeed = quad.ne.nearestSeed;
 					cells.get(p.nearestSeed).add(p);
 				}
@@ -200,7 +201,6 @@ public class Voronoi {
 	private void checkSingleCell(int x, int y) {
 		Point p = voronoiMatrix[x][y];
 		p.nearestSeed = getNearestSite(x, y);
-		p.data = p.nearestSeed.data;
 		cells.get(p.nearestSeed).add(p);
 
 	}
@@ -242,6 +242,7 @@ public class Voronoi {
 		//return constructed list
 		toProcess.addAll(subdivision);
 	}
+
 	private Point getNearestSite(int x, int y) {
 		Point p = voronoiMatrix[x][y];
 		if (p.nearestSeed != null) return p.nearestSeed;

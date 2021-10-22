@@ -8,18 +8,25 @@
 
 package lib.math.voronoi.algorithm.data.nodes;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class Point {
 	public Point nearestSeed;
 
-	public PointData getData() {
-		return data;
+	private final Map<Object, Object> components = new HashMap<>();
+
+	public void addComponent(Object key, Object component) {
+		components.put(key, component);
 	}
 
-	public void setData(PointData data) {
-		this.data = data;
+	public void removeComponent(Object key) {
+		components.remove(key);
 	}
 
-	public PointData data;
+	public Object getComponent(Object string) {
+		return components.get(string);
+	}
 
 	//simply an x and y location
 	public final int x;
@@ -90,8 +97,7 @@ public class Point {
 
 	@Override
 	public String toString() {
-		if (this.data != null) return this.data.toString();
-		else if (this.nearestSeed != null) return this.nearestSeed.printCoords();
+		if (this.nearestSeed != null) return this.nearestSeed.printCoords();
 		else return "null";
 	}
 
@@ -108,7 +114,5 @@ public class Point {
 		this.nearestSeed = this;
 	}
 
-	public static abstract class PointData {
 
-	}
 }

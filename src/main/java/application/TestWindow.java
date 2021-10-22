@@ -14,37 +14,30 @@ import lib.math.voronoi.algorithm.VoronoiV2;
 import lib.math.voronoi.algorithm.VoronoiV2Builder;
 import lib.math.voronoi.algorithm.data.nodes.Point;
 
-import java.util.List;
 import java.util.Map;
 import java.util.Random;
 import java.util.concurrent.ConcurrentHashMap;
 
+import static java.util.Arrays.stream;
+
 public class TestWindow extends LazyWindow {
 	static VoronoiV2 v;
 
-	static int
-			w = 1920,
-			h = 1080;
-
 	static {
-		v = new VoronoiV2Builder().setWidth(w).setHeight(h).setScale(0.01).createVoronoiV2();
+		v = new VoronoiV2Builder().setScale(10).setAccuracy(1).createVoronoiV2();
 	}
 
 	@Override
 	protected Node content() {
-		List<Point> sites = v.getSites();
 		Map<Point, Color> palette = new ConcurrentHashMap<>();
 		Random r = new Random();
-		for (Point site : sites) {
-			Color c = Color.color(r.nextDouble(), r.nextDouble(), r.nextDouble());
-			palette.put(site, c);
-		}
-		WritableImage image = new WritableImage(w, h);
-		PixelWriter buffer = image.getPixelWriter();
 		Point[][] matrix = v.getMatrix();
-		for (Point[] row : matrix)
-			for (Point column : row)
-				buffer.setColor(column.x, column.y, palette.get(column.nearestSeed));
+		WritableImage image = new WritableImage(matrix.length, matrix[0].length);
+		PixelWriter buffer = image.getPixelWriter();
+		stream(matrix).parallel().forEachOrdered(array -> stream(array).parallel().forEachOrdered(entry -> buffer.setColor(
+				entry.x,
+				entry.y,
+				palette.computeIfAbsent(entry.nearestSeed, point -> Color.color(r.nextDouble(), r.nextDouble(), r.nextDouble())))));
 		return new ImageView(image);
 	}
 }

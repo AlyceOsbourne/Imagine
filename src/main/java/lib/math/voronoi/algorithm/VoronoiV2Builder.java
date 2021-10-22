@@ -14,6 +14,12 @@ public class VoronoiV2Builder {
 	private int height = 1080;
 	private @Nullable List<Point> sites = null;
 	private double scale = 1;
+	private double accuracy = 100;
+
+	public VoronoiV2Builder setAccuracy(double accuracy) {
+		this.accuracy = accuracy;
+		return this;
+	}
 
 	public VoronoiV2Builder setWidth(int width) {
 		this.width = width;
@@ -36,6 +42,6 @@ public class VoronoiV2Builder {
 	}
 
 	public VoronoiV2 createVoronoiV2() {
-		return new VoronoiV2(width, height, sites, scale);
+		return new VoronoiV2(width, height, sites, scale, accuracy);
 	}
 }
