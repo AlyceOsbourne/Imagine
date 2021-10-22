@@ -8,7 +8,6 @@
 
 package lib.utilities;
 
-import lib.math.voronoi.algorithm.data.nodes.Point;
 import org.jetbrains.annotations.Contract;
 
 public final class Utils {
@@ -23,17 +22,6 @@ public final class Utils {
 		Resolution(int width, int height) {
 			this.width = width;
 			this.height = height;
-		}
-	}
-
-	public static class DistanceUtils {
-		public static Point midpoint(Point a, Point b, Point[][] matrix) {
-			return matrix[average(a.x, b.x)][average(a.y, b.y)];
-		}
-
-		@Contract(pure = true)
-		private static int average(int a, int b) {
-			return (a + b) / 2;
 		}
 	}
 

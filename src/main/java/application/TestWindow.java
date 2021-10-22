@@ -12,7 +12,6 @@ import javafx.scene.paint.Color;
 import lib.javafx.windows.LazyWindow;
 import lib.math.voronoi.algorithm.VoronoiV2;
 import lib.math.voronoi.algorithm.VoronoiV2Builder;
-import lib.math.voronoi.algorithm.data.nodes.Point;
 
 import java.util.Map;
 import java.util.Random;
@@ -21,17 +20,17 @@ import java.util.concurrent.ConcurrentHashMap;
 import static java.util.Arrays.stream;
 
 public class TestWindow extends LazyWindow {
-	static VoronoiV2 v;
+	static VoronoiV2.Point[][] matrix;
 
 	static {
-		v = new VoronoiV2Builder().setScale(2).setAccuracy(100).createVoronoiV2();
+		matrix = new VoronoiV2Builder().setScale(1).setAccuracy(100).createVoronoiV2().getMatrix();
 	}
+
 
 	@Override
 	protected Node content() {
-		Map<Point, Color> palette = new ConcurrentHashMap<>();
+		Map<VoronoiV2.Point, Color> palette = new ConcurrentHashMap<>();
 		Random r = new Random();
-		Point[][] matrix = v.getMatrix();
 		WritableImage image = new WritableImage(matrix.length, matrix[0].length);
 		PixelWriter buffer = image.getPixelWriter();
 		stream(matrix)

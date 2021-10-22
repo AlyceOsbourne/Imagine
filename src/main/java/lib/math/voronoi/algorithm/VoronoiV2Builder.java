@@ -4,7 +4,6 @@
 
 package lib.math.voronoi.algorithm;
 
-import lib.math.voronoi.algorithm.data.nodes.Point;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
@@ -12,7 +11,7 @@ import java.util.List;
 public class VoronoiV2Builder {
 	private int width = 1920;
 	private int height = 1080;
-	private @Nullable List<Point> sites = null;
+	private @Nullable List<VoronoiV2.Point> sites = null;
 	private double scale = 1;
 	private double accuracy = 100;
 
@@ -31,7 +30,7 @@ public class VoronoiV2Builder {
 		return this;
 	}
 
-	public VoronoiV2Builder setSites(@Nullable List<Point> sites) {
+	public VoronoiV2Builder setSites(@Nullable List<VoronoiV2.Point> sites) {
 		this.sites = sites;
 		return this;
 	}
