@@ -42,7 +42,7 @@ public class VoronoiV2 {
 			if (sites == null || sites.isEmpty()) {
 				Random r = new Random();
 				double divisor = 4.823_1E-04; //at default res will produce sites that are a divisor of 1000
-				int bound = (int) (((width * height) * divisor) * scale);
+				int bound = (int) (((width * height) * divisor) * Math.max(scale, 0.001));
 				IntStream.rangeClosed(0, bound)
 						.mapToObj(i -> matrix[r.nextInt(width - 1)][r.nextInt(height - 1)].isSeed())
 						.parallel()
@@ -114,7 +114,7 @@ public class VoronoiV2 {
 	private boolean checkQuad(@NotNull Quad quad) {
 
 		//line to prevent fighting when two sites are of equidistant
-		if (quad.size() <= accuracy) {
+		if (quad.size() <= Math.max(1, accuracy)) {
 			List<Point> points = quad.points;
 			points.forEach(this::findNearestSite);
 			return true;

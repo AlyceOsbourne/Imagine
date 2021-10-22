@@ -34,10 +34,14 @@ public class TestWindow extends LazyWindow {
 		Point[][] matrix = v.getMatrix();
 		WritableImage image = new WritableImage(matrix.length, matrix[0].length);
 		PixelWriter buffer = image.getPixelWriter();
-		stream(matrix).parallel().forEachOrdered(array -> stream(array).parallel().forEachOrdered(entry -> buffer.setColor(
-				entry.x,
-				entry.y,
-				palette.computeIfAbsent(entry.nearestSeed, point -> Color.color(r.nextDouble(), r.nextDouble(), r.nextDouble())))));
+		stream(matrix)
+				.parallel()
+				.forEachOrdered(array -> stream(array)
+						.parallel()
+						.forEachOrdered(entry -> buffer.setColor(
+								entry.x,
+								entry.y,
+								palette.computeIfAbsent(entry.nearestSeed, point -> Color.color(r.nextDouble(), r.nextDouble(), r.nextDouble())))));
 		return new ImageView(image);
 	}
 }
