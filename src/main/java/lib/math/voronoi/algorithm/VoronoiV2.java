@@ -21,22 +21,21 @@ public class VoronoiV2 {
 	private final int height;
 	private final Point[][] matrix;
 	private final Vector<Point> sites;
+	private final double scale;
 	double accuracy;
 
 	public VoronoiV2(int width, int height, @Nullable List<Point> sites, double scale, double accuracy) {
 		this.width = width;
 		this.height = height;
+		this.scale = scale;
 		this.accuracy = 101 - accuracy;
 		this.sites = new Vector<>();
+		matrix = constructMatrix(width, height);
+		assignOrCreateSites(width, height, sites, scale);
+		process();
+	}
 
-		//construct matrix
-		{
-			matrix = new Point[width][height];
-			for (int x = 0; x < matrix.length; x++)
-				for (int y = 0; y < matrix[x].length; y++)
-					matrix[x][y] = new Point(x, y);
-		}
-
+	private void assignOrCreateSites(int width, int height, @Nullable List<Point> sites, double scale) {
 		//create random dataset if site list is null else check sites for validity and add to site vector
 		{
 			if (sites == null || sites.isEmpty()) {
@@ -56,26 +55,37 @@ public class VoronoiV2 {
 						.forEach(site -> this.sites.add(matrix[site.x][site.y] = site.isSeed()));
 			}
 		}
-		process();
+	}
+
+	@NotNull
+	private Point[][] constructMatrix(int width, int height) {
+		final Point[][] matrix;
+		//construct matrix
+		{
+			matrix = new Point[width][height];
+			for (int x = 0; x < matrix.length; x++)
+				for (int y = 0; y < matrix[x].length; y++)
+					matrix[x][y] = new Point(x, y);
+		}
+		return matrix;
 	}
 
 	private void process() {
+
 		final Queue<Quad> processQueue = new ConcurrentLinkedDeque<>(subdivideQuad(new Quad(matrix[0][0], matrix[0][height - 1], matrix[width - 1][0], matrix[width - 1][height - 1])));
 
-		//create initial quad
-		//processQueue.add(new Quad(matrix[0][0], matrix[0][height - 1], matrix[width - 1][0], matrix[width - 1][height - 1]));
-
+		if (scale > 1)
+			IntStream
+					.iterate(0, i -> i < scale, i -> i+4)
+					.forEach(i -> processQueue
+							.forEach(quad -> processQueue.addAll(subdivideQuad(quad))));
 		//process all quads within queue
 		processQueue
 				.parallelStream()
 				.unordered()
 				.forEach(quad -> {
-					if (!checkQuad(quad))
-						processQueue.addAll(subdivideQuad(quad));
-					else assignSeed(
-							quad.nw,
-							quad.se,
-							quad.ne.nearestSeed);
+					if (checkQuad(quad)) assignSeed(quad.nw, quad.se, quad.ne.nearestSeed);
+					else processQueue.addAll(subdivideQuad(quad));
 				});
 	}
 
@@ -112,19 +122,18 @@ public class VoronoiV2 {
 
 	//checks to see if 4 points of quad are equal
 	private boolean checkQuad(@NotNull Quad quad) {
-
 		//line to prevent fighting when two sites are of equidistant
 		if (quad.size() <= Math.max(1, accuracy)) {
-			List<Point> points = quad.points;
-			points.forEach(this::findNearestSite);
+			quad.points.forEach(this::findNearestSite);
 			return true;
 		}
-		return quad.points
+		else return quad.points
 				.stream()
 				.map(this::findNearestSite)
 				.unordered()
 				.distinct()
 				.count() == 1;
+
 	}
 
 
