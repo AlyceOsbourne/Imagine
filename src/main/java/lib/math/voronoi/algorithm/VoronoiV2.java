@@ -50,7 +50,9 @@ public class VoronoiV2 {
 				//check sites are valid, discard invalid sites
 				for (Point site : sites) {
 					if (
-							((site.x >= 0) && (site.x < width))
+							((site.x >= 0)
+									&&
+									(site.x < width))
 									&&
 									((site.y >= 0) && (site.y < height))
 					) {
