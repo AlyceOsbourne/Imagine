@@ -86,9 +86,10 @@ public class Voronoi {
 	}
 
 	/**
-	 * the last step in the factory, triggers the voronoi generation and returns the resulting matrix
+	 * the last step in the factory, triggers the voronoi generation and returns the resulting diagram.
+	 * From this object you can return the site list and the computed matrix
 	 *
-	 * @return Point[][] matrix of the voronoi diagram
+	 * @return the voronoi diagram
 	 **/
 	public Algorithm generateVoronoi() {
 		return new Algorithm(width, height, sites, scale, accuracy);
@@ -240,12 +241,15 @@ public class Voronoi {
 			if (point.isSeed) return point;
 			{
 				Stream<Point> stream = sites.stream();
-				// start running in parallel if sitelist is huge
-				if (sites.size() >= 2500) stream = stream.parallel();
-				if (sites.size() >= 10000) stream.unordered();
-				return point.nearestSeed = stream
-						.min(Comparator.comparingDouble(value -> value.distance(point)))
-						.orElseThrow(RuntimeException::new);
+				// start running in parallel if site list is huge
+				if (sites.size() >= 3000) stream =
+						stream
+								.parallel()
+								.unordered();
+				return point.nearestSeed =
+						stream
+								.min(Comparator.comparingDouble(value -> value.distance(point)))
+								.orElseThrow(RuntimeException::new);
 			}
 
 		}
@@ -263,7 +267,6 @@ public class Voronoi {
 			private final Map<Object, Object> components = new HashMap<>();
 			public Point nearestSeed;
 			private boolean isSeed;
-
 			public Point(int x, int y) {
 				this.x = x;
 				this.y = y;
@@ -280,7 +283,6 @@ public class Voronoi {
 			public Object getComponent(Object string) {
 				return components.get(string);
 			}
-
 			public Point setIsSeed() {
 				nearestSeed = this;
 				isSeed = true;
