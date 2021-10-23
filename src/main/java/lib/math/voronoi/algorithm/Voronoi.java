@@ -17,7 +17,7 @@ import java.util.stream.Stream;
 
 
 /**
- * The type Voronoi.
+ * voronoi factory, results in a matrix holding voronoi data,
  */
 public class Voronoi {
 	private int width = 1920;
@@ -30,7 +30,7 @@ public class Voronoi {
 	 * set how accurate the resulting voronoi diagram produced by the factory is
 	 *
 	 * @param accuracy
-	 * 		default range 0-100&
+	 * 		default range 0-100%
 	 */
 	public Voronoi setAccuracy(double accuracy) {
 		this.accuracy = accuracy;
@@ -90,18 +90,16 @@ public class Voronoi {
 	 *
 	 * @return Point[][] matrix of the voronoi diagram
 	 **/
-	public Algorithm.Point[][] generateVoronoi() {
-		return new Algorithm(width, height, sites, scale, accuracy).getMatrix();
+	public Algorithm generateVoronoi() {
+		return new Algorithm(width, height, sites, scale, accuracy);
 	}
 
 	public static class Algorithm {
 		private final int width;
 		private final int height;
 		private final Point[][] matrix;
-		private final Vector<Point> sites;
-		double accuracy;
 
-		private Algorithm(int width, int height, List<Point> sites, double scale, double accuracy) {
+		Algorithm(int width, int height, List<Point> sites, double scale, double accuracy) {
 			this.width = width;
 			this.height = height;
 			this.accuracy = 101 - accuracy;
@@ -111,18 +109,8 @@ public class Voronoi {
 			process();
 		}
 
-		// prepares the matrix for calculation
-		private Point[][] constructMatrix(int width, int height) {
-			final Point[][] matrix;
-			//construct matrix
-			{
-				matrix = new Point[width][height];
-				for (int x = 0; x < matrix.length; x++)
-					for (int y = 0; y < matrix[x].length; y++)
-						matrix[x][y] = new Point(x, y);
-			}
-			return matrix;
-		}
+		private final Vector<Point> sites;
+		double accuracy;
 
 		//checks site list to see if null, if null generate random dataset,
 		//otherwise check sites in list are valid and add to matrix
@@ -132,7 +120,7 @@ public class Voronoi {
 				if (sites == null || sites.isEmpty()) {
 					Random r = new Random();
 					double divisor = 4.823_1E-04; //at default res will produce sites that are a divisor of 1000
-					int bound = Math.max(2, (int) (((width * height) * divisor) * Math.max(scale, 0.001)));
+					int bound = Math.max(1, (int) (((width * height) * divisor) * Math.max(scale, 0.00001)));
 					IntStream.rangeClosed(0, bound)
 							.mapToObj(i -> matrix[r.nextInt(width - 1)][r.nextInt(height - 1)].setIsSeed())
 							.parallel()
@@ -148,6 +136,19 @@ public class Voronoi {
 			}
 		}
 
+		// prepares the matrix for calculation
+		private Point[][] constructMatrix(int width, int height) {
+			final Point[][] matrix;
+			//construct matrix
+			{
+				matrix = new Point[width][height];
+				for (int x = 0; x < matrix.length; x++)
+					for (int y = 0; y < matrix[x].length; y++)
+						matrix[x][y] = new Point(x, y);
+			}
+			return matrix;
+		}
+
 		//begins processing
 		private void process() {
 
@@ -158,9 +159,14 @@ public class Voronoi {
 					.parallelStream()
 					.unordered()
 					.forEach(quad -> {
-						if (checkQuad(quad)) assignSeed(quad.nw, quad.se, quad.ne.nearestSeed);
+						if (checkQuad(quad)) assignSeed(quad.nw, quad.se, quad.nw.nearestSeed);
 						else processQueue.addAll(subdivideQuad(quad));
 					});
+		}
+
+		// basic math, just gets average of two ints
+		private static int average(int a, int b) {
+			return (a + b) >> 1;
 		}
 
 		//takes quad, splits into 4, returns
@@ -225,20 +231,23 @@ public class Voronoi {
 			return matrix[average(a.x, b.x)][average(a.y, b.y)];
 		}
 
-		//finds the nearest site to provided point
-		private Point findNearestSite(Point point) {
-			Stream<Point> stream = sites.stream();
-			// start running in parallel if sitelist is huge
-			if (sites.size() >= 3000) stream = stream.unordered().parallel();
-			return point.nearestSeed = stream
-					.min(Comparator.comparingDouble(value -> value.distance(point)))
-					.orElseThrow(RuntimeException::new);
-
+		public List<Point> getSites() {
+			return Collections.unmodifiableList(sites);
 		}
 
-		// basic math, just gets average of two ints
-		private static int average(int a, int b) {
-			return (a + b) / 2;
+		//finds the nearest site to provided point
+		private Point findNearestSite(Point point) {
+			if (point.isSeed) return point;
+			{
+				Stream<Point> stream = sites.stream();
+				// start running in parallel if sitelist is huge
+				if (sites.size() >= 2500) stream = stream.parallel();
+				if (sites.size() >= 10000) stream.unordered();
+				return point.nearestSeed = stream
+						.min(Comparator.comparingDouble(value -> value.distance(point)))
+						.orElseThrow(RuntimeException::new);
+			}
+
 		}
 
 		//returns matrix

@@ -23,10 +23,7 @@ public class TestWindow extends LazyWindow {
 	static Point[][] matrix;
 
 	static {
-		matrix = new Voronoi()
-				.setScale(1)
-				.setAccuracy(100)
-				.generateVoronoi();
+		matrix = new Voronoi().setScale(1).setAccuracy(100).generateVoronoi().getMatrix();
 	}
 
 
@@ -37,9 +34,7 @@ public class TestWindow extends LazyWindow {
 		WritableImage image = new WritableImage(matrix.length, matrix[0].length);
 		PixelWriter buffer = image.getPixelWriter();
 		stream(matrix)
-				.parallel()
 				.forEachOrdered(array -> stream(array)
-						.parallel()
 						.forEachOrdered(entry -> buffer.setColor(
 								entry.x,
 								entry.y,

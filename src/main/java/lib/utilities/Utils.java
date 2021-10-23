@@ -11,22 +11,11 @@ package lib.utilities;
 import org.jetbrains.annotations.Contract;
 
 public final class Utils {
-	public enum Resolution {
-		HIGH(1920, 1200),
-		MEDIUM(HIGH.width / 2, HIGH.height / 2),
-		LOW(MEDIUM.width / 2, MEDIUM.height / 2);
-
-
-		final public int width, height;
-
-		Resolution(int width, int height) {
-			this.width = width;
-			this.height = height;
-		}
-	}
 
 	public static class LoadingUtils {
+
 		public static void progressPercentage(int done, int total) {
+
 			int size = 100;
 			String iconLeftBoundary = "[", iconDone = "=", iconRemain = ".", iconRightBoundary = "]";
 
