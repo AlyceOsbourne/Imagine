@@ -106,7 +106,7 @@ public abstract class Window extends BorderPane {
 					if (content instanceof LoadsFXML) ((LoadsFXML) content).loadFXML();
 					setCenter(content);
 				}
-			} catch (IOException e) {
+			} catch (IOException | InterruptedException e) {
 				e.printStackTrace();
 			}
 			if (rightBar() != null) {
@@ -240,7 +240,7 @@ public abstract class Window extends BorderPane {
 	 * @throws IOException
 	 * 		the io exception
 	 */
-	protected abstract Node content() throws IOException;
+	protected abstract Node content() throws IOException, InterruptedException;
 
 	/**
 	 * Right bar node.

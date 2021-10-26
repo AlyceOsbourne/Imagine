@@ -10,7 +10,7 @@ import lib.javafx.Window;
 
 public class Imagine extends App {
 	static {
-		debug = true;
+		debug = false;
 	}
 
 	@Override
@@ -22,7 +22,7 @@ public class Imagine extends App {
 	protected Window startingWindow() {
 		if (!debug) return new MainMenu();
 		else {
-			return new TestWindow();
+			return null;
 		}
 	}
 
